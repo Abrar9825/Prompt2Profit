@@ -1,0 +1,47 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background-color: #7333AF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.content{
+    width: 60%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.logo{
+    color: #FACC15;
+    font-size: 2.6rem;
+}
+.appName{
+    
+    margin: 2rem 0 4rem 0;
+    font-family: 'Poppins', sans-serif;
+    color: #ffff;
+}
+
+.quote{
+    color: #C7D2FE;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    word-wrap:break-word;
+    font-weight: 900;
+    text-align: justify;
+}
+
+@media (max-width: 480px) {
+    .quote{
+        font-size: 0.9rem;
+    }
+}
+

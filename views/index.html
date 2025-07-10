@@ -1,0 +1,248 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/css/index.css" />
+  </head>
+  <body>
+    <div class="page">
+      <div class="navbar">
+        <h1>Prompt2Profit</h1>
+        <h3>History</h3>
+        <h3>Help</h3>
+        <h3>New Prompt</h3>
+        <h3 id="welcomeUser"></h3>
+       <button onclick="logout()">Logout</button>
+        <i class="bell fa-solid fa-bell"></i>
+      </div>
+
+      <div class="main-container">
+        <div class="container-header">
+          <h1>Generate Your Business Idea</h1>
+          <p>
+            Transform your thoughts into comprehensive business plans with
+            AI-<br />
+            powered insights and analysis.
+          </p>
+        </div>
+        <div class="form-container">
+          <div class="instruction">
+            <i class="edit-icon fa-solid fa-pen-to-square"></i>
+            <p>Describe Your Business Idea</p>
+          </div>
+          <textarea
+            type="textarea"
+            name="prompt"
+            class="prompt"
+            placeholder="Enter your business idea here... For example: A mobile app that connects local farmers with restaurants to reduce food waste and provide fresh ingredients..."
+          ></textarea>
+          <div class="info">
+            <p>Be as detailed as possible for better results</p>
+            <p><span id="count">0</span>/2000</p>
+          </div>
+          <div class="buttons">
+            <button type="submit" id="showResult">
+              <i class="fa-solid fa-wand-magic" ></i> Generate Business Plan
+            </button>
+            <button type="submit">
+              <i class="fa-solid fa-file-pdf"></i> Generate PDF
+            </button>
+          </div>
+          <div class="tips">
+            <p class="tips-header">
+              <i class="bulb fa-solid fa-lightbulb"></i> Tips for Better Results
+            </p>
+            <div class="tips-body">
+              <div class="row">
+                <p>
+                  <span class="dot"><i class="fa-solid fa-circle"></i></span>
+                  Include your target audience and market
+                </p>
+                <p>
+                  <span class="dot"><i class="fa-solid fa-circle"></i></span>
+                  Mention your unique value proposition
+                </p>
+              </div>
+              <div class="row">
+                <p>
+                  <span class="dot"><i class="fa-solid fa-circle"></i></span>
+                  Describe the problem you're solving
+                </p>
+                <p>
+                  <span class="dot"><i class="fa-solid fa-circle"></i></span>
+                  any existing competition info
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="recents" id="resultContainer">
+          <!-- result would appear here and would replace recents card -->
+          <h2 class="section-title">Recent Ideas</h2>
+          <div class="ideas-grid">
+            <div class="idea-card">
+              <div class="card-header">
+                <h3>Food Delivery App</h3>
+                <span class="time">2 days ago</span>
+              </div>
+              <p class="description">
+                A sustainable food delivery platform connecting local
+                restaurants with eco-conscious consumers...
+              </p>
+              <div class="card-actions">
+                <a href="#"><i class="fa-solid fa-eye"></i> View</a>
+                <a href="#"><i class="pdf fa-solid fa-download"></i> PDF</a>
+              </div>
+            </div>
+
+            <div class="idea-card">
+              <div class="card-header">
+                <h3>Fitness Tracking SaaS</h3>
+                <span class="time">1 week ago</span>
+              </div>
+              <p class="description">
+                AI-powered fitness tracking platform for personal trainers and
+                their clients...
+              </p>
+              <div class="card-actions">
+                <a href="#"><i class="fa-solid fa-eye"></i> View</a>
+                <a href="#"><i class="pdf fa-solid fa-download"></i> PDF</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+     <script>
+      //logout function
+function logout() {
+    // Remove user and token from localStorage
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    // redirect to index page
+    window.location.href = "/index.html"; // change path if needed
+  }
+  // below is called when page is loaded
+ window.addEventListener("DOMContentLoaded", () => {
+       // Get user from localStorage
+       // this contains id,name,email,etc 
+const user = JSON.parse(localStorage.getItem('user')); 
+
+  if (user && user.name) {
+    document.getElementById("welcomeUser").textContent = `Welcome ${user.name}`;}
+    else{
+       document.getElementById("welcomeUser").textContent = `Welcome Guest`;
+    }
+
+
+
+  // dynamic creation of result based on generate business plan button
+    document.getElementById('showResult').addEventListener('click', async () => {
+      const prompt = document.querySelector('.prompt').value.trim();
+       const loader = document.getElementById('fullLoader');
+       // Show loader
+  loader.style.display = 'block';
+    if (!prompt) {
+       loader.style.display = 'none'; // hide loader before return
+      alert("Please enter a business idea first!");
+      return;
+    }
+    try{
+      const token = localStorage.getItem('token');
+
+
+    const response = await fetch('/api/ask', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token && { Authorization: `Bearer ${token}` })
+      },
+      body: JSON.stringify({ user_query: prompt })
+    });
+    const data = await response.json();
+
+   
+
+  if (!response.ok) {
+    alert(data.error || 'Something went wrong');
+    return;
+  }
+
+  // Store in localStorage or sessionStorage
+  localStorage.setItem('aiResult', JSON.stringify(data));
+
+  // // Redirect to result.html
+  // window.location.href = '/result.html';
+      const res = await fetch('/result.html');  // fetch the result.html file
+
+      const html = await res.text();           // read it as text (HTML)
+
+      document.getElementById('resultContainer').innerHTML = html; // insert into div
+
+    // Now call function to populate data
+populateResultFromStorage();
+
+    } 
+
+    catch(err){
+        console.error(err);
+    alert("Failed to generate idea.");
+    loader.style.display = 'none';
+    }
+    
+    finally {
+    // hide loader (even if page is navigating)
+    loader.style.display = 'none';
+  }
+     });
+
+     // populate function
+     function populateResultFromStorage() {
+  const result = JSON.parse(localStorage.getItem('aiResult'));
+
+  if (!result) {
+    document.body.innerHTML = '<p>No data found. Please go back and generate a prompt first.</p>';
+  } else {
+
+    document.querySelector('.info h3').textContent = result.topic;
+
+    //todays date
+    
+
+  const today = new Date();
+const options = { month: 'long', day: 'numeric', year: 'numeric' };
+const formattedDate = today.toLocaleDateString('en-US', options);
+
+// Update the paragraph to say "Analysis completed on <date>"
+document.querySelector('.info p').textContent = `Analysis completed on ${formattedDate}`;
+
+
+    document.querySelector('.score').innerHTML = `${result.Score}/100<br><small>Idea Score</small>`;
+    document.querySelector('.tags').innerHTML = `
+      <span class="tag"><i class="dot fa-solid fa-circle"></i> ${result.verdict}</span>
+      
+      <span class="tag"><i class="dollar fa-solid fa-dollar-sign"></i> ${result.monthlyEarning}</span>
+    `;
+    // similarly update other fields based on your layout structure
+  }
+  localStorage.removeItem('aiResult'); } });
+  </script>
+  <!-- Loader -->
+<div id="fullLoader" style="display:none;">
+  <div class="loader-backdrop"></div>
+  <div class="loader-spinner">
+    <i class="fa fa-spinner fa-spin fa-3x"></i>
+    <p>Generating your business plan...</p>
+  </div>
+</div>
+  </body>
+</html>

@@ -1,0 +1,199 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  background: #7333AF;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.container {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 100%;
+  margin: 2rem;
+}
+
+.brand {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #7333AF;
+  text-align: center;
+}
+
+.form-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-align: center;
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-bottom: 0.3rem;
+  display: block;
+}
+
+.input-box {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  padding: 0.6rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  gap: 0.6rem;
+}
+
+.input-box input {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 0.95rem;
+}
+
+.eye-icon {
+  color: #999;
+  cursor: pointer;
+}
+
+.password-hint {
+  font-size: 0.75rem;
+  color: #666;
+  margin-top: -0.8rem;
+  margin-bottom: 1rem;
+}
+
+.agreement {
+  display: flex;
+  align-items: flex-start;
+  font-size: 0.85rem;
+  margin-bottom: 1.2rem;
+  gap: 0.5rem;
+}
+
+.agreement a {
+  color: #7333AF;
+  text-decoration: none;
+}
+
+.submit-btn {
+  width: 100%;
+  background: linear-gradient(to right, #7333AF, #7d2ae8);
+  color: white;
+  border: none;
+  padding: 0.8rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 1.2rem;
+}
+
+.divider {
+  text-align: center;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.divider span {
+  background: white;
+  padding: 0 1rem;
+  color: #888;
+  font-size: 0.85rem;
+  position: relative;
+  z-index: 1;
+}
+
+.divider::before {
+  content: "";
+  height: 1px;
+  background: #ccc;
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  z-index: 0;
+}
+
+.social-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.social {
+  flex: 1;
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.signin-text {
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+.signin-text a {
+  color: #7333AF;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+
+@media (max-width: 576px) {
+  .container {
+    padding: 1.5rem;
+    max-width: 25rem;
+    width: 90%;
+  }
+  .brand {
+    font-size: 1.5rem;
+  }
+  .signin-title {
+    font-size: 1.2rem;
+    margin: 1rem 0;
+  }
+  .subtext {
+    font-size: 0.875rem;
+    color: #4b5563;
+    margin-bottom: 1.5rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .container {
+    padding: 1.5rem;
+    max-width: 25rem;
+    width: 90%;
+  }
+  .brand {
+    font-size: 1.5rem;
+  }
+  .signin-title {
+    font-size: 1.2rem;
+    margin: 1rem 0;
+  }
+  .subtext {
+    font-size: 0.875rem;
+    color: #4b5563;
+    margin-bottom: 1.5rem;
+  }
+}

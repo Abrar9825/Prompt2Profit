@@ -1,0 +1,284 @@
+:root {
+  --bg: #f9fafb;
+  --card: #fff;
+  --border: #e5e7eb;
+  --gray: #6b7280;
+  --lightgray: #9ca3af;
+  --green: #34d399;
+  --red: #f87171;
+  --purple: #2563EB;
+}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: "Inter", sans-serif;
+  background-color: var(--bg);
+  color: #111827;
+  padding: 20px;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.navbar {
+  grid-area: 1 / 1 / 2 / 7;
+  height: 4.5rem;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  margin: 0 0 3rem 0;
+  margin: -20px;
+}
+.navbar h1 {
+  font-family: "Roboto Mono", monospace;
+  color: #7333af;
+  margin: 0 16rem 0 10rem;
+  font-size: 1.8rem;
+}
+.navbar h3 {
+  font-family: "Roboto Mono", monospace;
+  margin: 0 6rem 0 0;
+  color: #7333af;
+}
+.searchbox input {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  width: 250px;
+  margin: 0 0 0 10rem;
+}
+.filters {
+  margin-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.filters h2 {
+  font-size: 18px;
+  font-weight: 700;
+}
+.filters h2 span {
+  background: #f3f4f6;
+  color: #4b5563;
+  font-weight: 400;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  margin-left: 8px;
+}
+.dropdowns select {
+  padding: 6px 10px;
+  margin-left: 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+.prompt-list {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.prompt-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+.prompt-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--gray);
+}
+.badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.badge.green strong{
+  background-color: #DCFCE7;
+  color: #16A34A;
+}
+.badge.red strong{
+  background-color: #fef2f2;
+  color: #b91c1c;
+}
+.prompt-title {
+  font-size: 15px;
+  font-weight: 600;
+}
+.prompt-desc {
+  font-size: 14px;
+  color: #374151;
+}
+.prompt-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--lightgray);
+}
+.prompt-header .gem {
+  color: #16A34A;
+  padding: 0.875rem;
+  border-radius: 8px;
+  background-color: #DCFCE7;
+}
+.prompt-header .trash {
+  color: #DC2626;
+  padding: 0.875rem;
+  border-radius: 8px;
+  background-color: #FEE2E2;
+}
+.prompt-footer .code{
+    color: #6B7280;
+}
+.prompt-footer .star{
+    color: #6B7280;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+  gap: 6px;
+}
+.pagination button {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  background: white;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.pagination .active {
+  background: var(--purple);
+  color: white;
+}
+@media (max-width: 1200px) {
+  .navbar h1 {
+    margin: 0 8rem 0 5rem;
+  }
+  .navbar h3 {
+    margin: 0 3rem 0 0;
+  }
+  .navbar .searchbox input {
+    margin: 0 0 0 5rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .page {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .navbar {
+    grid-area: 1 / 1 / 2 / 5;
+  } 
+  .navbar .searchbox input {
+    margin: 0;
+    font-size: 0.9rem;
+    width: 200px;
+  } 
+}
+
+@media (max-width: 768px) {
+  .navbar h1 {
+    margin: 0 3rem 0 2rem;
+    font-size: 1.5rem;
+  }
+  .navbar h3 {
+    margin: 0 1.5rem 0 0;
+    font-size: 0.9rem;
+  }
+  .navbar .searchbox input {
+    margin: 0 0 0 2rem;
+    font-size: 0.9rem;
+  } 
+}
+
+@media (max-width: 576px) {
+  .navbar {
+    height: 3.5rem;
+    padding: 0 1rem;
+    justify-content: space-between;
+    position: relative;
+  }
+  
+  .navbar h1 {
+    margin: 0;
+    font-size: 1.2rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 40%;
+  }
+  
+  .navbar h3 {
+    margin: 0 0.5rem;
+    font-size: 0.8rem;
+    display: none; 
+  }
+  
+  .navbar .searchbox input {
+    margin: 0;
+    font-size: 0.725rem;
+    padding: 0.4rem;
+    width: 100px;
+  }
+  
+  }
+  
+  @media (max-width: 576px) {
+    .navbar {
+      justify-content: flex-start;
+      gap: 0.5rem;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 0.5rem;
+    }
+    
+    .navbar h1 {
+      margin-right: auto;
+      flex-shrink: 0;
+    }
+    
+    .navbar h3 {
+      display: block;
+      white-space: nowrap;
+      font-size: 0.8rem;
+      margin: 0 0.5rem;
+    }
+    
+    .navbar .searchbox input {
+      margin-left: auto;
+    }
+    
+    .navbar::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .navbar h3 {
+      font-size: 0.7rem;
+      margin: 0 0.3rem;
+    }
+    
+    .navbar h1 {
+      font-size: 1rem;
+    }
+  }

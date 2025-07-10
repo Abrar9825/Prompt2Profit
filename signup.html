@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Account - Prompt2Profit</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/signup.css">
+</head>
+<body>
+  <div class="container">
+    <form class="register-box">
+      <h1 class="brand">Prompt2Profit</h1>
+      <h2 class="form-title">Create Account</h2>
+
+      <label>Full Name</label>
+      <div class="input-box">
+        <i style="color:#9CA3AF"class="fa-solid fa-user"></i>
+        <input type="text" placeholder="Enter your full name" required />
+      </div>
+
+      <label>Email Address</label>
+      <div class="input-box">
+        <i style="color:#9CA3AF"class="fa-solid fa-envelope"></i>
+        <input type="email" placeholder="Enter your email" required />
+      </div>
+
+      <label>Password</label>
+      <div class="input-box">
+        <i style="color:#9CA3AF"class="fa-solid fa-lock"></i>
+        <input type="password" placeholder="Create a password" required />
+        <i style="color:#9CA3AF"class="fa-regular fa-eye eye-icon"></i>
+      </div>
+      <p class="password-hint">Password must be at least 8 characters long</p>
+
+      <label>Confirm Password</label>
+      <div class="input-box">
+        <i style="color:#9CA3AF"class="fa-solid fa-lock"></i>
+        <input type="password" placeholder="Confirm your password" required />
+      </div>
+
+      <div class="agreement">
+        <input type="checkbox" required />
+        <label>I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+      </div>
+
+      <button type="submit" class="submit-btn">Create Account</button>
+
+      <div class="divider"><span>Or continue with</span></div>
+
+      <div class="social-buttons">
+        <button class="social google"><i style="color: red"class="fa-brands fa-google"></i> Google</button>
+        <button class="social github"><i style="color: black"class="fa-brands fa-github"></i> GitHub</button>
+      </div>
+
+      <p class="signin-text">Already have an account? <a href="#">Sign in</a></p>
+    </form>
+  </div>
+  <script>
+  // Get all eye icons
+  const toggleIcons = document.querySelectorAll('.eye-icon');
+
+  toggleIcons.forEach(icon => {
+    icon.addEventListener('click', () => {
+      const input = icon.previousElementSibling; // the input just before the icon
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
