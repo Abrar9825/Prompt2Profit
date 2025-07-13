@@ -45,8 +45,8 @@
             placeholder="Enter your business idea here... For example: A mobile app that connects local farmers with restaurants to reduce food waste and provide fresh ingredients..."
           ></textarea>
 
-          <div class="info">
-            <p>Be as detailed as possible for better results</p>
+          <div class="info1">
+            <p></p>
             <p><span id="count">0</span>/2000</p>
           </div>
 
@@ -260,16 +260,182 @@
             return;
           }
 
-          const today = new Date();
-          const formattedDate = today.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+            const today = new Date();
+  const formattedDate = today.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric"
+  });
 
-          document.querySelector(".info h3").textContent = result.topic;
-          document.querySelector(".info p").textContent = `Analysis completed on ${formattedDate}`;
-          document.querySelector(".score").innerHTML = `${result.Score}/100<br><small>Idea Score</small>`;
-          document.querySelector(".tags").innerHTML = `
-            <span class="tag"><i class="dot fa-solid fa-circle"></i> ${result.verdict}</span>
-            <span class="tag"><i class="dollar fa-solid fa-dollar-sign"></i> ${result.monthlyEarning}</span>
-          `;
+  // Update header info
+  document.querySelector(".info h3").textContent = result.topic || "No Title";
+ document.querySelector(".info p").textContent = `Analysis completed on ${formattedDate}`;
+         
+  document.querySelector(".score").innerHTML = `${result.Score || "?"}/100<br><small>Idea Score</small>`;
+
+  // Update tags
+  document.querySelector(".tags").innerHTML = `
+    <span class="tag"><i class="dot fa-solid fa-circle"></i> ${result.verdict || "N/A"}</span>
+    <span class="tag"><i class="clock fa-solid fa-clock"></i> ${result.Timeline_to_first_revenue || "N/A"}</span>
+    <span class="tag"><i class="dollar fa-solid fa-dollar-sign"></i> ${result.monthlyEarning || "N/A"}</span>
+  `;
+
+  // Worth building section
+  document.querySelector(".div3 .title").innerHTML = `<i class="check fa-solid fa-check"></i> Worth Building`;
+  document.querySelector(".div3 .answer").textContent = result.verdict || "N/A";
+  document.querySelector(".div3 ul").innerHTML = `<li>${result.verdict_reason || "Strong market demand, viable model."}</li>`;
+
+  // Target audience
+  const audienceRaw = result.audience || "";
+const audienceList = audienceRaw.split(",").map(item => item.trim());
+
+document.querySelector(".div4 ul").innerHTML = audienceList.map(item => `<li>${item}</li>`).join('');
+
+
+  // MVP Features
+ const mvpRaw = result.mvpFeatureList || "";
+
+const mvpFeatures = Array.isArray(mvpRaw)
+  ? mvpRaw
+  : splitOutsideParentheses(mvpRaw);
+
+document.querySelector(".div5 ul").innerHTML =
+  mvpFeatures.map(f => `<li>${f}</li>`).join('') +
+  `<li></li>`;
+
+//`<li><a href="#">Read More</a></li>`;
+
+function splitOutsideParentheses(str) {
+  const result = [];
+  let current = "";
+  let depth = 0;
+
+  for (const char of str) {
+    if (char === "(") {
+      depth++;
+      current += char;
+    } else if (char === ")") {
+      depth--;
+      current += char;
+    } else if (char === "," && depth === 0) {
+      result.push(current.trim());
+      current = "";
+    } else {
+      current += char;
+    }
+  }
+  if (current.trim()) result.push(current.trim());
+  return result;
+}
+
+
+  // Earning potential
+  document.querySelector(".div6 p strong").textContent = result.monthlyEarning || "$ -";
+  document.querySelector(".div6 p small").textContent = "";
+
+  // Problem it solves
+const problem = result.realWorldProblem || "Not specified";
+
+// If it's a comma-separated string, split and wrap in <li>
+const bulletPoints = problem.split(",").map(p => `<li>${p.trim()}</li>`).join("");
+
+document.querySelector(".div7 p").innerHTML = `
+  <small><ul>${bulletPoints}</ul></small>
+`;
+
+ // Tech Stack
+const techStr = result.TechStack || "";
+
+function parseTechStack(techString) {
+  const lines = techString.split('\n').map(line => line.trim()).filter(line => line);
+  const techObj = {};
+
+  lines.forEach(line => {
+    // line example: "Frontend : React,"
+    // remove trailing commas & split by ":"
+    const cleanLine = line.replace(/,$/, '');
+    const [key, value] = cleanLine.split(':').map(s => s.trim());
+    if (key && value) {
+      // convert key to lowercase and replace spaces with underscore
+      const formattedKey = key.toLowerCase().replace(/\s+/g, '_');
+      techObj[formattedKey] = value;
+    }
+  });
+
+  return techObj;
+}
+
+const stack = parseTechStack(techStr);
+
+const techHTML = `
+  <div class="tag-group frontend">
+    <strong>Frontend:</strong> <span>${stack.frontend || "N/A"}</span>
+  </div>
+  <div class="tag-group backend">
+    <strong>Backend:</strong> <span>${stack.backend || "N/A"}</span>
+  </div>
+  <div class="tag-group mobile">
+    <strong>Mobile App:</strong> <span>${stack.mobile_app || "N/A"}</span>
+  </div>
+  <div class="tag-group database">
+    <strong>Database:</strong> <span>${stack.database || "N/A"}</span>
+  </div>
+  <div class="tag-group ai">
+    <strong>AI:</strong> <span>${stack.ai || "N/A"}</span>
+  </div>
+  <div class="tag-group auth">
+    <strong>Auth:</strong> <span>${stack.auth || "N/A"}</span>
+  </div>
+`;
+
+document.querySelector(".div8 .tech-tags").innerHTML = techHTML;
+
+  // USP
+  document.querySelector(".div9 p").textContent = Array.isArray(result.USP) ? result.USP[0] : (result.USP || "N/A");
+
+  // Monetization model
+function splitOutsideParentheses(text) {
+  const result = [];
+  let current = '';
+  let parenDepth = 0;
+
+  for (const char of text) {
+    if (char === '(') parenDepth++;
+    if (char === ')') parenDepth--;
+    if (char === ',' && parenDepth === 0) {
+      result.push(current.trim());
+      current = '';
+    } else {
+      current += char;
+    }
+  }
+  if (current) result.push(current.trim());
+  return result;
+}
+
+// Usage example:
+const monetization = result.monetizationStrategy || "N/A";
+const items = splitOutsideParentheses(monetization);
+
+document.querySelector(".div10 ul").innerHTML = items.map(item => `<li>${item}</li>`).join('');
+
+  // Timeline to revenue
+  if (result.Timeline_to_first_revenue) {
+    document.querySelector(".div11 ul").innerHTML = `
+      <li>MVP Development: 3-4 months</li>
+      <li>Beta Testing: 1-2 months</li>
+      <li>Market Launch: 1 month</li>
+      <li><strong>First Revenue: <span class="time">${result.Timeline_to_first_revenue}</span></strong></li>
+    `;
+  }
+
+  // // Roadmap
+  // if (Array.isArray(result.roadmap)) {
+  //   document.querySelector(".div12 p").innerHTML = result.roadmap.map((stage, idx) =>
+  //     `<strong>Stage ${idx + 1}:</strong> ${stage}<br>`).join('');
+  // } else {
+  //   document.querySelector(".div12 p").textContent = "No roadmap available.";
+  // }
         }
       });
     </script>
