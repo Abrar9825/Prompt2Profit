@@ -43,20 +43,18 @@ Return the result in JSON format:
   "Score":"<score out of 100>",
   "roadmap": [
   {
-    "phase": "Phase 1",
+    "week": "week 1",
     "goal": "<goal for phase 1>",
-    "duration": "<e.g. 3 months>",
-    "steps": ["<step 1>", "<step 2>", "<step 3>"],
+    "steps": ["<step 1 in detail>", "<step 2 in detail>", "<step 3 in detail>"],
     "platforms": ["<Web>", "<Mobile>", "<AI>", "<Other>"]
   },
   {
-    "phase": "Phase 2",
+    "week": "week 2",
     "goal": "<goal for phase 2>",
-    "duration": "<e.g. 2 months>",
-    "steps": ["<step 1>", "<step 2>", "<step 3>"],
+    "steps": ["<step 1 in detail>", "<step 2 in detail>", "<step 3 in detail>"],
     "platforms": ["<Web>", "<Mobile>"]
   }
-  // Add up to 4 phases if needed
+  // Add up to 8 weeks if needed
 ]
 }
 `;
@@ -151,7 +149,7 @@ else{
   res.json({ topic:topic,verdict: verdict, audience:audience,monthlyEarning:monthlyEarning
       , realWorldProblem:realWorldProblem,USP:USP,monetizationStrategy:monetizationStrategy
       ,mvpFeatureList:mvpFeatureList,TechStack:tech,Timeline_to_first_revenue:Timeline_to_first_revenue,
-      Score:Score
+      Score:Score,roadmap:roadmap
     });
 } 
     

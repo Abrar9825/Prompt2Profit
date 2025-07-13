@@ -1,10 +1,10 @@
 const express=require("express");
 
 const router=express.Router();
-const {generatePDF,generateLastPromptPdf}=require("../controllers/generatePDFController");
+const {saveResult,generatePDF,generateLastPromptPdf}=require("../controllers/generatePDFController");
 
-
-router.post("/generate-pdf/:id",generatePDF);
+router.post('/save-result', saveResult);
+router.post("/generate-pdf",generatePDF);
 router.post("/generate-lastPromptPdf",generateLastPromptPdf);
 
 module.exports=router;
