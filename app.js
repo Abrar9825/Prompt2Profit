@@ -34,7 +34,7 @@ const UserRoute=require("./routes/UserRoute");
 // routes used
 app.use(express.json());
 app.use("/api",fetchAPIRoutes);
-app.use("/generate",generatePDFRoutes);
+app.use("/api",generatePDFRoutes);
 app.use("/user",UserRoute);
 
 

@@ -3,8 +3,9 @@ const fontkit = require('fontkit');
 const fs = require('fs');
 const path = require('path');
 const promptModel = require('../models/PromptModel');
+const jwt = require('jsonwebtoken');
 
-//generateLastPromptPdf
+//generateLastPromptPdf-----------> not using this function
 const generateLastPromptPdf = async (req, res) => {
   const id = parseInt(req.params.id);
   const lastPromptData = await promptModel.findOne().sort({ id: -1 }).limit(1).select('roadmap');
@@ -100,14 +101,67 @@ const generateLastPromptPdf = async (req, res) => {
   res.send(Buffer.from(pdfBytes));
 };
 
+// =======================================save result ============================
+
+// save result to db when generatepdf->login->then this function is called
+const saveResult = async (req, res) => {
+  if (!req.headers.authorization) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  try {
+    const token = req.headers.authorization.split(' ')[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const aiData = req.body; // expecting full parsed JSON from frontend
+
+    // Validate input as needed, e.g.
+    if (!aiData || !aiData.topic || !Array.isArray(aiData.roadmap)) {
+      return res.status(400).json({ error: "Invalid AI result data" });
+    }
+
+    // Prepare data similar to your fetchAPI logic
+    const newPrompt = await promptModel.create({
+      prompt_desc: aiData.topic,
+      score: aiData.Score || '',
+      worthbuilding: aiData.verdict || '',
+      target_audience: aiData.audience || '',
+      mvp_features: Array.isArray(aiData.mvpFeatureList) ? aiData.mvpFeatureList.join(",") : '',
+      earning_potential: aiData.monthlyEarning || '',
+      tech_stack: {
+        frontend: aiData.TechStack ? aiData.TechStack[0] : '',
+        backend: aiData.TechStack ? aiData.TechStack[1] : '',
+        mobile_app: aiData.TechStack ? aiData.TechStack[2] : '',
+        database: aiData.TechStack ? aiData.TechStack[3] : '',
+        ai: aiData.TechStack ? aiData.TechStack[4] : '',
+        auth: aiData.TechStack ? aiData.TechStack[5] : ''
+      },
+      usp: Array.isArray(aiData.USP) ? aiData.USP[0] : aiData.USP || '',
+      problem_it_solves: aiData.realWorldProblem || '',
+      timeline_to_first_revenue: aiData.Timeline_to_first_revenue || '',
+      monetization_model: aiData.monetizationStrategy || '',
+      roadmap: aiData.roadmap,
+      user_id: decoded.id
+    });
+     console.log(newPrompt);
+    res.json({ message: "AI result saved successfully", id: newPrompt._id });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to save AI result" });
+  }
+};
 
 
-//generatePDF
+
+//================================= generatePDF ===========================
+// generate pdf is called when user is already logged in 
 const generatePDF = async (req, res) => {
-  const id = parseInt(req.params.id);
-  const promptData = await promptModel.findOne({ id }).select('roadmap');
-  const roadmapArray = promptData?.roadmap || [];
+  const roadmapArray = req.body.roadmap || [];
 
+  if (!Array.isArray(roadmapArray) || roadmapArray.length === 0) {
+    return res.status(400).json({ error: 'Invalid or empty roadmap data' });
+  }
   const pdfDoc = await PDFDocument.create();
   pdfDoc.registerFontkit(fontkit);
 
@@ -170,23 +224,23 @@ const generatePDF = async (req, res) => {
   };
 
   // ✨ Title
-  drawLine('📊 Roadmap Report', 0, 16, true);
+  drawLine(`📊 Roadmap Report : ${req.body.topic}`, 0, 16, true);
   y -= 15;
 
-  roadmapArray.forEach((phaseObj, idx) => {
-    drawLine(`📍 ${phaseObj.phase}`, 0, 14, true);
-    drawLine(`🛠 Goal: ${phaseObj.goal}`, indent);
-    drawLine(`⏱ Duration: ${phaseObj.duration}`, indent);
+  roadmapArray.forEach((weekObj, idx) => {
+    drawLine(`📍 ${weekObj.week}`, 0, 14, true);
+    drawLine(`🛠 Goal: ${weekObj.goal}`, indent);
+    //drawLine(`⏱ Duration: ${phaseObj.duration}`, indent);
 
-    if (Array.isArray(phaseObj.steps) && phaseObj.steps.length > 0) {
+    if (Array.isArray(weekObj.steps) && weekObj.steps.length > 0) {
       drawLine(`🗂 Steps:`, indent);
-      phaseObj.steps.forEach(step => {
+      weekObj.steps.forEach(step => {
         drawLine(`• ${step}`, indent * 2);
       });
     }
 
-    if (Array.isArray(phaseObj.platforms) && phaseObj.platforms.length > 0) {
-      drawLine(`💻 Platforms: ${phaseObj.platforms.join(', ')}`, indent);
+    if (Array.isArray(weekObj.platforms) && weekObj.platforms.length > 0) {
+      drawLine(`💻 Platforms: ${weekObj.platforms.join(', ')}`, indent);
     }
 
     y -= 10; // Extra spacing between phases
@@ -198,4 +252,4 @@ const generatePDF = async (req, res) => {
   res.send(Buffer.from(pdfBytes));
 };
 
-module.exports = { generatePDF,generateLastPromptPdf };
+module.exports = { generatePDF,generateLastPromptPdf,saveResult };

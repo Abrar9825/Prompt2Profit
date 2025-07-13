@@ -34,7 +34,7 @@
         <label><input type="checkbox" name="remember"> Remember me</label>
         <a href="#">Forgot password?</a>
       </div>
-
+       <!-- submit button -->
       <button type="submit" class="signin-btn">Sign In <i class="fa-solid fa-arrow-right"></i></button>
 
       <div class="divider"><span>or continue with</span></div>
@@ -69,7 +69,41 @@
       localStorage.setItem('user', JSON.stringify(decoded));
         
 alert(`Login successful, Welcome ${decoded.name}`);
-                window.location.href = '/index.html';
+// Check if aiResult exists before redirecting
+    const resultToStore = localStorage.getItem('aiResult');
+ if (resultToStore) {
+        // Save it to backend
+        fetch("/api/ask", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${data.token}`
+            },
+            body: resultToStore
+        })
+        .then(res => res.json())
+        .then(res => {
+            // Save roadmap to window so we can generate PDF
+            window.generatedRoadmap = res.roadmap;
+            window.topic = res.topic;
+            
+            // Save again to localStorage (for safety)
+            localStorage.setItem("latestRoadmap", JSON.stringify(res.roadmap));
+          //  localStorage.removeItem("aiResult"); // clear after storing
+
+            // Redirect to main page for PDF generation
+            window.location.href = "/index.html?download=1";
+        })
+        .catch(err => {
+            alert("Failed to save result after login");
+            console.error(err);
+            window.location.href = "/index.html";
+        });
+    }
+    else{
+                window.location.href = '/index.html'; }
+                // window.generatedRoadmap ! =null then download pdf
+              
             } else {
                 alert(data.message || 'Login failed');
             }

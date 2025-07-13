@@ -1,14 +1,14 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Prompt2Profit</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
+    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
     <link rel="stylesheet" href="/css/index.css" />
   </head>
   <body>
@@ -19,7 +19,7 @@
         <h3>Help</h3>
         <h3>New Prompt</h3>
         <h3 id="welcomeUser"></h3>
-       <button onclick="logout()">Logout</button>
+        <button onclick="logout()">Logout</button>
         <i class="bell fa-solid fa-bell"></i>
       </div>
 
@@ -28,221 +28,258 @@
           <h1>Generate Your Business Idea</h1>
           <p>
             Transform your thoughts into comprehensive business plans with
-            AI-<br />
-            powered insights and analysis.
+            AI-powered insights and analysis.
           </p>
         </div>
+
         <div class="form-container">
           <div class="instruction">
             <i class="edit-icon fa-solid fa-pen-to-square"></i>
             <p>Describe Your Business Idea</p>
           </div>
+            <!-- prompt area -->
           <textarea
-            type="textarea"
+          id="promptArea"
             name="prompt"
             class="prompt"
             placeholder="Enter your business idea here... For example: A mobile app that connects local farmers with restaurants to reduce food waste and provide fresh ingredients..."
           ></textarea>
+
           <div class="info">
             <p>Be as detailed as possible for better results</p>
             <p><span id="count">0</span>/2000</p>
           </div>
+
           <div class="buttons">
             <button type="submit" id="showResult">
-              <i class="fa-solid fa-wand-magic" ></i> Generate Business Plan
+              <i class="fa-solid fa-wand-magic"></i> Generate Business Plan
             </button>
-            <button type="submit">
+            <button type="submit" id="generatePDF">
               <i class="fa-solid fa-file-pdf"></i> Generate PDF
             </button>
           </div>
+
           <div class="tips">
             <p class="tips-header">
               <i class="bulb fa-solid fa-lightbulb"></i> Tips for Better Results
             </p>
             <div class="tips-body">
               <div class="row">
-                <p>
-                  <span class="dot"><i class="fa-solid fa-circle"></i></span>
-                  Include your target audience and market
-                </p>
-                <p>
-                  <span class="dot"><i class="fa-solid fa-circle"></i></span>
-                  Mention your unique value proposition
-                </p>
+                <p><span class="dot"><i class="fa-solid fa-circle"></i></span> Include your target audience and market</p>
+                <p><span class="dot"><i class="fa-solid fa-circle"></i></span> Mention your unique value proposition</p>
               </div>
               <div class="row">
-                <p>
-                  <span class="dot"><i class="fa-solid fa-circle"></i></span>
-                  Describe the problem you're solving
-                </p>
-                <p>
-                  <span class="dot"><i class="fa-solid fa-circle"></i></span>
-                  any existing competition info
-                </p>
+                <p><span class="dot"><i class="fa-solid fa-circle"></i></span> Describe the problem you're solving</p>
+                <p><span class="dot"><i class="fa-solid fa-circle"></i></span> Any existing competition info</p>
               </div>
             </div>
           </div>
         </div>
-        <div class="recents" id="resultContainer">
-          <!-- result would appear here and would replace recents card -->
-          <h2 class="section-title">Recent Ideas</h2>
-          <div class="ideas-grid">
-            <div class="idea-card">
-              <div class="card-header">
-                <h3>Food Delivery App</h3>
-                <span class="time">2 days ago</span>
-              </div>
-              <p class="description">
-                A sustainable food delivery platform connecting local
-                restaurants with eco-conscious consumers...
-              </p>
-              <div class="card-actions">
-                <a href="#"><i class="fa-solid fa-eye"></i> View</a>
-                <a href="#"><i class="pdf fa-solid fa-download"></i> PDF</a>
-              </div>
-            </div>
 
-            <div class="idea-card">
-              <div class="card-header">
-                <h3>Fitness Tracking SaaS</h3>
-                <span class="time">1 week ago</span>
-              </div>
-              <p class="description">
-                AI-powered fitness tracking platform for personal trainers and
-                their clients...
-              </p>
-              <div class="card-actions">
-                <a href="#"><i class="fa-solid fa-eye"></i> View</a>
-                <a href="#"><i class="pdf fa-solid fa-download"></i> PDF</a>
-              </div>
-            </div>
-          </div>
+        <div class="recents" id="resultContainer">
+          <h2 class="section-title">Recent Ideas</h2>
+          <div class="ideas-grid"></div>
         </div>
-        
       </div>
     </div>
-     <script>
-      //logout function
-function logout() {
-    // Remove user and token from localStorage
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
 
-    // redirect to index page
-    window.location.href = "/index.html"; // change path if needed
-  }
-  // below is called when page is loaded
- window.addEventListener("DOMContentLoaded", () => {
-       // Get user from localStorage
-       // this contains id,name,email,etc 
-const user = JSON.parse(localStorage.getItem('user')); 
+    <script>
+      // =========================LOGOUT==============================
+      function logout() {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        window.location.href = "/index.html";
+      }
+//=================================== DOM Content Loaded===============
+      window.addEventListener("DOMContentLoaded", async () => {
 
-  if (user && user.name) {
-    document.getElementById("welcomeUser").textContent = `Welcome ${user.name}`;}
-    else{
-       document.getElementById("welcomeUser").textContent = `Welcome Guest`;
-    }
+         
+         
+    const user = JSON.parse(localStorage.getItem("user"));
+        document.getElementById("welcomeUser").textContent = user?.name ? `Welcome ${user.name}` : "Welcome Guest";
 
+          
+        // here we are fetching topic from localstorage and providing to promptarea as soon as user logs in 
+        const storedTopic=localStorage.getItem("topic");
+          if(storedTopic){
+                   document.getElementById("promptArea").textContent=storedTopic;
+          }
 
+        // the below shouldgeneratepdf stores true or false --> true when user is anonymous and tries to generate pdf
+        const shouldDownload = localStorage.getItem("shouldGeneratePDF");
 
-  // dynamic creation of result based on generate business plan button
-    document.getElementById('showResult').addEventListener('click', async () => {
-      const prompt = document.querySelector('.prompt').value.trim();
-       const loader = document.getElementById('fullLoader');
-       // Show loader
-  loader.style.display = 'block';
-    if (!prompt) {
-       loader.style.display = 'none'; // hide loader before return
-      alert("Please enter a business idea first!");
-      return;
-    }
-    try{
-      const token = localStorage.getItem('token');
+        if (shouldDownload === "true") {
+          localStorage.removeItem("shouldGeneratePDF");
 
+          // token fetches user id , aiResult and topic that anonymous user has entered before login
+          const token = localStorage.getItem("token");
+            const aiResultRaw = localStorage.getItem("aiResult");
+          const prompt = localStorage.getItem("topic");
+          console.log(`aiResult ${aiResultRaw}`);
+          console.log(`topic ${prompt}`);
 
-    const response = await fetch('/api/ask', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token && { Authorization: `Bearer ${token}` })
-      },
-      body: JSON.stringify({ user_query: prompt })
-    });
-    const data = await response.json();
-
-   
-
-  if (!response.ok) {
-    alert(data.error || 'Something went wrong');
+          // if aiResult is empty it wont download pdf and no db entry would be made
+         if (!aiResultRaw) {
+    console.error("No AI result to save");
     return;
   }
+  try {
+    // here on click of login save-result is called for db entry after anonymous user generates result -> login -> then db entry ->then download pdf
+    const response = await fetch("/api/save-result", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(token && { Authorization: `Bearer ${token}` })
+      },
+       body: JSON.stringify(JSON.parse(aiResultRaw))  // send the whole AI result JSON string
+    });
 
-  // Store in localStorage or sessionStorage
-  localStorage.setItem('aiResult', JSON.stringify(data));
-
-  // // Redirect to result.html
-  // window.location.href = '/result.html';
-      const res = await fetch('/result.html');  // fetch the result.html file
-
-      const html = await res.text();           // read it as text (HTML)
-
-      document.getElementById('resultContainer').innerHTML = html; // insert into div
-
-    // Now call function to populate data
-populateResultFromStorage();
-
-    } 
-
-    catch(err){
-        console.error(err);
-    alert("Failed to generate idea.");
-    loader.style.display = 'none';
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText);
     }
-    
-    finally {
-    // hide loader (even if page is navigating)
-    loader.style.display = 'none';
-  }
-     });
 
-     // populate function
-     function populateResultFromStorage() {
-  const result = JSON.parse(localStorage.getItem('aiResult'));
-
-  if (!result) {
-    document.body.innerHTML = '<p>No data found. Please go back and generate a prompt first.</p>';
-  } else {
-
-    document.querySelector('.info h3').textContent = result.topic;
-
-    //todays date
     
 
-  const today = new Date();
-const options = { month: 'long', day: 'numeric', year: 'numeric' };
-const formattedDate = today.toLocaleDateString('en-US', options);
+    // Optionally trigger PDF generation/download here after save success
+    document.getElementById("generatePDF").click();
 
-// Update the paragraph to say "Analysis completed on <date>"
-document.querySelector('.info p').textContent = `Analysis completed on ${formattedDate}`;
-
-
-    document.querySelector('.score').innerHTML = `${result.Score}/100<br><small>Idea Score</small>`;
-    document.querySelector('.tags').innerHTML = `
-      <span class="tag"><i class="dot fa-solid fa-circle"></i> ${result.verdict}</span>
-      
-      <span class="tag"><i class="dollar fa-solid fa-dollar-sign"></i> ${result.monthlyEarning}</span>
-    `;
-    // similarly update other fields based on your layout structure
+  } catch (err) {
+    console.error("Failed to save AI result:", err);
   }
-  localStorage.removeItem('aiResult'); } });
-  </script>
-  <!-- Loader -->
-<div id="fullLoader" style="display:none;">
-  <div class="loader-backdrop"></div>
-  <div class="loader-spinner">
-    <i class="fa fa-spinner fa-spin fa-3x"></i>
-    <p>Generating your business plan...</p>
-  </div>
-</div>
+
+        }
+//=========================================generate pdf function =======================
+        document.getElementById("generatePDF").addEventListener("click", async () => {
+          // here we fetch aiResult generated by user 
+          const raw = localStorage.getItem("aiResult");
+          if (!raw) return alert("Please generate the business plan first.");
+
+          const user = JSON.parse(localStorage.getItem("user"));
+
+          // below we check that is user is anonymous or not
+          if (!user || !user.name) {
+            // if anonymous shouldgeneratepdf must be true
+            localStorage.setItem("shouldGeneratePDF", "true");
+         
+            // then redirect to login
+            window.location.href = "/login.html";
+            return;
+          }
+             let result;
+          try {
+            result = JSON.parse(raw);
+          } catch (err) {
+            alert("Invalid AI result format.");
+            return;
+          }
+
+          const { roadmap, topic } = result;
+          if (!Array.isArray(roadmap)) return alert("No roadmap found.");
+
+          try {
+            const response = await fetch("/api/generate-pdf", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ roadmap, topic })        //here we are sending roadmap and topic for pdf creation to pdf api
+            });
+
+            if (!response.ok) {
+              const errorText = await response.text();
+              throw new Error(errorText);
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "roadmap.pdf";
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+          } catch (error) {
+            alert("PDF generation failed.");
+            console.error(error);
+          }
+          // after generating pdf we clear aiResult and topic so that when user clicks on generatepdf then he/she needs to enter prompt first
+          localStorage.removeItem("aiResult"); // clear after storing
+          localStorage.removeItem("topic");
+        });
+
+        //=====================================show result==============================
+        document.getElementById("showResult").addEventListener("click", async () => {
+          const prompt = document.querySelector(".prompt").value.trim();
+
+          // loading button
+          const loader = document.getElementById("fullLoader");
+          loader.style.display = "block";
+
+          if (!prompt) {
+            loader.style.display = "none";
+            alert("Please enter a business idea first!");
+            return;
+          }
+
+          try {
+            const token = localStorage.getItem("token");
+            const response = await fetch("/api/ask", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                ...(token && { Authorization: `Bearer ${token}` })
+              },
+              body: JSON.stringify({ user_query: prompt })
+            });
+
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || "Something went wrong");
+
+            // data = result
+            localStorage.setItem("aiResult", JSON.stringify(data));
+            localStorage.setItem("topic", prompt);
+
+            // we are replacing recent card with result
+            const res = await fetch("/result.html");
+            const html = await res.text();
+            document.getElementById("resultContainer").innerHTML = html;
+
+            populateResultFromStorage();
+          } catch (err) {
+            alert("Failed to generate idea.");
+            console.error(err);
+          } finally {
+            loader.style.display = "none";
+          }
+        });
+//===============================populate result from storage=====================
+        function populateResultFromStorage() {
+          const result = JSON.parse(localStorage.getItem("aiResult"));
+          if (!result) {
+            document.body.innerHTML = "<p>No data found. Please go back and generate a prompt first.</p>";
+            return;
+          }
+
+          const today = new Date();
+          const formattedDate = today.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+
+          document.querySelector(".info h3").textContent = result.topic;
+          document.querySelector(".info p").textContent = `Analysis completed on ${formattedDate}`;
+          document.querySelector(".score").innerHTML = `${result.Score}/100<br><small>Idea Score</small>`;
+          document.querySelector(".tags").innerHTML = `
+            <span class="tag"><i class="dot fa-solid fa-circle"></i> ${result.verdict}</span>
+            <span class="tag"><i class="dollar fa-solid fa-dollar-sign"></i> ${result.monthlyEarning}</span>
+          `;
+        }
+      });
+    </script>
+      <!--=========================== loading button ===============================-->
+    <div id="fullLoader" style="display:none;">
+      <div class="loader-backdrop"></div>
+      <div class="loader-spinner">
+        <i class="fa fa-spinner fa-spin fa-3x"></i>
+        <p>Generating your business plan...</p>
+      </div>
+    </div>
   </body>
 </html>
