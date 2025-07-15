@@ -66,12 +66,25 @@ body {
   font-family: "Roboto Mono", monospace;
   margin: 0 6rem 0 0;
   color: #7333af;
+  cursor: pointer;
 }
 .navbar .bell {
   margin: 0 0 0 10rem;
   color: #6b7280;
 }
-
+#logout{
+  border: none;
+  padding: 0.6rem;
+  background-color: #fff;
+  border: 2px solid #7333af;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+#logout:hover{
+  background-color: #9d9c9c;
+}
 /* .div1 { grid-area: 2 / 2 / 3 / 6; }
 .div2 { grid-area: 3 / 2 / 5 / 6; }
 .div3 { grid-area: 5 / 2 / 7 / 6; } */
@@ -164,6 +177,7 @@ body {
   border-radius: 12px;
   font-size: 1rem;
   font-weight: 600;
+  cursor: pointer;
 }
 .form-container .buttons button:first-child {
   border: none;

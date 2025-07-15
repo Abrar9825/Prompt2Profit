@@ -19,8 +19,8 @@
         <h3>Help</h3>
         <h3>New Prompt</h3>
         <h3 id="welcomeUser"></h3>
-        <button onclick="logout()">Logout</button>
-        <i class="bell fa-solid fa-bell"></i>
+        <button onclick="logout()" id="logout">Logout</button>
+        <!-- <i class="bell fa-solid fa-bell"></i> -->
       </div>
 
       <div class="main-container">
@@ -37,9 +37,9 @@
             <i class="edit-icon fa-solid fa-pen-to-square"></i>
             <p>Describe Your Business Idea</p>
           </div>
-            <!-- prompt area -->
+          <!-- prompt area -->
           <textarea
-          id="promptArea"
+            id="promptArea"
             name="prompt"
             class="prompt"
             placeholder="Enter your business idea here... For example: A mobile app that connects local farmers with restaurants to reduce food waste and provide fresh ingredients..."
@@ -65,12 +65,24 @@
             </p>
             <div class="tips-body">
               <div class="row">
-                <p><span class="dot"><i class="fa-solid fa-circle"></i></span> Include your target audience and market</p>
-                <p><span class="dot"><i class="fa-solid fa-circle"></i></span> Mention your unique value proposition</p>
+                <p>
+                  <span class="dot"><i class="fa-solid fa-circle"></i></span>
+                  Include your target audience and market
+                </p>
+                <p>
+                  <span class="dot"><i class="fa-solid fa-circle"></i></span>
+                  Mention your unique value proposition
+                </p>
               </div>
               <div class="row">
-                <p><span class="dot"><i class="fa-solid fa-circle"></i></span> Describe the problem you're solving</p>
-                <p><span class="dot"><i class="fa-solid fa-circle"></i></span> Any existing competition info</p>
+                <p>
+                  <span class="dot"><i class="fa-solid fa-circle"></i></span>
+                  Describe the problem you're solving
+                </p>
+                <p>
+                  <span class="dot"><i class="fa-solid fa-circle"></i></span>
+                  Any existing competition info
+                </p>
               </div>
             </div>
           </div>
@@ -90,20 +102,48 @@
         localStorage.removeItem("user");
         window.location.href = "/index.html";
       }
-//=================================== DOM Content Loaded===============
+      //=================================== DOM Content Loaded===============
       window.addEventListener("DOMContentLoaded", async () => {
-
-         
-         
-    const user = JSON.parse(localStorage.getItem("user"));
-        document.getElementById("welcomeUser").textContent = user?.name ? `Welcome ${user.name}` : "Welcome Guest";
-
-          
-        // here we are fetching topic from localstorage and providing to promptarea as soon as user logs in 
-        const storedTopic=localStorage.getItem("topic");
-          if(storedTopic){
-                   document.getElementById("promptArea").textContent=storedTopic;
+        function handleTokenAndUser(token, userData = null) {
+          localStorage.setItem("token", token);
+          if (userData) {
+            localStorage.setItem("user", JSON.stringify(userData));
+          } else {
+            try {
+              const payload = JSON.parse(atob(token.split(".")[1]));
+              const user = {
+                id: payload.id,
+                email: payload.email,
+                name: payload.name,
+                role: payload.role,
+              };
+              localStorage.setItem("user", JSON.stringify(user));
+            } catch (error) {
+              console.error("Error decoding token:", error);
+            }
           }
+        }
+        const urlParams = new URLSearchParams(window.location.search);
+        const tokenFromUrl = urlParams.get("token");
+        if (tokenFromUrl) {
+          // Handle OAuth token from URL
+          handleTokenAndUser(tokenFromUrl);
+
+          // Clean up URL by removing token parameter
+          const url = new URL(window.location);
+          url.searchParams.delete("token");
+          window.history.replaceState({}, document.title, url.toString());
+        }
+        const user = JSON.parse(localStorage.getItem("user"));
+        document.getElementById("welcomeUser").textContent = user?.name
+          ? `Welcome ${user.name}`
+          : "Welcome Guest";
+
+        // here we are fetching topic from localstorage and providing to promptarea as soon as user logs in
+        const storedTopic = localStorage.getItem("topic");
+        if (storedTopic) {
+          document.getElementById("promptArea").textContent = storedTopic;
+        }
 
         // the below shouldgeneratepdf stores true or false --> true when user is anonymous and tries to generate pdf
         const shouldDownload = localStorage.getItem("shouldGeneratePDF");
@@ -113,75 +153,25 @@
 
           // token fetches user id , aiResult and topic that anonymous user has entered before login
           const token = localStorage.getItem("token");
-            const aiResultRaw = localStorage.getItem("aiResult");
+          const aiResultRaw = localStorage.getItem("aiResult");
           const prompt = localStorage.getItem("topic");
           console.log(`aiResult ${aiResultRaw}`);
           console.log(`topic ${prompt}`);
 
           // if aiResult is empty it wont download pdf and no db entry would be made
-         if (!aiResultRaw) {
-    console.error("No AI result to save");
-    return;
-  }
-  try {
-    // here on click of login save-result is called for db entry after anonymous user generates result -> login -> then db entry ->then download pdf
-    const response = await fetch("/api/save-result", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...(token && { Authorization: `Bearer ${token}` })
-      },
-       body: JSON.stringify(JSON.parse(aiResultRaw))  // send the whole AI result JSON string
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(errorText);
-    }
-
-    
-
-    // Optionally trigger PDF generation/download here after save success
-    document.getElementById("generatePDF").click();
-
-  } catch (err) {
-    console.error("Failed to save AI result:", err);
-  }
-
-        }
-//=========================================generate pdf function =======================
-        document.getElementById("generatePDF").addEventListener("click", async () => {
-          // here we fetch aiResult generated by user 
-          const raw = localStorage.getItem("aiResult");
-          if (!raw) return alert("Please generate the business plan first.");
-
-          const user = JSON.parse(localStorage.getItem("user"));
-
-          // below we check that is user is anonymous or not
-          if (!user || !user.name) {
-            // if anonymous shouldgeneratepdf must be true
-            localStorage.setItem("shouldGeneratePDF", "true");
-         
-            // then redirect to login
-            window.location.href = "/login.html";
+          if (!aiResultRaw) {
+            console.error("No AI result to save");
             return;
           }
-             let result;
           try {
-            result = JSON.parse(raw);
-          } catch (err) {
-            alert("Invalid AI result format.");
-            return;
-          }
-
-          const { roadmap, topic } = result;
-          if (!Array.isArray(roadmap)) return alert("No roadmap found.");
-
-          try {
-            const response = await fetch("/api/generate-pdf", {
+            // here on click of login save-result is called for db entry after anonymous user generates result -> login -> then db entry ->then download pdf
+            const response = await fetch("/api/save-result", {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ roadmap, topic })        //here we are sending roadmap and topic for pdf creation to pdf api
+              headers: {
+                "Content-Type": "application/json",
+                ...(token && { Authorization: `Bearer ${token}` }),
+              },
+              body: JSON.stringify(JSON.parse(aiResultRaw)), // send the whole AI result JSON string
             });
 
             if (!response.ok) {
@@ -189,185 +179,261 @@
               throw new Error(errorText);
             }
 
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "roadmap.pdf";
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            window.URL.revokeObjectURL(url);
-          } catch (error) {
-            alert("PDF generation failed.");
-            console.error(error);
+            // Optionally trigger PDF generation/download here after save success
+            document.getElementById("generatePDF").click();
+          } catch (err) {
+            console.error("Failed to save AI result:", err);
           }
-          // after generating pdf we clear aiResult and topic so that when user clicks on generatepdf then he/she needs to enter prompt first
-          localStorage.removeItem("aiResult"); // clear after storing
-          localStorage.removeItem("topic");
-        });
+        }
+        //=========================================generate pdf function =======================
+        document
+          .getElementById("generatePDF")
+          .addEventListener("click", async () => {
+            // here we fetch aiResult generated by user
+            const raw = localStorage.getItem("aiResult");
+            if (!raw) return alert("Please generate the business plan first.");
+
+            const user = JSON.parse(localStorage.getItem("user"));
+
+            // below we check that is user is anonymous or not
+            if (!user || !user.name) {
+              // if anonymous shouldgeneratepdf must be true
+              localStorage.setItem("shouldGeneratePDF", "true");
+
+              // then redirect to login
+              window.location.href = "/login.html";
+              return;
+            }
+            let result;
+            try {
+              result = JSON.parse(raw);
+            } catch (err) {
+              alert("Invalid AI result format.");
+              return;
+            }
+
+            const { roadmap, topic } = result;
+            if (!Array.isArray(roadmap)) return alert("No roadmap found.");
+
+            try {
+              const response = await fetch("/api/generate-pdf", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ roadmap, topic }), //here we are sending roadmap and topic for pdf creation to pdf api
+              });
+
+              if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText);
+              }
+
+              const blob = await response.blob();
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = "roadmap.pdf";
+              document.body.appendChild(a);
+              a.click();
+              a.remove();
+              window.URL.revokeObjectURL(url);
+            } catch (error) {
+              alert("PDF generation failed.");
+              console.error(error);
+            }
+            // after generating pdf we clear aiResult and topic so that when user clicks on generatepdf then he/she needs to enter prompt first
+            localStorage.removeItem("aiResult"); // clear after storing
+            localStorage.removeItem("topic");
+          });
 
         //=====================================show result==============================
-        document.getElementById("showResult").addEventListener("click", async () => {
-          const prompt = document.querySelector(".prompt").value.trim();
+        document
+          .getElementById("showResult")
+          .addEventListener("click", async () => {
+            const prompt = document.querySelector(".prompt").value.trim();
 
-          // loading button
-          const loader = document.getElementById("fullLoader");
-          loader.style.display = "block";
+            // loading button
+            const loader = document.getElementById("fullLoader");
+            loader.style.display = "block";
 
-          if (!prompt) {
-            loader.style.display = "none";
-            alert("Please enter a business idea first!");
-            return;
-          }
+            if (!prompt) {
+              loader.style.display = "none";
+              alert("Please enter a business idea first!");
+              return;
+            }
 
-          try {
-            const token = localStorage.getItem("token");
-            const response = await fetch("/api/ask", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                ...(token && { Authorization: `Bearer ${token}` })
-              },
-              body: JSON.stringify({ user_query: prompt })
-            });
+            try {
+              const token = localStorage.getItem("token");
+              const response = await fetch("/api/ask", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  ...(token && { Authorization: `Bearer ${token}` }),
+                },
+                body: JSON.stringify({ user_query: prompt }),
+              });
 
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.error || "Something went wrong");
+              const data = await response.json();
+              if (!response.ok)
+                throw new Error(data.error || "Something went wrong");
 
-            // data = result
-            localStorage.setItem("aiResult", JSON.stringify(data));
-            localStorage.setItem("topic", prompt);
+              // data = result
+              localStorage.setItem("aiResult", JSON.stringify(data));
+              localStorage.setItem("topic", prompt);
 
-            // we are replacing recent card with result
-            const res = await fetch("/result.html");
-            const html = await res.text();
-            document.getElementById("resultContainer").innerHTML = html;
+              // we are replacing recent card with result
+              const res = await fetch("/result.html");
+              const html = await res.text();
+              document.getElementById("resultContainer").innerHTML = html;
 
-            populateResultFromStorage();
-          } catch (err) {
-            alert("Failed to generate idea.");
-            console.error(err);
-          } finally {
-            loader.style.display = "none";
-          }
-        });
-//===============================populate result from storage=====================
+              populateResultFromStorage();
+            } catch (err) {
+              alert("Failed to generate idea.");
+              console.error(err);
+            } finally {
+              loader.style.display = "none";
+            }
+          });
+        //===============================populate result from storage=====================
         function populateResultFromStorage() {
           const result = JSON.parse(localStorage.getItem("aiResult"));
           if (!result) {
-            document.body.innerHTML = "<p>No data found. Please go back and generate a prompt first.</p>";
+            document.body.innerHTML =
+              "<p>No data found. Please go back and generate a prompt first.</p>";
             return;
           }
 
-            const today = new Date();
-  const formattedDate = today.toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric"
-  });
+          const today = new Date();
+          const formattedDate = today.toLocaleDateString("en-US", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          });
 
-  // Update header info
-  document.querySelector(".info h3").textContent = result.topic || "No Title";
- document.querySelector(".info p").textContent = `Analysis completed on ${formattedDate}`;
-         
-  document.querySelector(".score").innerHTML = `${result.Score || "?"}/100<br><small>Idea Score</small>`;
+          // Update header info
+          document.querySelector(".info h3").textContent =
+            result.topic || "No Title";
+          document.querySelector(
+            ".info p"
+          ).textContent = `Analysis completed on ${formattedDate}`;
 
-  // Update tags
-  document.querySelector(".tags").innerHTML = `
-    <span class="tag"><i class="dot fa-solid fa-circle"></i> ${result.verdict || "N/A"}</span>
-    <span class="tag"><i class="clock fa-solid fa-clock"></i> ${result.Timeline_to_first_revenue || "N/A"}</span>
-    <span class="tag"><i class="dollar fa-solid fa-dollar-sign"></i> ${result.monthlyEarning || "N/A"}</span>
+          document.querySelector(".score").innerHTML = `${
+            result.Score || "?"
+          }/100<br><small>Idea Score</small>`;
+
+          // Update tags
+          document.querySelector(".tags").innerHTML = `
+    <span class="tag"><i class="dot fa-solid fa-circle"></i> ${
+      result.verdict || "N/A"
+    }</span>
+    <span class="tag"><i class="clock fa-solid fa-clock"></i> ${
+      result.Timeline_to_first_revenue || "N/A"
+    }</span>
+    <span class="tag"><i class="dollar fa-solid fa-dollar-sign"></i> ${
+      result.monthlyEarning || "N/A"
+    }</span>
   `;
 
-  // Worth building section
-  document.querySelector(".div3 .title").innerHTML = `<i class="check fa-solid fa-check"></i> Worth Building`;
-  document.querySelector(".div3 .answer").textContent = result.verdict || "N/A";
-  document.querySelector(".div3 ul").innerHTML = `<li>${result.verdict_reason || "Strong market demand, viable model."}</li>`;
+          // Worth building section
+          document.querySelector(
+            ".div3 .title"
+          ).innerHTML = `<i class="check fa-solid fa-check"></i> Worth Building`;
+          document.querySelector(".div3 .answer").textContent =
+            result.verdict || "N/A";
+          document.querySelector(".div3 ul").innerHTML = `<li>${
+            result.verdict_reason || "Strong market demand, viable model."
+          }</li>`;
 
-  // Target audience
-  const audienceRaw = result.audience || "";
-const audienceList = audienceRaw.split(",").map(item => item.trim());
+          // Target audience
+          const audienceRaw = result.audience || "";
+          const audienceList = audienceRaw
+            .split(",")
+            .map((item) => item.trim());
 
-document.querySelector(".div4 ul").innerHTML = audienceList.map(item => `<li>${item}</li>`).join('');
+          document.querySelector(".div4 ul").innerHTML = audienceList
+            .map((item) => `<li>${item}</li>`)
+            .join("");
 
+          // MVP Features
+          const mvpRaw = result.mvpFeatureList || "";
 
-  // MVP Features
- const mvpRaw = result.mvpFeatureList || "";
+          const mvpFeatures = Array.isArray(mvpRaw)
+            ? mvpRaw
+            : splitOutsideParentheses(mvpRaw);
 
-const mvpFeatures = Array.isArray(mvpRaw)
-  ? mvpRaw
-  : splitOutsideParentheses(mvpRaw);
+          document.querySelector(".div5 ul").innerHTML =
+            mvpFeatures.map((f) => `<li>${f}</li>`).join("") + `<li></li>`;
 
-document.querySelector(".div5 ul").innerHTML =
-  mvpFeatures.map(f => `<li>${f}</li>`).join('') +
-  `<li></li>`;
+          //`<li><a href="#">Read More</a></li>`;
 
-//`<li><a href="#">Read More</a></li>`;
+          function splitOutsideParentheses(str) {
+            const result = [];
+            let current = "";
+            let depth = 0;
 
-function splitOutsideParentheses(str) {
-  const result = [];
-  let current = "";
-  let depth = 0;
+            for (const char of str) {
+              if (char === "(") {
+                depth++;
+                current += char;
+              } else if (char === ")") {
+                depth--;
+                current += char;
+              } else if (char === "," && depth === 0) {
+                result.push(current.trim());
+                current = "";
+              } else {
+                current += char;
+              }
+            }
+            if (current.trim()) result.push(current.trim());
+            return result;
+          }
 
-  for (const char of str) {
-    if (char === "(") {
-      depth++;
-      current += char;
-    } else if (char === ")") {
-      depth--;
-      current += char;
-    } else if (char === "," && depth === 0) {
-      result.push(current.trim());
-      current = "";
-    } else {
-      current += char;
-    }
-  }
-  if (current.trim()) result.push(current.trim());
-  return result;
-}
+          // Earning potential
+          document.querySelector(".div6 p strong").textContent =
+            result.monthlyEarning || "$ -";
+          document.querySelector(".div6 p small").textContent = "";
 
+          // Problem it solves
+          const problem = result.realWorldProblem || "Not specified";
 
-  // Earning potential
-  document.querySelector(".div6 p strong").textContent = result.monthlyEarning || "$ -";
-  document.querySelector(".div6 p small").textContent = "";
+          // If it's a comma-separated string, split and wrap in <li>
+          const bulletPoints = problem
+            .split(",")
+            .map((p) => `<li>${p.trim()}</li>`)
+            .join("");
 
-  // Problem it solves
-const problem = result.realWorldProblem || "Not specified";
-
-// If it's a comma-separated string, split and wrap in <li>
-const bulletPoints = problem.split(",").map(p => `<li>${p.trim()}</li>`).join("");
-
-document.querySelector(".div7 p").innerHTML = `
+          document.querySelector(".div7 p").innerHTML = `
   <small><ul>${bulletPoints}</ul></small>
 `;
 
- // Tech Stack
-const techStr = result.TechStack || "";
+          // Tech Stack
+          const techStr = result.TechStack || "";
 
-function parseTechStack(techString) {
-  const lines = techString.split('\n').map(line => line.trim()).filter(line => line);
-  const techObj = {};
+          function parseTechStack(techString) {
+            const lines = techString
+              .split("\n")
+              .map((line) => line.trim())
+              .filter((line) => line);
+            const techObj = {};
 
-  lines.forEach(line => {
-    // line example: "Frontend : React,"
-    // remove trailing commas & split by ":"
-    const cleanLine = line.replace(/,$/, '');
-    const [key, value] = cleanLine.split(':').map(s => s.trim());
-    if (key && value) {
-      // convert key to lowercase and replace spaces with underscore
-      const formattedKey = key.toLowerCase().replace(/\s+/g, '_');
-      techObj[formattedKey] = value;
-    }
-  });
+            lines.forEach((line) => {
+              // line example: "Frontend : React,"
+              // remove trailing commas & split by ":"
+              const cleanLine = line.replace(/,$/, "");
+              const [key, value] = cleanLine.split(":").map((s) => s.trim());
+              if (key && value) {
+                // convert key to lowercase and replace spaces with underscore
+                const formattedKey = key.toLowerCase().replace(/\s+/g, "_");
+                techObj[formattedKey] = value;
+              }
+            });
 
-  return techObj;
-}
+            return techObj;
+          }
 
-const stack = parseTechStack(techStr);
+          const stack = parseTechStack(techStr);
 
-const techHTML = `
+          const techHTML = `
   <div class="tag-group frontend">
     <strong>Frontend:</strong> <span>${stack.frontend || "N/A"}</span>
   </div>
@@ -388,59 +454,71 @@ const techHTML = `
   </div>
 `;
 
-document.querySelector(".div8 .tech-tags").innerHTML = techHTML;
+          document.querySelector(".div8 .tech-tags").innerHTML = techHTML;
 
-  // USP
-  document.querySelector(".div9 p").textContent = Array.isArray(result.USP) ? result.USP[0] : (result.USP || "N/A");
+          // USP
+          document.querySelector(".div9 p").textContent = Array.isArray(
+            result.USP
+          )
+            ? result.USP[0]
+            : result.USP || "N/A";
 
-  // Monetization model
-function splitOutsideParentheses(text) {
-  const result = [];
-  let current = '';
-  let parenDepth = 0;
+          // Monetization model
+          function splitOutsideParentheses(text) {
+            const result = [];
+            let current = "";
+            let parenDepth = 0;
 
-  for (const char of text) {
-    if (char === '(') parenDepth++;
-    if (char === ')') parenDepth--;
-    if (char === ',' && parenDepth === 0) {
-      result.push(current.trim());
-      current = '';
-    } else {
-      current += char;
-    }
-  }
-  if (current) result.push(current.trim());
-  return result;
-}
+            for (const char of text) {
+              if (char === "(") parenDepth++;
+              if (char === ")") parenDepth--;
+              if (char === "," && parenDepth === 0) {
+                result.push(current.trim());
+                current = "";
+              } else {
+                current += char;
+              }
+            }
+            if (current) result.push(current.trim());
+            return result;
+          }
 
-// Usage example:
-const monetization = result.monetizationStrategy || "N/A";
-const items = splitOutsideParentheses(monetization);
+          // Usage example:
+          const monetization = result.monetizationStrategy || "N/A";
+          const items = splitOutsideParentheses(monetization);
 
-document.querySelector(".div10 ul").innerHTML = items.map(item => `<li>${item}</li>`).join('');
+          document.querySelector(".div10 ul").innerHTML = items
+            .map((item) => `<li>${item}</li>`)
+            .join("");
 
-  // Timeline to revenue
-  if (result.Timeline_to_first_revenue) {
-    document.querySelector(".div11 ul").innerHTML = `
+          // Timeline to revenue
+          if (result.Timeline_to_first_revenue) {
+            document.querySelector(".div11 ul").innerHTML = `
       <li>MVP Development: 3-4 months</li>
       <li>Beta Testing: 1-2 months</li>
       <li>Market Launch: 1 month</li>
       <li><strong>First Revenue: <span class="time">${result.Timeline_to_first_revenue}</span></strong></li>
     `;
-  }
+          }
 
-  // // Roadmap
-  // if (Array.isArray(result.roadmap)) {
-  //   document.querySelector(".div12 p").innerHTML = result.roadmap.map((stage, idx) =>
-  //     `<strong>Stage ${idx + 1}:</strong> ${stage}<br>`).join('');
-  // } else {
-  //   document.querySelector(".div12 p").textContent = "No roadmap available.";
-  // }
+          // // Roadmap
+          // if (Array.isArray(result.roadmap)) {
+          //   document.querySelector(".div12 p").innerHTML = result.roadmap.map((stage, idx) =>
+          //     `<strong>Stage ${idx + 1}:</strong> ${stage}<br>`).join('');
+          // } else {
+          //   document.querySelector(".div12 p").textContent = "No roadmap available.";
+          // }
+        }
+
+        if (
+          document.getElementById("welcomeUser").textContent === "Welcome Guest"
+        ) {
+          document.getElementById("logout").style.display = "none";
         }
       });
     </script>
-      <!--=========================== loading button ===============================-->
-    <div id="fullLoader" style="display:none;">
+    <!--=========================== loading button ===============================-->
+    <div id="fullLoader" style="display: none">
       <div class="loader-backdrop"></div>
       <div class="loader-spinner">
         <i class="fa fa-spinner fa-spin fa-3x"></i>
