@@ -1,133 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prompt2Profit - Sign In</title>
-   <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
-  
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/login.css">
-</head>
-<body>
-  <div class="container">
-    <form class="login-box" id="loginForm">
-      <h1 class="brand">Prompt2Profit</h1>
-      <h2 class="signin-title">Sign In</h2>
-      <p class="subtext">Enter your credentials to access your account</p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prompt2Profit - Sign In</title>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
 
-      <label>Email Address</label>
-      <div class="input-box">
-        <i class="email-icon fa-solid fa-envelope"></i>
-        <input type="email" placeholder="Enter your email" id="email" required>
-      </div>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/login.css" />
+  </head>
+  <body>
+    <div class="container">
+      <form class="login-box" id="loginForm">
+        <h1 class="brand">Prompt2Profit</h1>
+        <h2 class="signin-title">Sign In</h2>
+        <p class="subtext">Enter your credentials to access your account</p>
 
-      <label>Password</label>
-      <div class="input-box">
-        <i class="lock-icon fa-solid fa-lock"></i>
-        <input type="password" placeholder="Enter your password" id="password" required>
-        <i class="fa-regular fa-eye eye-icon"></i>
-      </div>
+        <label>Email Address</label>
+        <div class="input-box">
+          <i class="email-icon fa-solid fa-envelope"></i>
+          <input
+            type="email"
+            placeholder="Enter your email"
+            id="email"
+            required
+          />
+        </div>
 
-      <div class="options">
-        <label><input type="checkbox" name="remember"> Remember me</label>
-        <a href="#">Forgot password?</a>
-      </div>
-       <!-- submit button -->
-      <button type="submit" class="signin-btn">Sign In <i class="fa-solid fa-arrow-right"></i></button>
+        <label>Password</label>
+        <div class="input-box">
+          <i class="lock-icon fa-solid fa-lock"></i>
+          <input
+            type="password"
+            placeholder="Enter your password"
+            id="password"
+            required
+          />
+          <i class="fa-regular fa-eye eye-icon"></i>
+        </div>
 
-      <div class="divider"><span>or continue with</span></div>
+        <div class="options">
+          <label><input type="checkbox" name="remember" /> Remember me</label>
+          <a href="#">Forgot password?</a>
+        </div>
+        <!-- submit button -->
+        <button type="submit" class="signin-btn">
+          Sign In <i class="fa-solid fa-arrow-right"></i>
+        </button>
 
-      <div class="social-buttons">
-        <button class="social google" onclick="document.location='/google'"><i class="fa-brands fa-google" style="color: red;"></i> Google</button>
-        <button class="social github" onclick="document.location='/github'"><i class="fa-brands fa-github"></i> GitHub</button>
-      </div>
+        <div class="divider"><span>or continue with</span></div>
 
-      <p class="signup-text">Don't have an account? <a href="#">Sign up</a></p>
-    </form>
-  </div>
-  <script>
+        <div class="social-buttons">
+          <button class="social google" onclick="document.location='/google'">
+            <i class="fa-brands fa-google" style="color: red"></i> Google
+          </button>
+          <button class="social github" onclick="document.location='/github'">
+            <i class="fa-brands fa-github"></i> GitHub
+          </button>
+        </div>
+
+        <p class="signup-text">
+          Don't have an account? <a href="signup.html">Sign up</a>
+        </p>
+      </form>
+    </div>
+    <script>
       // login logic to store email password data into json format so that UserController can fetch it in form of req.body
-              document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+      document.getElementById("loginForm").addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
 
-            const response = await fetch('/user/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                localStorage.setItem('token', data.token);
-            
-                   const decoded = jwt_decode(data.token);
-      localStorage.setItem('user', JSON.stringify(decoded));
-        
-alert(`Login successful, Welcome ${decoded.name}`);
-// Check if aiResult exists before redirecting
-    const resultToStore = localStorage.getItem('aiResult');
- if (resultToStore) {
-        // Save it to backend
-        fetch("/api/ask", {
+          const response = await fetch("/user/login", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${data.token}`
-            },
-            body: resultToStore
-        })
-        .then(res => res.json())
-        .then(res => {
-            // Save roadmap to window so we can generate PDF
-            window.generatedRoadmap = res.roadmap;
-            window.topic = res.topic;
-            
-            // Save again to localStorage (for safety)
-            localStorage.setItem("latestRoadmap", JSON.stringify(res.roadmap));
-          //  localStorage.removeItem("aiResult"); // clear after storing
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+          });
 
-            // Redirect to main page for PDF generation
-            window.location.href = "/index.html?download=1";
-        })
-        .catch(err => {
-            alert("Failed to save result after login");
-            console.error(err);
-            window.location.href = "/index.html";
-        });
-    }
-    else{
-                window.location.href = '/index.html'; }
-                // window.generatedRoadmap ! =null then download pdf
-              
+          const data = await response.json();
+
+          if (response.ok) {
+            localStorage.setItem("token", data.token);
+
+            const decoded = jwt_decode(data.token);
+            localStorage.setItem("user", JSON.stringify(decoded));
+
+            alert(`Login successful, Welcome ${decoded.name}`);
+            // Check if aiResult exists before redirecting
+            const resultToStore = localStorage.getItem("aiResult");
+            if (resultToStore) {
+              // Save it to backend
+              fetch("/api/ask", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${data.token}`,
+                },
+                body: resultToStore,
+              })
+                .then((res) => res.json())
+                .then((res) => {
+                  // Save roadmap to window so we can generate PDF
+                  window.generatedRoadmap = res.roadmap;
+                  window.topic = res.topic;
+
+                  // Save again to localStorage (for safety)
+                  localStorage.setItem(
+                    "latestRoadmap",
+                    JSON.stringify(res.roadmap)
+                  );
+                  //  localStorage.removeItem("aiResult"); // clear after storing
+
+                  // Redirect to main page for PDF generation
+                  window.location.href = "/index.html?download=1";
+                })
+                .catch((err) => {
+                  alert("Failed to save result after login");
+                  console.error(err);
+                  window.location.href = "/index.html";
+                });
             } else {
-                alert(data.message || 'Login failed');
+              window.location.href = "/index.html";
             }
+            // window.generatedRoadmap ! =null then download pdf
+          } else {
+            alert(data.message || "Login failed");
+          }
         });
 
+      // Get all eye icons
+      const toggleIcons = document.querySelectorAll(".eye-icon");
 
-  // Get all eye icons
-  const toggleIcons = document.querySelectorAll('.eye-icon');
-
-  toggleIcons.forEach(icon => {
-    icon.addEventListener('click', () => {
-      const input = icon.previousElementSibling; // the input just before the icon
-      if (input.type === 'password') {
-        input.type = 'text';
-        icon.classList.remove('fa-eye');
-        icon.classList.add('fa-eye-slash');
-      } else {
-        input.type = 'password';
-        icon.classList.remove('fa-eye-slash');
-        icon.classList.add('fa-eye');
-      }
-    });
-  });
-</script>
-
-</body>
+      toggleIcons.forEach((icon) => {
+        icon.addEventListener("click", () => {
+          const input = icon.previousElementSibling; // the input just before the icon
+          if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
+          } else {
+            input.type = "password";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+          }
+        });
+      });
+    </script>
+  </body>
 </html>
