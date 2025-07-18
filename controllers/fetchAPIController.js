@@ -27,47 +27,58 @@ You're a startup business analyst. Evaluate the following startup idea:
 Return the result in JSON format:
 
 {
- "topic":"<topic>",
+  "topic": "<topic>",
   "verdict": "Treasure" or "Trash",
- 
 
   // The keys below appear ONLY when "verdict" is "Treasure".
-  "audience":"<audience age group and category>",
-  "monthlyEarning":"<in terms of rupees>",
+  "audience": "<audience age group and category>",
+  "monthlyEarning": "<in INR, e.g. ₹5,00,000 monthly> ",
+
+  // New field explaining why it's treasure
+  "whyTreasure": "<reason why this idea is a treasure, e.g. strong market demand, innovative solution, etc>",
+
   "realWorldProblem": "<what specific pain does it solve?>",
-  "USP":   ["<primary usp>"],
+  "USP": ["<primary usp>"],
   "monetizationStrategy": "<how the business will make money>",
-  "mvpFeatureList":   ["<feature 1>", "<feature 2>", "<feature 3>", "<feature 4>", "<feature 5>", "<feature 6>"],
-  "TechStack":["<frontend>","<backend>","<mobileApp>","<database>","<ai>","<auth>"],
-  "Timeline_to_first_revenue":"<how much months it will take>",
-  "Score":"<score out of 100>",
+  "mvpFeatureList": ["<feature 1>", "<feature 2>", "<feature 3>", "<feature 4>", "<feature 5>", "<feature 6>"],
+  "TechStack": ["<frontend>", "<backend>", "<mobileApp>", "<database>", "<ai>", "<auth>"],
+
+  // More detailed timeline with month-wise phases
+  "Timeline_to_first_revenue": [
+  { "phase": "MVP Development", "duration": "3-4 months" },
+  { "phase": "Testing and Validation", "duration": "1-2 months" },
+  { "phase": "Marketing and Launch", "duration": "1 month" }
+],
+
+  "Score": "<score out of 100>",
   "roadmap": [
- {
-    "week": "week 1",
-    "goal": "<**Highly detailed overall objective for this week, explained in simple, non-technical terms.** Describe the specific, measurable milestone that will be achieved by the end of this week, focusing on its impact and benefit for the business or user. *Example: By the end of Week 1, we will have validated the core problem with 20 potential users and gathered their initial feedback on our proposed solution, ensuring we're building something people actually need.*>",
-    "steps": [
-            "<Step 1: Extremely detailed action item.",
-            "<Step 2: Extremely detailed action item.",
-            "<Step 3: Extremely detailed action item.",
-            "<Step 4 (Optional)>"
-        ],
-    "platforms": ["<Web>", "<Mobile>", "<AI>", "<Other>"]
- },
- {
-    "week": "week 2",
-    "goal": "<**Highly detailed overall objective for this week, explained in simple, non-technical terms.** Describe the specific, measurable milestone that will be achieved by the end of this week, focusing on its impact and benefit for the business or user.>",
-    "steps": [
-            "<Step 1: Extremely detailed action item.",
-            "<Step 2: Extremely detailed action item.",
-            "<Step 3: Extremely detailed action item.",
-            "<Step 4 (Optional)>"
-        ],
-    "platforms": ["<Web>", "<Mobile>"]
-  }
-  // Add up to 8 weeks if needed
-]
+    {
+      "week": "week 1",
+      "goal": "<Highly detailed overall objective for this week, explained in simple, non-technical terms. Describe the specific, measurable milestone that will be achieved by the end of this week, focusing on its impact and benefit for the business or user. Example: By the end of Week 1, we will have validated the core problem with 20 potential users and gathered their initial feedback on our proposed solution, ensuring we're building something people actually need.>",
+      "steps": [
+        "<Step 1: Extremely detailed action item.>",
+        "<Step 2: Extremely detailed action item.>",
+        "<Step 3: Extremely detailed action item.>",
+        "<Step 4 (Optional)>"
+      ],
+      "platforms": ["<Web>", "<Mobile>", "<AI>", "<Other>"]
+    },
+    {
+      "week": "week 2",
+      "goal": "<Highly detailed overall objective for this week, explained in simple, non-technical terms. Describe the specific, measurable milestone that will be achieved by the end of this week, focusing on its impact and benefit for the business or user.>",
+      "steps": [
+        "<Step 1: Extremely detailed action item.>",
+        "<Step 2: Extremely detailed action item.>",
+        "<Step 3: Extremely detailed action item.>",
+        "<Step 4 (Optional)>"
+      ],
+      "platforms": ["<Web>", "<Mobile>"]
+    }
+    // Add up to 8 weeks if needed
+  ]
 }
 `;
+
 
     try {
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
@@ -80,9 +91,10 @@ Return the result in JSON format:
        // below fetches the result in long one line string
        const rawText = result.response.text();
 
+
  // below remove json
    const cleaned = rawText.replace(/```(json)?/g, '').trim();
-
+console.log("Raw AI output:", cleaned);
 const jsonResponse = JSON.parse(cleaned);
 
     const verdict=jsonResponse.verdict;
@@ -91,7 +103,7 @@ if(verdict=="Trash"){
   res.json({verdict:verdict});
 }
 else{
- 
+  const whyTreasure=jsonResponse.whyTreasure;
   const topic=jsonResponse.topic;
   const Score=jsonResponse.Score;
    const audience=jsonResponse.audience;
@@ -116,6 +128,15 @@ else{
     const USP=jsonResponse.USP[0];
     const monetizationStrategy=jsonResponse.monetizationStrategy;
    const Timeline_to_first_revenue=jsonResponse.Timeline_to_first_revenue;
+   const mvpPhase = Timeline_to_first_revenue[0];       // { phase: "MVP Development", duration: "3-4 months" }
+const testingPhase = Timeline_to_first_revenue[1];   // { phase: "Testing and Validation", duration: "1-2 months" }
+const marketingPhase = Timeline_to_first_revenue[2]; // { phase: "Marketing and Launch", duration: "1 month" }
+
+const timelineText = `
+  ${mvpPhase.phase} : ${mvpPhase.duration},
+  ${testingPhase.phase} : ${testingPhase.duration},
+  ${marketingPhase.phase} : ${marketingPhase.duration},
+`;
 
     // checks if user is logged in
     // here if we would require to only work with logged in users then we would provide req.user.id here and would pass verifytoken variable in middleware  
@@ -133,10 +154,12 @@ else{
  const newPrompt=await promptModel.create({
                 prompt_desc:topic,
                   score:Score,
+                  whyTreasure:whyTreasure,
                   worthbuilding:verdict,
                   target_audience:audience,
                   mvp_features:mvpFeatureList,
                   earning_potential:monthlyEarning,
+                  timeline_to_first_revenue:timelineText,
                   tech_stack:{
                       frontend:frontend,
                       mobile_app:mobileApp,
@@ -147,7 +170,7 @@ else{
                   },
                   usp:USP,
                   problem_it_solves:realWorldProblem,
-                  timeline_to_first_revenue:Timeline_to_first_revenue,
+                  
                   monetization_model:monetizationStrategy,
                   roadmap:roadmap,
                 user_id: decoded.id         // this fetches user token _id which is stored in id:_id
@@ -158,8 +181,8 @@ else{
 
   res.json({ topic:topic,verdict: verdict, audience:audience,monthlyEarning:monthlyEarning
       , realWorldProblem:realWorldProblem,USP:USP,monetizationStrategy:monetizationStrategy
-      ,mvpFeatureList:mvpFeatureList,TechStack:tech,Timeline_to_first_revenue:Timeline_to_first_revenue,
-      Score:Score,roadmap:roadmap
+      ,mvpFeatureList:mvpFeatureList,TechStack:tech,Timeline_to_first_revenue:timelineText,
+      Score:Score,roadmap:roadmap,whyTreasure:whyTreasure
     });
 } 
     
