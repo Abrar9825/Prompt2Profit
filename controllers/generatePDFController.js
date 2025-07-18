@@ -5,7 +5,6 @@ const path = require('path');
 const promptModel = require('../models/PromptModel');
 const jwt = require('jsonwebtoken');
 
-//generateLastPromptPdf-----------> not using this function
 const generateLastPromptPdf = async (req, res) => {
   const id = parseInt(req.params.id);
   const lastPromptData = await promptModel.findOne().sort({ id: -1 }).limit(1).select('roadmap');
@@ -155,7 +154,9 @@ const saveResult = async (req, res) => {
 
 
 //================================= generatePDF ===========================
+
 // generate pdf is called when user is already logged in 
+
 const generatePDF = async (req, res) => {
   const roadmapArray = req.body.roadmap || [];
 
@@ -171,7 +172,7 @@ const generatePDF = async (req, res) => {
   const textFont = await pdfDoc.embedFont(normalFontBytes);
   const emojiFont = await pdfDoc.embedFont(emojiFontBytes);
 
-  const page = pdfDoc.addPage([595.28, 2000]);
+  let page = pdfDoc.addPage([595.28, 2000]);
   let y = 1900;
   const lineGap = 18;
   const leftMargin = 50;
@@ -180,12 +181,12 @@ const generatePDF = async (req, res) => {
 
   const addPageIfNeeded = () => {
     if (y < bottomMargin) {
-      pdfDoc.addPage([595.28, 2000]);
+      page = pdfDoc.addPage([595.28, 2000]);
       y = 1900;
     }
   };
 
-  const drawLine = (text, indentX = 0, fontSize = 12, useEmoji = false) => {
+  const drawLine = (text, indentX = 0, fontSize = 12, useEmoji = false, color = rgb(0, 0, 0)) => {
     const currentFont = useEmoji ? emojiFont : textFont;
     const maxWidth = 480;
     const words = text.split(' ');
@@ -201,7 +202,7 @@ const generatePDF = async (req, res) => {
           y,
           size: fontSize,
           font: currentFont,
-          color: rgb(0, 0, 0),
+          color,
         });
         y -= lineGap;
         line = word + ' ';
@@ -217,39 +218,44 @@ const generatePDF = async (req, res) => {
         y,
         size: fontSize,
         font: currentFont,
-        color: rgb(0, 0, 0),
+        color,
       });
       y -= lineGap;
     }
   };
 
-  // ✨ Title
-  drawLine(`📊 Roadmap Report : ${req.body.topic}`, 0, 16, true);
-  y -= 15;
+  // ✨ Title Section
+  drawLine(`📊 Roadmap Report: ${req.body.topic}`, 0, 18, true, rgb(0.2, 0.4, 0.8));
+  y -= 20;
 
   roadmapArray.forEach((weekObj, idx) => {
-    drawLine(`📍 ${weekObj.week}`, 0, 14, true);
-    drawLine(`🛠 Goal: ${weekObj.goal}`, indent);
-    //drawLine(`⏱ Duration: ${phaseObj.duration}`, indent);
+    // 📍 Week Title
+    drawLine(`📍 ${weekObj.week}`, 0, 14, true, rgb(1, 0.5, 0));
 
+    // 🛠 Goal
+    drawLine(`🛠 Goal: ${weekObj.goal}`, indent, 12, false, rgb(0.1, 0.5, 0.1));
+
+    // 🗂 Steps
     if (Array.isArray(weekObj.steps) && weekObj.steps.length > 0) {
-      drawLine(`🗂 Steps:`, indent);
+      drawLine(`🗂 Steps:`, indent, 12, false, rgb(0.3, 0.3, 0.3));
       weekObj.steps.forEach(step => {
-        drawLine(`• ${step}`, indent * 2);
+        drawLine(`• ${step}`, indent * 2, 11, false, rgb(0.4, 0.4, 0.4));
       });
     }
 
+    // 💻 Platforms
     if (Array.isArray(weekObj.platforms) && weekObj.platforms.length > 0) {
-      drawLine(`💻 Platforms: ${weekObj.platforms.join(', ')}`, indent);
+      drawLine(`💻 Platforms: ${weekObj.platforms.join(', ')}`, indent, 12, false, rgb(0, 0.6, 0.6));
     }
 
-    y -= 10; // Extra spacing between phases
+    y -= 20; // Extra spacing between weeks
   });
 
   const pdfBytes = await pdfDoc.save();
   res.setHeader('Content-Type', 'application/pdf');
-  res.setHeader('Content-Disposition', 'attachment; filename=report.pdf');
+  res.setHeader('Content-Disposition', 'attachment; filename=roadmap.pdf');
   res.send(Buffer.from(pdfBytes));
 };
+
 
 module.exports = { generatePDF,generateLastPromptPdf,saveResult };

@@ -36,7 +36,7 @@ app.use(express.json());
 app.use("/api",fetchAPIRoutes);
 app.use("/api",generatePDFRoutes);
 app.use("/user",UserRoute);
-
+app.use("/", UserRoute)
 
 const PORT=process.env.PORT || 3000;
 

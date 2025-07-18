@@ -42,16 +42,26 @@ Return the result in JSON format:
   "Timeline_to_first_revenue":"<how much months it will take>",
   "Score":"<score out of 100>",
   "roadmap": [
-  {
+ {
     "week": "week 1",
-    "goal": "<goal for phase 1>",
-    "steps": ["<step 1 in detail>", "<step 2 in detail>", "<step 3 in detail>"],
+    "goal": "<**Highly detailed overall objective for this week, explained in simple, non-technical terms.** Describe the specific, measurable milestone that will be achieved by the end of this week, focusing on its impact and benefit for the business or user. *Example: By the end of Week 1, we will have validated the core problem with 20 potential users and gathered their initial feedback on our proposed solution, ensuring we're building something people actually need.*>",
+    "steps": [
+            "<Step 1: Extremely detailed action item.",
+            "<Step 2: Extremely detailed action item.",
+            "<Step 3: Extremely detailed action item.",
+            "<Step 4 (Optional)>"
+        ],
     "platforms": ["<Web>", "<Mobile>", "<AI>", "<Other>"]
-  },
-  {
+ },
+ {
     "week": "week 2",
-    "goal": "<goal for phase 2>",
-    "steps": ["<step 1 in detail>", "<step 2 in detail>", "<step 3 in detail>"],
+    "goal": "<**Highly detailed overall objective for this week, explained in simple, non-technical terms.** Describe the specific, measurable milestone that will be achieved by the end of this week, focusing on its impact and benefit for the business or user.>",
+    "steps": [
+            "<Step 1: Extremely detailed action item.",
+            "<Step 2: Extremely detailed action item.",
+            "<Step 3: Extremely detailed action item.",
+            "<Step 4 (Optional)>"
+        ],
     "platforms": ["<Web>", "<Mobile>"]
   }
   // Add up to 8 weeks if needed
