@@ -40,7 +40,7 @@ Return the result in JSON format:
   "realWorldProblem": "<what specific pain does it solve?>",
   "USP": ["<primary usp>"],
   "monetizationStrategy": "<how the business will make money> note: for each idea seperate them with a dot",
-  "mvpFeatureList": ["<feature 1>", "<feature 2>", "<feature 3>", "<feature 4>", "<feature 5>", "<feature 6>"],
+  "mvpFeatureList": ["<feature 1>", "<feature 2>", "<feature 3>", "<feature 4>", "<feature 5>", "<feature 6>"]note: Use commas only for sepearating each item so that i can seperate it by using split(","),
   "TechStack": ["<frontend>", "<backend>", "<mobileApp>", "<database>", "<ai>", "<auth>"],
 
   // More detailed timeline with month-wise phases
