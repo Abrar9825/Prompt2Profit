@@ -32,14 +32,14 @@ Return the result in JSON format:
 
   // The keys below appear ONLY when "verdict" is "Treasure".
   "audience": "<audience age group and category>",
-  "monthlyEarning": "<in INR, e.g. ₹5,00,000 monthly> ",
+  "monthlyEarning": "<in INR, e.g. ₹5,00,000 monthly> note: give in detail, structure: first give the overall amount then a dot and then the detail",
 
   // New field explaining why it's treasure
   "whyTreasure": "<reason why this idea is a treasure, e.g. strong market demand, innovative solution, etc>",
 
   "realWorldProblem": "<what specific pain does it solve?>",
   "USP": ["<primary usp>"],
-  "monetizationStrategy": "<how the business will make money>",
+  "monetizationStrategy": "<how the business will make money> note: for each idea seperate them with a dot",
   "mvpFeatureList": ["<feature 1>", "<feature 2>", "<feature 3>", "<feature 4>", "<feature 5>", "<feature 6>"],
   "TechStack": ["<frontend>", "<backend>", "<mobileApp>", "<database>", "<ai>", "<auth>"],
 
@@ -75,6 +75,7 @@ Return the result in JSON format:
       "platforms": ["<Web>", "<Mobile>"]
     }
     // Add up to 8 weeks if needed
+    note: do not give this types of lines at the end " // Add more weeks as needed for detailed development, testing, and launch phases"
   ]
 }
 `;
@@ -93,7 +94,11 @@ Return the result in JSON format:
 
 
  // below remove json
-   const cleaned = rawText.replace(/```(json)?/g, '').trim();
+   let cleaned = rawText
+            .replace(/```(json)?/g, '')  
+            .replace(/[\r\n]+/g, ' ')    
+            .replace(/\s+/g, ' ')         
+            .trim();
 console.log("Raw AI output:", cleaned);
 const jsonResponse = JSON.parse(cleaned);
 
@@ -128,16 +133,18 @@ else{
     const USP=jsonResponse.USP[0];
     const monetizationStrategy=jsonResponse.monetizationStrategy;
    const Timeline_to_first_revenue=jsonResponse.Timeline_to_first_revenue;
-   const mvpPhase = Timeline_to_first_revenue[0];       // { phase: "MVP Development", duration: "3-4 months" }
-const testingPhase = Timeline_to_first_revenue[1];   // { phase: "Testing and Validation", duration: "1-2 months" }
-const marketingPhase = Timeline_to_first_revenue[2]; // { phase: "Marketing and Launch", duration: "1 month" }
+//    const mvpPhase = Timeline_to_first_revenue[0];       // { phase: "MVP Development", duration: "3-4 months" }
+// const testingPhase = Timeline_to_first_revenue[1];   // { phase: "Testing and Validation", duration: "1-2 months" }
+// const marketingPhase = Timeline_to_first_revenue[2]; // { phase: "Marketing and Launch", duration: "1 month" }
 
-const timelineText = `
-  ${mvpPhase.phase} : ${mvpPhase.duration},
-  ${testingPhase.phase} : ${testingPhase.duration},
-  ${marketingPhase.phase} : ${marketingPhase.duration},
-`;
+// const timelineText = `
+//   ${mvpPhase.phase} : ${mvpPhase.duration},
+//   ${testingPhase.phase} : ${testingPhase.duration},
+//   ${marketingPhase.phase} : ${marketingPhase.duration},
+// `;
 
+const timelineData = Timeline_to_first_revenue;
+console.log(timelineData);
     // checks if user is logged in
     // here if we would require to only work with logged in users then we would provide req.user.id here and would pass verifytoken variable in middleware  
     if (req.headers.authorization) {
@@ -159,7 +166,8 @@ const timelineText = `
                   target_audience:audience,
                   mvp_features:mvpFeatureList,
                   earning_potential:monthlyEarning,
-                  timeline_to_first_revenue:timelineText,
+                  // timeline_to_first_revenue:timelineText,
+                  Timeline_to_first_revenue: timelineData,
                   tech_stack:{
                       frontend:frontend,
                       mobile_app:mobileApp,
@@ -181,7 +189,7 @@ const timelineText = `
 
   res.json({ topic:topic,verdict: verdict, audience:audience,monthlyEarning:monthlyEarning
       , realWorldProblem:realWorldProblem,USP:USP,monetizationStrategy:monetizationStrategy
-      ,mvpFeatureList:mvpFeatureList,TechStack:tech,Timeline_to_first_revenue:timelineText,
+      ,mvpFeatureList:mvpFeatureList,TechStack:tech,Timeline_to_first_revenue:timelineData,
       Score:Score,roadmap:roadmap,whyTreasure:whyTreasure
     });
 } 

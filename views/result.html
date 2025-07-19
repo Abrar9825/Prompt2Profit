@@ -32,10 +32,6 @@
               ><i class="dot fa-solid fa-circle"></i> Worth Building</span
             >
             <span class="tag"
-              ><i class="clock fa-solid fa-clock"></i> 6–12 months to
-              revenue</span
-            >
-            <span class="tag"
               ><i class="dollar fa-solid fa-dollar-sign"></i> High earning
               potential</span
             >
@@ -48,12 +44,8 @@
           <i class="check fa-solid fa-check"></i> Worth Building
         </div>
         <p>
-          <span class="answer">Yes</span><br /><small
-            ><ul>
-              Strong market demand clear differentiation viable business model
-              make this a promising venture
-            </ul></small
-          >
+          <span class="answer">Yes</span><br />
+          <small></small>
         </p>
       </div>
       <div class="div4">
@@ -80,9 +72,7 @@
         <div class="title">
           <i class="line fa-solid fa-chart-line"></i> Earning Potential
         </div>
-        <p>
-          <strong>$2.5M+</strong><br /><small>$</small>
-        </p>
+        <p><strong>$2.5M+</strong><br /><small>$</small></p>
       </div>
       <div class="div7">
         <div class="title">
@@ -115,32 +105,50 @@
         </div>
       </div>
       <div class="div9">
-        <div class="title"><i class="star fa-solid fa-star"></i>Unique Selling Proposition</div>
+        <div class="title">
+          <i class="star fa-solid fa-star"></i>Unique Selling Proposition
+        </div>
         <p>
           "AI-powered personalization that learns your taste preferences and
           suggests the perfect meal every time, reducing order time by 70%."
         </p>
       </div>
       <div class="div10">
-        <div class="title"><i class="coins fa-solid fa-coins"></i> Monetization Model</div>
+        <div class="title">
+          <i class="coins fa-solid fa-coins"></i> Monetization Model
+        </div>
         <ul>
-          <li><strong>15%</strong> <br> Commission per order</li>
-          <li><strong>$4.99</strong> <br> Premium AI features</li>
-          <li><strong>$299</strong> <br>Restaurant partnerships</li>
-          <li><strong>$2.99</strong> <br>Delivery fee</li>
+          <li>
+            <strong>15%</strong> <br />
+            Commission per order
+          </li>
+          <li>
+            <strong>$4.99</strong> <br />
+            Premium AI features
+          </li>
+          <li><strong>$299</strong> <br />Restaurant partnerships</li>
+          <li><strong>$2.99</strong> <br />Delivery fee</li>
         </ul>
       </div>
       <div class="div11">
-        <div class="title"><i class="calender fa-solid fa-calendar"></i> Timeline to Revenue</div>
+        <div class="title">
+          <i class="calender fa-solid fa-calendar"></i> Timeline to Revenue
+        </div>
         <ul>
           <li>MVP Development: 3-4 months</li>
           <li>Beta Testing: 1-2 months</li>
           <li>Market Launch: 1 month</li>
-          <li><strong>First Revenue: <span class="time">6 months</span> </strong></li>
+          <li>
+            <strong>First Revenue: <span class="time">6 months</span> </strong>
+          </li>
         </ul>
       </div>
       <div class="div12">
-        <div class="title"><i class="locate fa-solid fa-map-location-dot"></i> Roadmap – Build From Idea to Launch</div>
+        <div class="title">
+          <i class="locate fa-solid fa-map-location-dot"></i> Roadmap – Build
+          From Idea to Launch<br>
+          --For Roadmap Generate Pdf--
+        </div>
         <p></p>
       </div>
       <div class="div13">
@@ -150,8 +158,174 @@
       </div>
     </div>
     <script>
-      
-</script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const result = JSON.parse(localStorage.getItem("aiResult"));
+        if (!result) {
+          window.location.href = "/index.html";
+          return;
+        }
 
+        const today = new Date();
+        const formattedDate = today.toLocaleDateString("en-US", {
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+        });
+
+        // Update header info
+        document.querySelector(".info h3").textContent =
+          result.topic || "No Title";
+        document.querySelector(
+          ".info p"
+        ).textContent = `Analysis completed on ${formattedDate}`;
+        document.querySelector(".score").innerHTML = `${
+          result.Score || "?"
+        }/100<br><small>Idea Score</small>`;
+
+        // Update tags
+        const earning = result.monthlyEarning || "N/A";
+        const earningItems = earning
+          .split(".")
+          .map((item) => item.trim())
+          .filter((item) => item.length > 0);
+        
+        document.querySelector(".tags").innerHTML = `
+      <span class="tag"><i class="dot fa-solid fa-circle"></i> ${
+        result.verdict || "N/A"
+      }</span>
+      <span class="tag"><i class="dollar fa-solid fa-dollar-sign"></i> ${earningItems[0] || "N/A"
+    }</span>
+      
+    `;
+
+        // Worth building section
+        document.querySelector(
+          ".div3 .title"
+        ).innerHTML = `<i class="check fa-solid fa-check"></i> Worth Building`;
+        document.querySelector(".div3 p").innerHTML = `
+      <span class="answer">${
+        result.verdict === "Treasure" ? "Yes" : "No"
+      }</span><br>
+      <small>${result.whyTreasure || "N/A"}</small>
+    `;
+
+        // Target audience
+        const audienceRaw = result.audience || "";
+        const audienceList = audienceRaw
+          .split(",")
+          .map((item) => `<li>${item.trim()}</li>`)
+          .join("");
+        document.querySelector(".div4 ul").innerHTML = audienceList;
+
+        // MVP Features
+        const mvpFeatures = Array.isArray(result.mvpFeatureList)
+          ? result.mvpFeatureList
+          : result.mvpFeatureList?.split(",").map((item) => item.trim());
+
+        document.querySelector(".div5 ul").innerHTML = mvpFeatures
+          ? mvpFeatures.map((feature) => `<li>${feature}</li>`).join("")
+          : "<li>No features specified</li>";
+
+        
+        // Earning potential
+        
+        document.querySelector(".div6 p").innerHTML = earningItems.map((item)=> `<strong>${item}</strong>`).join(" ");
+      
+
+
+        // Problem it solves
+        const problem = result.realWorldProblem || "Not specified";
+        document.querySelector(".div7 p").innerHTML = `
+      <small>${problem}</small>
+    `;
+
+        // Tech Stack
+        const techStr = result.TechStack || "";
+
+        function parseTechStack(techString) {
+          const lines = techString
+            .split("\n")
+            .map((line) => line.trim())
+            .filter((line) => line);
+          const techObj = {};
+
+          lines.forEach((line) => {
+            // line example: "Frontend : React,"
+            // remove trailing commas & split by ":"
+            const cleanLine = line.replace(/,$/, "");
+            const [key, value] = cleanLine.split(":").map((s) => s.trim());
+            if (key && value) {
+              // convert key to lowercase and replace spaces with underscore
+              const formattedKey = key.toLowerCase().replace(/\s+/g, "_");
+              techObj[formattedKey] = value;
+            }
+          });
+
+          return techObj;
+        }
+
+        const stack = parseTechStack(techStr);
+
+        const techHTML = `
+            <div class="tag-group frontend">
+              <strong>Frontend:</strong> <span>${stack.frontend || "N/A"}</span>
+            </div>
+            <div class="tag-group backend">
+              <strong>Backend:</strong> <span>${stack.backend || "N/A"}</span>
+            </div>
+            <div class="tag-group mobile">
+              <strong>Mobile App:</strong> <span>${
+                stack.mobile_app || "N/A"
+              }</span>
+            </div>
+            <div class="tag-group database">
+              <strong>Database:</strong> <span>${stack.database || "N/A"}</span>
+            </div>
+            <div class="tag-group ai">
+              <strong>AI:</strong> <span>${stack.ai || "N/A"}</span>
+            </div>
+            <div class="tag-group auth">
+              <strong>Auth:</strong> <span>${stack.auth || "N/A"}</span>
+            </div>
+          `;
+
+        document.querySelector(".div8 .tech-tags").innerHTML = techHTML;
+
+        // USP
+        document.querySelector(".div9 p").textContent = Array.isArray(
+          result.USP
+        )
+          ? result.USP[0]
+          : result.USP || "N/A";
+
+        // Monetization model
+        const monetization = result.monetizationStrategy || "N/A";
+        // Split by all periods
+        const monetizationItems = monetization
+          .split(".")
+          .map((item) => item.trim())
+          .filter((item) => item.length > 0);
+
+        document.querySelector(".div10 ul").innerHTML = monetizationItems
+          .map((item) => `<li><strong>${item}</strong></li>`)
+          .join("");
+
+        // Timeline to revenue
+        if (result.Timeline_to_first_revenue) {
+          document.querySelector(".div11 ul").innerHTML = `
+  <li>${result.Timeline_to_first_revenue[0]?.phase || "Development"}: ${
+            result.Timeline_to_first_revenue[0]?.duration || "N/A"
+          }</li>
+  <li>${result.Timeline_to_first_revenue[1]?.phase || "Testing"}: ${
+            result.Timeline_to_first_revenue[1]?.duration || "N/A"
+          }</li>
+  <li>${result.Timeline_to_first_revenue[2]?.phase || "Launch"}: ${
+            result.Timeline_to_first_revenue[2]?.duration || "N/A"
+          }</li>
+`;
+        }
+
+      });
+    </script>
   </body>
 </html>
