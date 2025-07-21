@@ -326,6 +326,34 @@
         }
 
       });
-    </script>
+
+//    document.addEventListener("DOMContentLoaded", async () => {
+//   const promptId = localStorage.getItem("selectedPromptId");
+//   if (!promptId) {
+//     window.location.href = "/history.html";
+//     return;
+//   }
+//   try {
+//     const res = await fetch(`/api/history/${promptId}`, {
+//       headers: {
+//         "Content-Type": "application/json",
+//         ...(localStorage.getItem("token") && {
+//           Authorization: "Bearer " + localStorage.getItem("token"),
+//         }),
+//       },
+//     });
+//     if (!res.ok) throw new Error("Prompt not found");
+//     const result = await res.json();
+
+//     // Populate your result.html fields here using result
+//     // Example:
+//     document.querySelector(".info h3").textContent = result.prompt_desc || "No Title";
+//     // ...populate other fields as needed...
+//   } catch (err) {
+//     alert("Failed to load prompt.");
+//     window.location.href = "/history.html";
+//   }
+// });    
+</script>
   </body>
 </html>

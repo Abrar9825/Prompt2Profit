@@ -157,6 +157,24 @@ console.log(timelineData);
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
 
+
+    // checks if user is logged in
+let userId = null;
+let sessionId = null;
+
+if (req.headers.authorization) {
+  try {
+    const token = req.headers.authorization.split(' ')[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    userId = decoded.id;
+  } catch (e) {
+    // Invalid token, treat as guest
+    sessionId = req.sessionID;
+  }
+} else {
+  sessionId = req.sessionID;
+}
+
       // below Store in DB
  const newPrompt=await promptModel.create({
                 prompt_desc:topic,
@@ -181,7 +199,8 @@ console.log(timelineData);
                   
                   monetization_model:monetizationStrategy,
                   roadmap:roadmap,
-                user_id: decoded.id         // this fetches user token _id which is stored in id:_id
+                user_id: decoded.id,         // this fetches user token _id which is stored in id:_id
+                 session_id: userId ? undefined : sessionId // <-- this line is key
 
             });
             console.log(newPrompt);
