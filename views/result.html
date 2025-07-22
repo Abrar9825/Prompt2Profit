@@ -18,14 +18,20 @@
     <div class="parent">
       <div class="navbar">
         <h1>Prompt2Profit</h1>
-        <h3>History</h3>
-        <h3><a href="index.html" style="text-decoration:none;">New Prompt</a></h3>
-        <h3 id="login-nav"><a href="login.html" style="text-decoration:none;">login/signup</a></h3>
+        <h3>
+          <a href="history.html" style="text-decoration: none">History</a>
+        </h3>
+        <h3>
+          <a href="index.html" style="text-decoration: none">New Prompt</a>
+        </h3>
+        <h3 id="login-nav">
+          <a href="login.html" style="text-decoration: none">login/signup</a>
+        </h3>
         <h3 id="welcomeUser"></h3>
         <button onclick="logout()" id="logout">Logout</button>
         <!-- <i class="bell fa-solid fa-bell"></i> -->
       </div>
-      
+
       <div class="div2">
         <div class="info">
           <h3>AI-Powered Food Delivery App</h3>
@@ -35,9 +41,8 @@
               ><i class="dot fa-solid fa-circle"></i> Worth Building</span
             >
             <span class="tag"
-              ><i class="dollar fa-solid fa-dollar-sign"></i> High earning
-              potential</span
-            >
+              ><i class="dollar fa-solid fa-dollar-sign"></i>
+            </span>
           </div>
         </div>
         <div class="score">87/100<br /><small>Idea Score</small></div>
@@ -58,9 +63,9 @@
             <i class="users fa-solid fa-users"></i> Target Audience
           </div>
           <ul>
-            <li>Tech-savvy millennials (25-40)</li>
-            <li>Busy professionals</li>
-            <li>Health-conscious consumers</li>
+            <li></li>
+            <li></li>
+            <li></li>
           </ul>
         </div>
         <div class="div5">
@@ -88,9 +93,9 @@
           </div>
           <p>
             <small>
-              Eliminates decision fatigue in food ordering by using AI to suggest
-              personalized meals based on preferences, dietary restrictions, and
-              past orders.</small
+              Eliminates decision fatigue in food ordering by using AI to
+              suggest personalized meals based on preferences, dietary
+              restrictions, and past orders.</small
             >
           </p>
         </div>
@@ -153,7 +158,9 @@
             <li>Beta Testing: 1-2 months</li>
             <li>Market Launch: 1 month</li>
             <li>
-              <strong>First Revenue: <span class="time">6 months</span> </strong>
+              <strong
+                >First Revenue: <span class="time">6 months</span>
+              </strong>
             </li>
           </ul>
         </div>
@@ -163,7 +170,7 @@
         <div class="div12">
           <div class="title">
             <i class="locate fa-solid fa-map-location-dot"></i> Roadmap – Build
-            From Idea to Launch<br>
+            From Idea to Launch<br />
             --For Roadmap Generate Pdf--
           </div>
           <p></p>
@@ -178,11 +185,11 @@
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         function logout() {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        window.location.href = "/index.html";
-      }
-      const user = JSON.parse(localStorage.getItem("user"));
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          window.location.href = "/index.html";
+        }
+        const user = JSON.parse(localStorage.getItem("user"));
         const welcomeElement = document.getElementById("welcomeUser");
 
         if (user && user.name) {
@@ -219,90 +226,128 @@
         }/100<br><small>Idea Score</small>`;
 
         // Update tags
-        const earning = result.monthlyEarning || "N/A";
-        const earningItems = earning
-          .split(".")
-          .map((item) => item.trim())
-          .filter((item) => item.length > 0);
-        
-        document.querySelector(".tags").innerHTML = `
-      <span class="tag"><i class="dot fa-solid fa-circle"></i> ${
-        result.verdict || "N/A"
-      }</span>
-      <span class="tag"><i class="dollar fa-solid fa-dollar-sign"></i> ${earningItems[0] || "N/A"
-    }</span>
-      
-    `;
+        if (result.verdict === "Treasure") {
+          const earning = result.monthlyEarning || "N/A";
+          const earningItems = earning
+            .split(".")
+            .map((item) => item.trim())
+            .filter((item) => item.length > 0);
 
+          document.querySelector(".tags").innerHTML = `
+            <span class="tag"><i class="dot fa-solid fa-circle"></i> ${
+              result.verdict || "N/A"
+            }</span>
+            <span class="tag"><i class="dollar fa-solid fa-dollar-sign"></i> ${
+              earningItems[0] || "N/A"
+            }</span>`;
+        } else {
+          document.querySelector(".tags").innerHTML = `
+            <span class="tag"><i class="dot fa-solid fa-circle" style="color: red;"></i> ${
+              result.verdict || "N/A"
+            }</span>`;
+        }
         // Worth building section
-        document.querySelector(
-          ".div3 .title"
-        ).innerHTML = `<i class="check fa-solid fa-check"></i> Worth Building`;
-        document.querySelector(".div3 p").innerHTML = `
-      <span class="answer">${
-        result.verdict === "Treasure" ? "Yes" : "No"
-      }</span><br>
-      <small>${result.whyTreasure || "N/A"}</small>
-    `;
-
-        // Target audience
-        const audienceRaw = result.audience || "";
-        const audienceList = audienceRaw
-          .split(",")
-          .map((item) => `<li>${item.trim()}</li>`)
-          .join("");
-        document.querySelector(".div4 ul").innerHTML = audienceList;
-
-        // MVP Features
-        const mvpFeatures = Array.isArray(result.mvpFeatureList)
-          ? result.mvpFeatureList
-          : result.mvpFeatureList?.split(",").map((item) => item.trim());
-
-        document.querySelector(".div5 ul").innerHTML = mvpFeatures
-          ? mvpFeatures.map((feature) => `<li>${feature}</li>`).join("")
-          : "<li>No features specified</li>";
-
-        
-        // Earning potential
-        
-        document.querySelector(".div6 p").innerHTML = earningItems.map((item)=> `<strong>${item}</strong>`).join(" ");
-      
-
-
-        // Problem it solves
-        const problem = result.realWorldProblem || "Not specified";
-        document.querySelector(".div7 p").innerHTML = `
-      <small>${problem}</small>
-    `;
-
-        // Tech Stack
-        const techStr = result.TechStack || "";
-
-        function parseTechStack(techString) {
-          const lines = techString
-            .split("\n")
-            .map((line) => line.trim())
-            .filter((line) => line);
-          const techObj = {};
-
-          lines.forEach((line) => {
-            // line example: "Frontend : React,"
-            // remove trailing commas & split by ":"
-            const cleanLine = line.replace(/,$/, "");
-            const [key, value] = cleanLine.split(":").map((s) => s.trim());
-            if (key && value) {
-              // convert key to lowercase and replace spaces with underscore
-              const formattedKey = key.toLowerCase().replace(/\s+/g, "_");
-              techObj[formattedKey] = value;
-            }
-          });
-
-          return techObj;
+        if (result.verdict === "Treasure") {
+          document.querySelector(
+            ".div3 .title"
+          ).innerHTML = `<i class="check fa-solid fa-check"></i> Worth Building`;
+        } else {
+          document.querySelector(
+            ".div3 .title"
+          ).innerHTML = `<i class="cross fa-solid fa-xmark"></i> Not Worth Building`;
         }
 
-        const stack = parseTechStack(techStr);
+        document.querySelector(".div3 p").innerHTML = `
+          <span class="answer">${
+            result.verdict === "Treasure" ? "Yes" : "No"
+          }</span><br>
+          <small>${result.whyTreasure || "N/A"}</small>`;
 
-        const techHTML = `
+        if (result.verdict === "Treasure") {
+          document.querySelector(".div3 p").innerHTML = `
+          <span class="answer">Yes</span><br>
+          <small>${result.whyTreasure || "N/A"}</small>`;
+        } else {
+          document.querySelector(".div3 p").innerHTML = `
+          <span class="answer" style="color: red;">No</span><br>
+          <small>${result.whyTreasure || "N/A"}</small>`;
+        }
+        if (result.verdict === "Treasure") {
+          // Target audience
+          const audienceRaw = result.audience || "";
+          const audienceList = audienceRaw
+            .split(",")
+            .map((item) => `<li>${item.trim()}</li>`)
+            .join("");
+          document.querySelector(".div4 ul").innerHTML = audienceList;
+        } else {
+          document.querySelector(".div4").style.display = "none";
+        }
+        if (result.verdict === "Treasure") {
+          // MVP Features
+          const mvpFeatures = Array.isArray(result.mvpFeatureList)
+            ? result.mvpFeatureList
+            : result.mvpFeatureList?.split(",").map((item) => item.trim());
+
+          document.querySelector(".div5 ul").innerHTML = mvpFeatures
+            ? mvpFeatures.map((feature) => `<li>${feature}</li>`).join("")
+            : "<li>No features specified</li>";
+        } else {
+          document.querySelector(".div5").style.display = "none";
+        }
+        if (result.verdict === "Treasure") {
+          // Earning potential
+          const earning = result.monthlyEarning || "N/A";
+          const earningItems = earning
+            .split(".")
+            .map((item) => item.trim())
+            .filter((item) => item.length > 0);
+            
+          document.querySelector(".div6 p").innerHTML = earningItems
+            .map((item) => `<strong>${item}</strong>`)
+            .join(" ");
+        } else {
+          document.querySelector(".div6").style.display = "none";
+        }
+
+        if (result.verdict === "Treasure") {
+          // Problem it solves
+          const problem = result.realWorldProblem || "Not specified";
+          document.querySelector(".div7 p").innerHTML = `
+      <small>${problem}</small>
+    `;
+        } else {
+          document.querySelector(".div7").style.display = "none";
+        }
+        if (result.verdict === "Treasure") {
+          // Tech Stack
+          const techStr = result.TechStack || "";
+
+          function parseTechStack(techString) {
+            const lines = techString
+              .split("\n")
+              .map((line) => line.trim())
+              .filter((line) => line);
+            const techObj = {};
+
+            lines.forEach((line) => {
+              // line example: "Frontend : React,"
+              // remove trailing commas & split by ":"
+              const cleanLine = line.replace(/,$/, "");
+              const [key, value] = cleanLine.split(":").map((s) => s.trim());
+              if (key && value) {
+                // convert key to lowercase and replace spaces with underscore
+                const formattedKey = key.toLowerCase().replace(/\s+/g, "_");
+                techObj[formattedKey] = value;
+              }
+            });
+
+            return techObj;
+          }
+
+          const stack = parseTechStack(techStr);
+
+          const techHTML = `
             <div class="tag-group frontend">
               <strong>Frontend:</strong> <span>${stack.frontend || "N/A"}</span>
             </div>
@@ -325,42 +370,55 @@
             </div>
           `;
 
-        document.querySelector(".div8 .tech-tags").innerHTML = techHTML;
-
-        // USP
-        document.querySelector(".div9 p").textContent = Array.isArray(
-          result.USP
-        )
-          ? result.USP[0]
-          : result.USP || "N/A";
-
-        // Monetization model
-        const monetization = result.monetizationStrategy || "N/A";
-        // Split by all periods
-        const monetizationItems = monetization
-          .split(".")
-          .map((item) => item.trim())
-          .filter((item) => item.length > 0);
-
-        document.querySelector(".div10 ul").innerHTML = monetizationItems
-          .map((item) => `<li><strong>${item}</strong></li>`)
-          .join("");
-
-        // Timeline to revenue
-        if (result.Timeline_to_first_revenue) {
-          document.querySelector(".div11 ul").innerHTML = `
-  <li>${result.Timeline_to_first_revenue[0]?.phase || "Development"}: ${
-            result.Timeline_to_first_revenue[0]?.duration || "N/A"
-          }</li>
-  <li>${result.Timeline_to_first_revenue[1]?.phase || "Testing"}: ${
-            result.Timeline_to_first_revenue[1]?.duration || "N/A"
-          }</li>
-  <li>${result.Timeline_to_first_revenue[2]?.phase || "Launch"}: ${
-            result.Timeline_to_first_revenue[2]?.duration || "N/A"
-          }</li>
-`;
+          document.querySelector(".div8 .tech-tags").innerHTML = techHTML;
+        } else {
+          document.querySelector(".div8").style.display = "none";
         }
+        if (result.verdict === "Treasure") {
+          // USP
+          document.querySelector(".div9 p").textContent = Array.isArray(
+            result.USP
+          )
+            ? result.USP[0]
+            : result.USP || "N/A";
+        } else {
+          document.querySelector(".div9").style.display = "none";
+        }
+        if (result.verdict === "Treasure") {
+          // Monetization model
+          const monetization = result.monetizationStrategy || "N/A";
+          // Split by all periods
+          const monetizationItems = monetization
+            .split(".")
+            .map((item) => item.trim())
+            .filter((item) => item.length > 0);
 
+          document.querySelector(".div10 ul").innerHTML = monetizationItems
+            .map((item) => `<li><strong>${item}</strong></li>`)
+            .join("");
+        } else {
+          document.querySelector(".div10").style.display = "none";
+        }
+        if (result.verdict === "Treasure") {
+          // Timeline to revenue
+          if (result.Timeline_to_first_revenue) {
+            document.querySelector(".div11 ul").innerHTML = `
+  <li>${result.Timeline_to_first_revenue[0]?.phase || "Development"}: ${
+              result.Timeline_to_first_revenue[0]?.duration || "N/A"
+            }</li>
+  <li>${result.Timeline_to_first_revenue[1]?.phase || "Testing"}: ${
+              result.Timeline_to_first_revenue[1]?.duration || "N/A"
+            }</li>
+  <li>${result.Timeline_to_first_revenue[2]?.phase || "Launch"}: ${
+              result.Timeline_to_first_revenue[2]?.duration || "N/A"
+            }</li>
+`;
+          }
+        } else {
+          document.querySelector(".div11").style.display = "none";
+          document.querySelector(".div12").style.display = "none";
+          document.querySelector(".div13").style.display = "none";
+        }
       });
     </script>
   </body>

@@ -36,16 +36,38 @@ header {
   margin: 0 0 3rem 0;
   margin: -20px;
 }
+
 .navbar h1 {
   font-family: "Roboto Mono", monospace;
   color: #7333af;
   margin: 0 16rem 0 10rem;
   font-size: 1.8rem;
+  font-weight: 700;
 }
+
 .navbar h3 {
   font-family: "Roboto Mono", monospace;
   margin: 0 6rem 0 0;
   color: #7333af;
+  /* font-weight: 500; */
+  cursor: pointer;
+}
+
+.navbar h3:hover {
+  color: #7c3aed;
+}
+#logout{
+  border: none;
+  padding: 0.6rem;
+  background-color: #fff;
+  border: 2px solid #7333af;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+#logout:hover{
+  background-color: #9d9c9c;
 }
 .searchbox input {
   padding: 8px 12px;

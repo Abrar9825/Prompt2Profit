@@ -3,7 +3,7 @@ const AutoIncrement=require('mongoose-sequence')(mongoose);
 
 const PromptSchema=new mongoose.Schema({
      prompt_desc:String,
-     
+     whyTreasure:String,
     score:String,
     worthbuilding:String,
     target_audience:String,

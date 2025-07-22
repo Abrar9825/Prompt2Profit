@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prompt2Profit</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="./css/history.css" />
+  </head>
+  <body>
+    <header>
+      <!-- <div class="logo">Prompt2Profit</div> -->
+      <div class="navbar">
+        <h1>Prompt2Profit</h1>
+        <h3>
+          <a href="history.html" style="text-decoration: none">History</a>
+        </h3>
+        <h3>
+          <a href="index.html" style="text-decoration: none">New Prompt</a>
+        </h3>
+        <h3 id="login-nav">
+          <a href="login.html" style="text-decoration: none">login/signup</a>
+        </h3>
+        <h3 id="welcomeUser"></h3>
+        <button onclick="logout()" id="logout">Logout</button>
+        <!-- <i class="bell fa-solid fa-bell"></i> -->
+      </div>
+    </header>
+
+    <div class="filters">
+      <h2>Your Prompts <span id="totalCount">0 total</span></h2>
+      <div class="dropdowns">
+        <select id="filterType">
+          <option value="all">All Prompts</option>
+          <option value="treasure">Treasure Only</option>
+          <option value="trash">Trash Only</option>
+        </select>
+        <select id="sortBy">
+          <option value="date">Sort by Date</option>
+          <option value="score">Sort by Score</option>
+          <option value="title">Sort by Title</option>
+        </select>
+      </div>
+    </div>
+    <div class="prompt-list" id="promptList">
+      <div class="loading">
+        <i
+          class="fas fa-spinner fa-spin"
+          style="font-size: 2rem; margin-bottom: 1rem"
+        ></i>
+        <p>Loading your prompts...</p>
+      </div>
+    </div>
+
+    <div class="pagination" id="pagination" style="display: none">
+      <button onclick="changePage(-1)">Previous</button>
+      <button class="active">1</button>
+      <button onclick="changePage(1)">Next</button>
+    </div>
+
+    <script>
+      let currentPage = 1;
+      let totalPages = 1;
+      let allPrompts = [];
+      let filteredPrompts = [];
+
+      // Logout function
+      function logout() {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        localStorage.removeItem("aiResult");
+        localStorage.removeItem("topic");
+        window.location.href = "/index.html";
+      }
+
+      // Initialize page
+      document.addEventListener("DOMContentLoaded", async () => {
+        handleUserAuthentication();
+        await loadUserHistory();
+        setupEventListeners();
+      });
+
+      function handleUserAuthentication() {
+        const user = JSON.parse(localStorage.getItem("user"));
+        const welcomeElement = document.getElementById("welcomeUser");
+
+        if (user && user.name) {
+          welcomeElement.textContent = `Welcome ${user.name}`;
+          document.getElementById("logout").style.display = "inline";
+          document.getElementById("login-nav").style.display = "none";
+        } else {
+          welcomeElement.textContent = "Welcome Guest";
+          document.getElementById("logout").style.display = "none";
+          document.getElementById("login-nav").style.display = "inline";
+        }
+      }
+
+      async function loadUserHistory() {
+        const historyList = document.getElementById("promptList");
+
+        try {
+          const user = JSON.parse(localStorage.getItem("user"));
+          const token = localStorage.getItem("token");
+
+          // Build API URL with user ID if available
+          let apiUrl = "/api/history";
+          if (user && user.id) {
+            apiUrl += `?userId=${user.id}`;
+          }
+
+          const response = await fetch(apiUrl, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              ...(token && { Authorization: `Bearer ${token}` }),
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const history = await response.json();
+          console.log("Fetched history data:", history);
+
+          allPrompts = Array.isArray(history) ? history : [];
+
+          if (allPrompts.length === 0) {
+            showEmptyState();
+            return;
+          }
+
+          // Update total count
+          document.getElementById(
+            "totalCount"
+          ).textContent = `${allPrompts.length} total`;
+
+          // Initial filter and display
+          applyFiltersAndSort();
+        } catch (error) {
+          console.error("Error fetching history:", error);
+          showErrorState();
+        }
+      }
+
+      function showEmptyState() {
+        const historyList = document.getElementById("promptList");
+        historyList.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-history"></i>
+            <h3>No History Found</h3>
+            <p>You haven't created any prompts yet. Start by creating your first business idea!</p>
+            <button class="retry-btn" onclick="window.location.href='/index.html'">
+              <i class="fas fa-plus"></i> Create New Prompt
+            </button>
+          </div>
+        `;
+      }
+
+      function showErrorState() {
+        const historyList = document.getElementById("promptList");
+        historyList.innerHTML = `
+          <div class="error-state">
+            <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+            <h3>Error Loading History</h3>
+            <p>We couldn't load your prompt history. Please try again.</p>
+            <button class="retry-btn" onclick="loadUserHistory()">
+              <i class="fas fa-refresh"></i> Retry
+            </button>
+          </div>
+        `;
+      }
+
+      function applyFiltersAndSort() {
+        const filterType = document.getElementById("filterType").value;
+        const sortBy = document.getElementById("sortBy").value;
+
+        // Apply filters
+        filteredPrompts = allPrompts.filter((item) => {
+          if (filterType === "all") return true;
+          if (filterType === "treasure")
+            return item.worthbuilding === "Treasure";
+          if (filterType === "trash") return item.worthbuilding === "Trash";
+          return true;
+        });
+
+        // Apply sorting
+        filteredPrompts.sort((a, b) => {
+          switch (sortBy) {
+            case "date":
+              return new Date(b.createdAt) - new Date(a.createdAt);
+            case "score":
+              const scoreA = parseInt(a.score) || 0;
+              const scoreB = parseInt(b.score) || 0;
+              return scoreB - scoreA;
+            case "title":
+              const titleA = a.prompt_desc || a.promptText || "";
+              const titleB = b.prompt_desc || b.promptText || "";
+              return titleA.localeCompare(titleB);
+            default:
+              return 0;
+          }
+        });
+
+        // Update count
+        document.getElementById(
+          "totalCount"
+        ).textContent = `${filteredPrompts.length} total`;
+
+        // Reset pagination
+        currentPage = 1;
+        displayPrompts();
+      }
+
+      function displayPrompts() {
+        const historyList = document.getElementById("promptList");
+        const itemsPerPage = 10;
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const currentPrompts = filteredPrompts.slice(startIndex, endIndex);
+
+        if (currentPrompts.length === 0) {
+          showEmptyState();
+          return;
+        }
+
+        historyList.innerHTML = "";
+
+        currentPrompts.forEach((item, idx) => {
+          const title =
+            item.prompt_desc || item.promptText || "Untitled Prompt";
+          const worth = item.worthbuilding || "Unknown";
+          const score = item.score || "N/A";
+          const created = item.createdAt
+            ? new Date(item.createdAt).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+              })
+            : "Unknown date";
+
+          const badgeClass = worth === "Treasure" ? "green" : "red";
+          const iconClass =
+            worth === "Treasure"
+              ? "gem fa-solid fa-gem"
+              : "trash fa-solid fa-trash";
+
+          const div = document.createElement("div");
+          div.className = "prompt-card";
+          div.innerHTML = `
+            <div class="prompt-header">
+              <span class="badge ${badgeClass}">
+                <i class="${iconClass}"></i>
+                <strong>${worth}</strong>
+              </span>
+              <span style="color: #666; font-size: 0.85rem;">${created}</span>
+              <span style="margin-left: auto; color: #6b7280; font-size: 0.85rem;">
+                Score: ${score}/100
+              </span>
+            </div>
+            <div class="prompt-title">${title.substring(0, 60)}${
+            title.length > 60 ? "..." : ""
+          }</div>
+            <div class="prompt-desc">
+              ${(
+                item.whyTreasure || "No description available"
+              ).substring(0, 120)}${
+            item.problem_it_solves?.length > 120 ? "..." : ""
+          }
+            </div>
+            <div class="prompt-footer">
+              <span><i class="fa-solid fa-lightbulb"></i> ${worth}</span>
+              <span style="margin-left: auto">
+                <i class="fa-solid fa-chevron-right"></i>
+              </span>
+            </div>
+          `;
+            console.log(item);
+          div.onclick = () => {
+            // Store the selected prompt data for the result page
+            localStorage.setItem("selectedPromptId", item._id);
+            let timelineData = [];
+            if (item.Timeline_to_first_revenue && Array.isArray(item.Timeline_to_first_revenue)) {
+              timelineData = item.Timeline_to_first_revenue;
+            } else if (item.timeline_to_first_revenue) {
+              // Handle legacy string format if it exists
+              timelineData = [
+                { "phase": "MVP Development", "duration": "3-4 months" },
+                { "phase": "Testing and Validation", "duration": "1-2 months" },
+                { "phase": "Marketing and Launch", "duration": "1 month" }
+              ];
+            } else {
+              // Default timeline if none exists
+              timelineData = [
+                { "phase": "MVP Development", "duration": "3-4 months" },
+                { "phase": "Testing and Validation", "duration": "1-2 months" },
+                { "phase": "Marketing and Launch", "duration": "1 month" }
+              ];
+            }
+            // Create a result object similar to what the AI API returns
+            const resultObject = {
+              topic: item.prompt_desc || "Untitled",
+              verdict: item.worthbuilding || "Unknown",
+              Score: item.score || "N/A",
+              audience: item.target_audience || "N/A",
+              monthlyEarning: item.earning_potential || "N/A",
+              realWorldProblem: item.problem_it_solves || "N/A",
+              USP: item.usp || "N/A",
+              monetizationStrategy: item.monetization_model || "N/A",
+              mvpFeatureList: item.mvp_features || "N/A",
+              TechStack: item.tech_stack
+                ? `
+                Frontend : ${item.tech_stack.frontend || "N/A"},
+                Backend : ${item.tech_stack.backend || "N/A"},
+                mobile App : ${item.tech_stack.mobile_app || "N/A"},
+                database : ${item.tech_stack.database || "N/A"},
+                ai : ${item.tech_stack.ai || "N/A"},
+                auth : ${item.tech_stack.auth || "N/A"},
+              `
+                : "N/A",
+              Timeline_to_first_revenue: item.Timeline_to_first_revenue || [],
+              roadmap: item.roadmap || [],
+              whyTreasure: item.whyTreasure || "N/A",
+            };
+
+            localStorage.setItem("aiResult", JSON.stringify(resultObject));
+            window.location.href = "/result.html";
+          };
+
+          historyList.appendChild(div);
+        });
+
+        // Update pagination
+        updatePagination();
+      }
+
+      function updatePagination() {
+        const pagination = document.getElementById("pagination");
+        const itemsPerPage = 10;
+        totalPages = Math.ceil(filteredPrompts.length / itemsPerPage);
+
+        if (totalPages <= 1) {
+          pagination.style.display = "none";
+          return;
+        }
+
+        pagination.style.display = "flex";
+        pagination.innerHTML = "";
+
+        // Previous button
+        const prevBtn = document.createElement("button");
+        prevBtn.textContent = "Previous";
+        prevBtn.disabled = currentPage === 1;
+        prevBtn.onclick = () => changePage(-1);
+        pagination.appendChild(prevBtn);
+
+        // Page numbers
+        for (let i = 1; i <= Math.min(totalPages, 5); i++) {
+          const pageBtn = document.createElement("button");
+          pageBtn.textContent = i;
+          pageBtn.className = i === currentPage ? "active" : "";
+          pageBtn.onclick = () => goToPage(i);
+          pagination.appendChild(pageBtn);
+        }
+
+        // Next button
+        const nextBtn = document.createElement("button");
+        nextBtn.textContent = "Next";
+        nextBtn.disabled = currentPage === totalPages;
+        nextBtn.onclick = () => changePage(1);
+        pagination.appendChild(nextBtn);
+      }
+
+      function changePage(direction) {
+        const newPage = currentPage + direction;
+        if (newPage >= 1 && newPage <= totalPages) {
+          currentPage = newPage;
+          displayPrompts();
+        }
+      }
+
+      function goToPage(page) {
+        currentPage = page;
+        displayPrompts();
+      }
+
+      function setupEventListeners() {
+        document
+          .getElementById("filterType")
+          .addEventListener("change", applyFiltersAndSort);
+        document
+          .getElementById("sortBy")
+          .addEventListener("change", applyFiltersAndSort);
+      }
+    </script>
+  </body>
+</html>

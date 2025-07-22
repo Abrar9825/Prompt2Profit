@@ -37,6 +37,7 @@ app.use("/api",fetchAPIRoutes);
 app.use("/api",generatePDFRoutes);
 app.use("/user",UserRoute);
 app.use("/", UserRoute)
+app.use('/api/history', require('./routes/historyRoutes'));
 
 const PORT=process.env.PORT || 3000;
 
