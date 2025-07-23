@@ -244,9 +244,9 @@ li {
   text-decoration: underline;
 }
 
-.div6 {
-  /* flex: 1; */
-}
+/* .div6 {
+  flex: 1;
+} */
 
 .div6 .title .line {
   color: #16a34a;
@@ -276,9 +276,9 @@ li {
   border-radius: 8px;
   background-color: #ffedd5;
 }
-.div7 {
-  /* flex: 1; */
-}
+/* .div7 {
+  flex: 1;
+} */
 
 .div8 {
   /* flex: 1; */
@@ -414,6 +414,7 @@ li {
 .div12 {
   width: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
@@ -668,3 +669,48 @@ li {
       font-size: 1rem;
     }
   }
+.pdf-download-section {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.pdf-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+}
+
+.pdf-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+}
+
+.pdf-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+}
+
+.pdf-btn i {
+  font-size: 16px;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  .pdf-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 14px 20px;
+  }
+}

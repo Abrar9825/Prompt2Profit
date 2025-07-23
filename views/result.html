@@ -173,6 +173,11 @@
             From Idea to Launch<br />
             --For Roadmap Generate Pdf--
           </div>
+          <div class="pdf-download-section">
+            <button id="generatePDF" class="pdf-btn">
+              <i class="fa-solid fa-file-pdf"></i> Download Roadmap PDF
+            </button>
+          </div>
           <p></p>
         </div>
       </div>
@@ -420,6 +425,64 @@
           document.querySelector(".div13").style.display = "none";
         }
       });
+
+      // PDF Generation functionality - same as index.html
+        document.getElementById("generatePDF").addEventListener("click", async () => {
+          const aiResult = localStorage.getItem("aiResult");
+          if (!aiResult) {
+            alert("Please generate the business plan first.");
+            return;
+          }
+
+          const user = JSON.parse(localStorage.getItem("user"));
+
+          // Check if user is authenticated
+          if (!user || !user.name) {
+            localStorage.setItem("shouldGeneratePDF", "true");
+            window.location.href = "/login.html";
+            return;
+          }
+
+          let result;
+          try {
+            result = JSON.parse(aiResult);
+          } catch (err) {
+            alert("Invalid AI result format.");
+            return;
+          }
+
+          const { roadmap, topic } = result;
+          if (!Array.isArray(roadmap)) {
+            alert("No roadmap found.");
+            return;
+          }
+
+          try {
+            const response = await fetch("/api/generate-pdf", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ roadmap, topic }),
+            });
+
+            if (!response.ok) {
+              const errorText = await response.text();
+              throw new Error(errorText);
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "roadmap.pdf";
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+          } catch (error) {
+            alert("PDF generation failed.");
+            console.error(error);
+          }
+        });
     </script>
   </body>
 </html>
