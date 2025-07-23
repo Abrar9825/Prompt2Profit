@@ -8,6 +8,7 @@
 body {
   background-color: #f9fafb;
   color: #111827;
+  overflow-x: hidden;
 }
 
 .parent {
@@ -244,7 +245,7 @@ li {
 }
 
 .div6 {
-  flex: 1;
+  /* flex: 1; */
 }
 
 .div6 .title .line {
@@ -276,11 +277,11 @@ li {
   background-color: #ffedd5;
 }
 .div7 {
-  flex: 1;
+  /* flex: 1; */
 }
 
 .div8 {
-  flex: 1;
+  /* flex: 1; */
   min-width: 0; /* Prevents flex item overflow */
 }
 

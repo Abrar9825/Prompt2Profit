@@ -28,29 +28,27 @@ Return the result in JSON format:
 {
   "topic": "<topic>",
   "verdict": "Treasure" or "Trash" note: Be practical and unbiased when deciding between 'Treasure' and 'Trash'. Approve only if the idea solves a real problem and shows good market potential.,
-  // New field explaining why it's treasure or trash
   "whyTreasure": "<reason why this idea is a treasure or trash, e.g. strong market demand, innovative solution, etc>",
 
-  // The keys below appear ONLY when "verdict" is "Treasure".
   "audience": "<audience age group and category>",
   "monthlyEarning": "<in INR, e.g. ₹5,00,000 monthly> note: give in detail, structure: first give the overall amount then a dot and then the detail",
 
-  
-
   "realWorldProblem": "<what specific pain does it solve?>",
   "USP": ["<primary usp>"],
-  "monetizationStrategy": "<how the business will make money> note: for each idea seperate them with a dot",
-  "mvpFeatureList": ["<feature 1>", "<feature 2>", "<feature 3>", "<feature 4>", "<feature 5>", "<feature 6>"]note: Use commas only for sepearating each item so that i can seperate it by using split(","),
-  "TechStack": ["<frontend>", "<backend>", "<mobileApp>", "<database>", "<ai>", "<auth>"] note: for each tech stack use only 2-3 words,
+  "monetizationStrategy": "<how the business will make money> note: separate each monetization method with a dot (.) only, not comma or semicolon.",
 
-  // More detailed timeline with month-wise phases
+  "mvpFeatureList": ["<feature 1>", "<feature 2>", "<feature 3>", "<feature 4>", "<feature 5>", "<feature 6>"] note: Use commas only for separating each item,
+
+  "TechStack": ["<frontend>", "<backend>", "<mobileApp>", "<database>", "<ai>", "<auth>"],
+
   "Timeline_to_first_revenue": [
-  { "phase": "MVP Development", "duration": "3-4 months" },
-  { "phase": "Testing and Validation", "duration": "1-2 months" },
-  { "phase": "Marketing and Launch", "duration": "1 month" }
-],
+    { "phase": "MVP Development", "duration": "3-4 months" },
+    { "phase": "Testing and Validation", "duration": "1-2 months" },
+    { "phase": "Marketing and Launch", "duration": "1 month" }
+  ] note: Timeline should vary based on idea complexity. Avoid repeating same timeline every time.,
 
-  "Score": "<score out of 100>" note: Score must reflect realistic startup potential based on innovation, market need, feasibility, and monetization. Vary the score honestly, even if it's low.,
+  "Score": "<score out of 100>" note: Evaluate score based only on input quality, feasibility, market size, competition, and monetization. Give low score if any factor is weak. Vary the score honestly, even if it's low.,
+
   "roadmap": [
     {
       "week": "week 1",
@@ -75,10 +73,11 @@ Return the result in JSON format:
       "platforms": ["<Web>", "<Mobile>"]
     }
     // Add up to 8 weeks if needed
-    note: do not give this types of lines at the end " // Add more weeks as needed for detailed development, testing, and launch phases"
-  ]
+    note: do not give this types of lines at the end " // Add more weeks as needed for detailed development, testing, and launch phases"note: strictly follow the format. Each roadmap item should be highly detailed, with specific steps and platforms. Avoid generic terms like 'development' or 'testing'. Focus on practical, non-technical milestones that have a clear business impact.
+  note: Do NOT use trailing commas in any array or object. The output must be strictly valid JSON.
 }
 `;
+
 
   try {
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
@@ -201,7 +200,7 @@ Return the result in JSON format:
           mvp_features: mvpFeatureList,
           earning_potential: monthlyEarning,
           // timeline_to_first_revenue:timelineText,
-          Timeline_to_first_revenue: Timeline_to_first_revenue,
+          timeline_to_first_revenue: Timeline_to_first_revenue,
           tech_stack: {
             frontend: frontend,
             mobile_app: mobileApp,

@@ -284,24 +284,7 @@
           div.onclick = () => {
             // Store the selected prompt data for the result page
             localStorage.setItem("selectedPromptId", item._id);
-            let timelineData = [];
-            if (item.Timeline_to_first_revenue && Array.isArray(item.Timeline_to_first_revenue)) {
-              timelineData = item.Timeline_to_first_revenue;
-            } else if (item.timeline_to_first_revenue) {
-              // Handle legacy string format if it exists
-              timelineData = [
-                { "phase": "MVP Development", "duration": "3-4 months" },
-                { "phase": "Testing and Validation", "duration": "1-2 months" },
-                { "phase": "Marketing and Launch", "duration": "1 month" }
-              ];
-            } else {
-              // Default timeline if none exists
-              timelineData = [
-                { "phase": "MVP Development", "duration": "3-4 months" },
-                { "phase": "Testing and Validation", "duration": "1-2 months" },
-                { "phase": "Marketing and Launch", "duration": "1 month" }
-              ];
-            }
+            
             // Create a result object similar to what the AI API returns
             const resultObject = {
               topic: item.prompt_desc || "Untitled",
@@ -323,7 +306,7 @@
                 auth : ${item.tech_stack.auth || "N/A"},
               `
                 : "N/A",
-              Timeline_to_first_revenue: item.Timeline_to_first_revenue || [],
+              Timeline_to_first_revenue: item.timeline_to_first_revenue || [],
               roadmap: item.roadmap || [],
               whyTreasure: item.whyTreasure || "N/A",
             };

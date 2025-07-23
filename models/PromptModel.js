@@ -19,7 +19,12 @@ const PromptSchema=new mongoose.Schema({
     },
     usp:String,
     problem_it_solves:String,
-    timeline_to_first_revenue:String,
+    timeline_to_first_revenue: [
+        {
+            phase: String,
+            duration: String
+        }
+    ],
     monetization_model:String,
     roadmap: [
   {
