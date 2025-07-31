@@ -3,12 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Prompt2Profit</title>
+    <title>History - Prompt2Profit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
-    <link rel="stylesheet" href="./css/history.css" />
+    <link rel="stylesheet" href="/css/history.css" />
   </head>
   <body>
     <header>
@@ -30,35 +33,37 @@
       </div>
     </header>
 
-    <div class="filters">
-      <h2>Your Prompts <span id="totalCount">0 total</span></h2>
-      <div class="dropdowns">
-        <select id="filterType">
-          <option value="all">All Prompts</option>
-          <option value="treasure">Treasure Only</option>
-          <option value="trash">Trash Only</option>
-        </select>
-        <select id="sortBy">
-          <option value="date">Sort by Date</option>
-          <option value="score">Sort by Score</option>
-          <option value="title">Sort by Title</option>
-        </select>
+    <div class="main-content">
+      <div class="filters">
+        <h2>Your Prompts <span id="totalCount">0 total</span></h2>
+        <div class="dropdowns">
+          <select id="filterType">
+            <option value="all">All Prompts</option>
+            <option value="treasure">Treasure Only</option>
+            <option value="trash">Trash Only</option>
+          </select>
+          <select id="sortBy">
+            <option value="date">Sort by Date</option>
+            <option value="score">Sort by Score</option>
+            <option value="title">Sort by Title</option>
+          </select>
+        </div>
       </div>
-    </div>
-    <div class="prompt-list" id="promptList">
-      <div class="loading">
-        <i
-          class="fas fa-spinner fa-spin"
-          style="font-size: 2rem; margin-bottom: 1rem"
-        ></i>
-        <p>Loading your prompts...</p>
+      <div class="prompt-list" id="promptList">
+        <div class="loading">
+          <i
+            class="fas fa-spinner fa-spin"
+            style="font-size: 2rem; margin-bottom: 1rem"
+          ></i>
+          <p>Loading your prompts...</p>
+        </div>
       </div>
-    </div>
 
-    <div class="pagination" id="pagination" style="display: none">
-      <button onclick="changePage(-1)">Previous</button>
-      <button class="active">1</button>
-      <button onclick="changePage(1)">Next</button>
+      <div class="pagination" id="pagination" style="display: none">
+        <button onclick="changePage(-1)">Previous</button>
+        <button class="active">1</button>
+        <button onclick="changePage(1)">Next</button>
+      </div>
     </div>
 
     <script>
@@ -150,11 +155,11 @@
         const historyList = document.getElementById("promptList");
         historyList.innerHTML = `
           <div class="empty-state">
-            <i class="fas fa-history"></i>
-            <h3>No History Found</h3>
-            <p>You haven't created any prompts yet. Start by creating your first business idea!</p>
-            <button class="retry-btn" onclick="window.location.href='/index.html'">
-              <i class="fas fa-plus"></i> Create New Prompt
+            <i class="icon fas fa-lightbulb"></i>
+            <h3>Ready to Start Creating?</h3>
+            <p>You haven't created any business ideas yet. Transform your thoughts into comprehensive business plans with AI-powered insights!</p>
+            <button class="create-btn" onclick="window.location.href='/index.html'">
+              <i class="fas fa-plus"></i> Create Your First Idea
             </button>
           </div>
         `;
@@ -254,30 +259,38 @@
           div.className = "prompt-card";
           div.innerHTML = `
             <div class="prompt-header">
-              <span class="badge ${badgeClass}">
-                <i class="${iconClass}"></i>
-                <strong>${worth}</strong>
-              </span>
-              <span style="color: #666; font-size: 0.85rem;">${created}</span>
-              <span style="margin-left: auto; color: #6b7280; font-size: 0.85rem;">
-                Score: ${score}/100
-              </span>
+              <div class="left-info">
+                <span class="badge ${badgeClass}">
+                  <i class="${iconClass}"></i>
+                  <strong>${worth}</strong>
+                </span>
+                <span class="date">${created}</span>
+              </div>
+              <span class="words">Score: ${score}/100</span>
             </div>
             <div class="prompt-title">${title.substring(0, 60)}${
             title.length > 60 ? "..." : ""
           }</div>
-            <div class="prompt-desc">
+            <div class="prompt-excerpt">
               ${(
                 item.whyTreasure || "No description available"
-              ).substring(0, 120)}${
-            item.problem_it_solves?.length > 120 ? "..." : ""
+              ).substring(0, 150)}${
+            (item.whyTreasure || "No description available").length > 150 ? "..." : ""
           }
             </div>
-            <div class="prompt-footer">
-              <span><i class="fa-solid fa-lightbulb"></i> ${worth}</span>
-              <span style="margin-left: auto">
-                <i class="fa-solid fa-chevron-right"></i>
-              </span>
+            <div class="prompt-actions">
+              <div class="action-buttons">
+                <button class="view-btn">
+                  <i class="fa-solid fa-eye"></i> View Details
+                </button>
+                <button class="download-btn">
+                  <i class="fa-solid fa-download"></i> Download
+                </button>
+              </div>
+              <div class="prompt-meta">
+                <span class="date">${created}</span>
+                <span class="words">${worth}</span>
+              </div>
             </div>
           `;
             console.log(item);

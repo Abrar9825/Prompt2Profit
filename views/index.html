@@ -4,6 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Prompt2Profit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
@@ -46,8 +49,8 @@
           ></textarea>
 
           <div class="info1">
-            <p></p>
-            <p><span id="count">0</span>/2000</p>
+            <p>💡 Tip: Be specific and detailed for better AI analysis</p>
+            <p><span id="count">0</span>/2000 characters</p>
           </div>
 
           <div class="buttons">
@@ -55,7 +58,7 @@
               <i class="fa-solid fa-wand-magic"></i> Generate Business Plan
             </button>
             <button type="submit" id="generatePDF">
-              <i class="fa-solid fa-file-pdf"></i> Generate PDF
+              <i class="fa-solid fa-route"></i> Get Your Roadmap
             </button>
           </div>
 
@@ -86,11 +89,6 @@
               </div>
             </div>
           </div>
-        </div>
-
-        <div class="recents" id="resultContainer">
-          <h2 class="section-title">Recent Ideas</h2>
-          <div class="ideas-grid"></div>
         </div>
       </div>
     </div>
@@ -192,6 +190,39 @@
             console.error("Failed to save AI result:", err);
           }
         }
+
+        //=========================================Character Counter =======================
+        const promptArea = document.getElementById("promptArea");
+        const countElement = document.getElementById("count");
+        const info1Element = document.querySelector(".info1");
+
+        // Update character count on input
+        promptArea.addEventListener("input", function() {
+          const currentLength = this.value.length;
+          const maxLength = 2000;
+          
+          // Update count display
+          countElement.textContent = currentLength;
+          
+          // Add visual feedback based on character count
+          info1Element.classList.remove("warning", "danger");
+          
+          if (currentLength > maxLength * 0.9) { // 90% threshold
+            info1Element.classList.add("danger");
+          } else if (currentLength > maxLength * 0.75) { // 75% threshold
+            info1Element.classList.add("warning");
+          }
+          
+          // Prevent typing beyond limit
+          if (currentLength >= maxLength) {
+            this.value = this.value.substring(0, maxLength);
+            countElement.textContent = maxLength;
+          }
+        });
+
+        // Initialize character count
+        promptArea.dispatchEvent(new Event('input'));
+
         //=========================================generate pdf function =======================
         document
           .getElementById("generatePDF")
