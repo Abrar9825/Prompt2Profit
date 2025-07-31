@@ -11,25 +11,286 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
-    <link rel="stylesheet" href="/css/history.css" />
+    <link rel="stylesheet" href="/css/history_new.css" />
+    <style>
+      /* Ensure responsiveness works */
+      * {
+        box-sizing: border-box;
+      }
+      
+      .navbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        height: 3.5rem;
+        width: 100vw;
+        background: white;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        margin: 0;
+        padding: 0 1rem;
+        border-bottom: 2px solid #1E40AF;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      
+      .navbar h1 {
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        flex-shrink: 0;
+      }
+      
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+      
+      .nav-links::-webkit-scrollbar {
+        display: none;
+      }
+      
+      .nav-links h3 {
+        font-family: 'Inter', sans-serif;
+        margin: 0;
+        color: #4B5563;
+        font-weight: 500;
+        cursor: pointer;
+        padding: 0.375rem 0.75rem;
+        border-radius: 0.5rem;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+        flex-shrink: 0;
+        font-size: 0.875rem;
+      }
+      
+      .nav-links h3:hover {
+        background: linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%);
+        color: white;
+        transform: translateY(-1px);
+      }
+      
+      .nav-links h3 a {
+        text-decoration: none;
+        color: inherit;
+      }
+      
+      .user-section {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-shrink: 0;
+      }
+      
+      #welcomeUser {
+        font-family: 'Inter', sans-serif;
+        color: #374151;
+        font-weight: 500;
+        padding: 0.375rem 0.75rem;
+        background: #F3F4F6;
+        border-radius: 0.5rem;
+        margin: 0;
+        font-size: 0.75rem;
+        white-space: nowrap;
+      }
+      
+      #logout {
+        border: none;
+        padding: 0.375rem 0.75rem;
+        background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+        color: white;
+        border-radius: 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+      }
+      
+      #logout:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      
+      
+      @media (max-width: 768px) {
+        .navbar {
+          height: 3rem;
+          padding: 0 0.75rem;
+          gap: 0.25rem;
+        }
+        
+        .navbar h1 {
+          font-size: 1rem;
+        }
+        
+        .nav-links {
+          gap: 0.125rem;
+        }
+        
+        .nav-links h3 {
+          font-size: 0.75rem;
+          padding: 0.25rem 0.5rem;
+        }
+        
+        #welcomeUser {
+          font-size: 0.625rem;
+          padding: 0.25rem 0.5rem;
+        }
+        
+        #logout {
+          font-size: 0.625rem;
+          padding: 0.25rem 0.5rem;
+        }
+        
+        .main-content {
+          padding: 0.75rem;
+        }
+        
+        .filters {
+          flex-direction: column;
+          gap: 0.75rem;
+          padding: 0.75rem;
+        }
+        
+        .filters h2 {
+          font-size: 1rem;
+        }
+        
+        .dropdowns {
+          flex-direction: column;
+          gap: 0.5rem;
+          width: 100%;
+        }
+        
+        .dropdowns select {
+          width: 100%;
+          font-size: 0.75rem;
+          padding: 0.5rem;
+        }
+        
+        .prompt-card {
+          padding: 0.75rem;
+        }
+        
+        .prompt-header {
+          flex-direction: column;
+          gap: 0.5rem;
+          align-items: flex-start;
+        }
+        
+        .prompt-actions {
+          flex-direction: column;
+          gap: 0.75rem;
+        }
+        
+        .action-buttons {
+          flex-direction: column;
+          gap: 0.375rem;
+        }
+        
+        .action-buttons a {
+          width: 100%;
+          justify-content: center;
+          font-size: 0.75rem;
+          padding: 0.5rem;
+        }
+        
+        .empty-state {
+          padding: 2rem 1rem;
+        }
+        
+        .empty-state h3 {
+          font-size: 1.25rem;
+        }
+        
+        .empty-state .create-btn {
+          padding: 0.75rem 1.25rem;
+          font-size: 0.875rem;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .navbar {
+          height: 2.75rem;
+          padding: 0 0.5rem;
+        }
+        
+        .navbar h1 {
+          font-size: 0.875rem;
+        }
+        
+        .nav-links h3 {
+          font-size: 0.625rem;
+          padding: 0.1875rem 0.375rem;
+        }
+        
+        #welcomeUser {
+          font-size: 0.5rem;
+          padding: 0.1875rem 0.375rem;
+        }
+        
+        #logout {
+          font-size: 0.5rem;
+          padding: 0.1875rem 0.375rem;
+        }
+        
+        .main-content {
+          padding: 0.5rem;
+        }
+        
+        .filters {
+          padding: 0.5rem;
+        }
+        
+        .filters h2 {
+          font-size: 0.875rem;
+        }
+        
+        .empty-state {
+          padding: 1.5rem 0.75rem;
+        }
+        
+        .empty-state h3 {
+          font-size: 1rem;
+        }
+        
+        .empty-state .icon {
+          font-size: 2rem;
+        }
+      }
+    </style>
   </head>
   <body>
     <header>
-      <!-- <div class="logo">Prompt2Profit</div> -->
       <div class="navbar">
         <h1>Prompt2Profit</h1>
-        <h3>
-          <a href="history.html" style="text-decoration: none">History</a>
-        </h3>
-        <h3>
-          <a href="index.html" style="text-decoration: none">New Prompt</a>
-        </h3>
-        <h3 id="login-nav">
-          <a href="login.html" style="text-decoration: none">login/signup</a>
-        </h3>
-        <h3 id="welcomeUser"></h3>
-        <button onclick="logout()" id="logout">Logout</button>
-        <!-- <i class="bell fa-solid fa-bell"></i> -->
+        <div class="nav-links">
+          <h3>
+            <a href="history.html" style="text-decoration: none">History</a>
+          </h3>
+          <h3>
+            <a href="index.html" style="text-decoration: none">New Prompt</a>
+          </h3>
+          <h3 id="login-nav">
+            <a href="login.html" style="text-decoration: none">login/signup</a>
+          </h3>
+        </div>
+        <div class="user-section">
+          <h3 id="welcomeUser"></h3>
+          <button onclick="logout()" id="logout">Logout</button>
+        </div>
       </div>
     </header>
 
@@ -155,12 +416,12 @@
         const historyList = document.getElementById("promptList");
         historyList.innerHTML = `
           <div class="empty-state">
-            <i class="icon fas fa-lightbulb"></i>
-            <h3>Ready to Start Creating?</h3>
-            <p>You haven't created any business ideas yet. Transform your thoughts into comprehensive business plans with AI-powered insights!</p>
-            <button class="create-btn" onclick="window.location.href='/index.html'">
-              <i class="fas fa-plus"></i> Create Your First Idea
-            </button>
+            <i class="icon fas fa-rocket"></i>
+            <h3>Ready to Launch Your Next Big Idea?</h3>
+            <p>Your entrepreneurial journey starts here! Transform your creative sparks into comprehensive business strategies with AI-powered insights and professional roadmaps.</p>
+            <a href="/index.html" class="create-btn">
+              <i class="fas fa-plus-circle"></i> Create Your First Business Idea
+            </a>
           </div>
         `;
       }
@@ -262,39 +523,45 @@
               <div class="left-info">
                 <span class="badge ${badgeClass}">
                   <i class="${iconClass}"></i>
-                  <strong>${worth}</strong>
+                  ${worth}
                 </span>
                 <span class="date">${created}</span>
               </div>
-              <span class="words">Score: ${score}/100</span>
+              <span class="badge blue">Score: ${score}/100</span>
             </div>
-            <div class="prompt-title">${title.substring(0, 60)}${
-            title.length > 60 ? "..." : ""
+            <div class="prompt-title">${title.substring(0, 80)}${
+            title.length > 80 ? "..." : ""
           }</div>
             <div class="prompt-excerpt">
               ${(
-                item.whyTreasure || "No description available"
+                item.whyTreasure || item.problem_it_solves || "No description available"
               ).substring(0, 150)}${
-            (item.whyTreasure || "No description available").length > 150 ? "..." : ""
+            (item.whyTreasure || item.problem_it_solves || "").length > 150 ? "..." : ""
           }
             </div>
             <div class="prompt-actions">
               <div class="action-buttons">
-                <button class="view-btn">
-                  <i class="fa-solid fa-eye"></i> View Details
-                </button>
-                <button class="download-btn">
-                  <i class="fa-solid fa-download"></i> Download
-                </button>
+                <a href="#" class="view-btn" onclick="viewPrompt('${item._id}'); return false;">
+                  <i class="fas fa-eye"></i> View Details
+                </a>
+                <a href="#" class="download-btn" onclick="downloadPrompt('${item._id}'); return false;">
+                  <i class="fas fa-download"></i> Get Roadmap
+                </a>
               </div>
               <div class="prompt-meta">
-                <span class="date">${created}</span>
-                <span class="words">${worth}</span>
+                <span class="words">
+                  <i class="fas fa-file-text"></i> ${(item.prompt_desc || '').split(' ').length} words
+                </span>
               </div>
             </div>
           `;
             console.log(item);
-          div.onclick = () => {
+          
+          // Add click handler for the entire card
+          div.onclick = (e) => {
+            // Don't trigger if clicking on action buttons
+            if (e.target.closest('.action-buttons')) return;
+            
             // Store the selected prompt data for the result page
             localStorage.setItem("selectedPromptId", item._id);
             
@@ -383,6 +650,48 @@
       function goToPage(page) {
         currentPage = page;
         displayPrompts();
+      }
+
+      function viewPrompt(promptId) {
+        const prompt = allPrompts.find(p => p._id === promptId);
+        if (prompt) {
+          localStorage.setItem("selectedPromptId", promptId);
+          
+          const resultObject = {
+            topic: prompt.prompt_desc || "Untitled",
+            verdict: prompt.worthbuilding || "Unknown",
+            Score: prompt.score || "N/A",
+            audience: prompt.target_audience || "N/A",
+            monthlyEarning: prompt.earning_potential || "N/A",
+            realWorldProblem: prompt.problem_it_solves || "N/A",
+            USP: prompt.usp || "N/A",
+            monetizationStrategy: prompt.monetization_model || "N/A",
+            mvpFeatureList: prompt.mvp_features || "N/A",
+            TechStack: prompt.tech_stack
+              ? `Frontend: ${prompt.tech_stack.frontend || "N/A"}, Backend: ${prompt.tech_stack.backend || "N/A"}, Mobile: ${prompt.tech_stack.mobile_app || "N/A"}, Database: ${prompt.tech_stack.database || "N/A"}, AI: ${prompt.tech_stack.ai || "N/A"}, Auth: ${prompt.tech_stack.auth || "N/A"}`
+              : "N/A",
+            Timeline_to_first_revenue: prompt.timeline_to_first_revenue || [],
+            roadmap: prompt.roadmap || [],
+            whyTreasure: prompt.whyTreasure || "N/A",
+          };
+
+          localStorage.setItem("aiResult", JSON.stringify(resultObject));
+          window.location.href = "/result.html";
+        }
+      }
+
+      function downloadPrompt(promptId) {
+        const prompt = allPrompts.find(p => p._id === promptId);
+        if (prompt) {
+          // Create PDF download functionality
+          const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(prompt, null, 2));
+          const downloadAnchorNode = document.createElement('a');
+          downloadAnchorNode.setAttribute("href", dataStr);
+          downloadAnchorNode.setAttribute("download", `${prompt.prompt_desc || 'prompt'}.json`);
+          document.body.appendChild(downloadAnchorNode);
+          downloadAnchorNode.click();
+          downloadAnchorNode.remove();
+        }
       }
 
       function setupEventListeners() {

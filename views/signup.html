@@ -6,14 +6,13 @@
   <title>Create Account - Prompt2Profit</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/signup.css">
+  <link rel="stylesheet" href="./css/signup.css">
 </head>
 <body>
   <div class="container">
     <form class="register-box" id="signup-form">
       <h1 class="brand">Prompt2Profit</h1>
       <h2 class="form-title">Create Account</h2>
-      <p class="subtext">Join thousands of entrepreneurs building their next big idea</p>
 
       <label for="name">Full Name</label>
       <div class="input-box">
@@ -41,11 +40,6 @@
         <input type="password" id="confirm_password" placeholder="Confirm your password" required />
       </div>
 
-      <div class="agreement">
-        <input type="checkbox" id="terms" required />
-        <label for="terms">I agree to the <a href="#" target="_blank">Terms of Service</a> and <a href="#" target="_blank">Privacy Policy</a></label>
-      </div>
-
       <button type="submit" class="submit-btn">Create Account</button>
 
       <div class="divider"><span>Or continue with</span></div>
@@ -54,7 +48,7 @@
         <button type="button" class="social github"><i class="fa-brands fa-github" style="color: black"></i> GitHub</button>
       </div>
 
-      <p class="signin-text">Already have an account? <a href="login.html">Sign in</a></p>
+      <p class="signin-text">Already have an account? <a href="#">Sign in</a></p>
     </form>
   </div>
 
@@ -75,26 +69,10 @@
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
       const confirm_password = document.getElementById("confirm_password").value;
-      const termsChecked = document.getElementById("terms").checked;
-
-      // Validation
-      if (!termsChecked) {
-        return alert("Please agree to the Terms of Service and Privacy Policy.");
-      }
-
-      if (password.length < 8) {
-        return alert("Password must be at least 8 characters long.");
-      }
 
       if (password !== confirm_password) {
         return alert("Passwords do not match.");
       }
-
-      // Update button to show loading state
-      const submitBtn = document.querySelector('.submit-btn');
-      const originalText = submitBtn.textContent;
-      submitBtn.textContent = 'Creating Account...';
-      submitBtn.disabled = true;
 
       try {
         const res = await fetch("/user/signup", {
@@ -114,25 +92,13 @@
         if (res.ok) {
           localStorage.setItem("token", data.token);
           localStorage.setItem("user", JSON.stringify(data.user));
-          
-          // Show success message
-          const submitBtn = document.querySelector('.submit-btn');
-          submitBtn.textContent = '✓ Account Created Successfully!';
-          submitBtn.style.background = 'var(--gradient-success)';
-          
-          // Redirect after short delay to show success
-          setTimeout(() => {
-            window.location.href = "/index.html";
-          }, 1500);
+          alert(`Signup successful, Welcome ${data.user.name}`);
+          window.location.href = "/login.html";
         } else {
-          submitBtn.textContent = originalText;
-          submitBtn.disabled = false;
           alert(data.message || "Signup failed.");
         }
       } catch (err) {
         console.error("Signup error:", err);
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
         alert("Server error. Please try again later.");
       }
     });
