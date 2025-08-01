@@ -1,488 +1,585 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="stylesheet" href="/css/result.css" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@500;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Food Delivery App Analysis</title>
+    <link rel="stylesheet" href="/css/result.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Bootstrap Icons as backup -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
   </head>
   <body>
-    <div class="parent">
-      <div class="navbar">
-        <h1>Prompt2Profit</h1>
-        <h3>
-          <a href="history.html" style="text-decoration: none">History</a>
-        </h3>
-        <h3>
-          <a href="index.html" style="text-decoration: none">New Prompt</a>
-        </h3>
-        <h3 id="login-nav">
-          <a href="login.html" style="text-decoration: none">login/signup</a>
-        </h3>
-        <h3 id="welcomeUser"></h3>
-        <button onclick="logout()" id="logout">Logout</button>
-        <!-- <i class="bell fa-solid fa-bell"></i> -->
+    <nav class="navbar">
+      <div class="logo">
+        <span class="logo-icon"><i class="fa fa-lightbulb-o"></i></span>
+        <span class="logo-text">Prompt2Profit</span>
       </div>
+      <div class="nav-links">
+        <a href="#"><i class="fa fa-line-chart"></i> Dashboard</a>
+        <a href="#"><i class="fa fa-bar-chart"></i> Analytics</a>
+        <a href="#"><i class="fa fa-history"></i> History</a>
+      </div>
+    </nav>
+    <section class="hero">
+      <div class="hero-content">
+        <div class="hero-icon">
+          <i class="fa fa-rocket"></i>
+        </div>
+        <h1 id="idea-title">...</h1>
+        <p id="idea-subtitle">...</p>
+        <div class="idea-score-card">
+          <div class="idea-score-label">
+            <i class="fa fa-star"></i> Idea Score
+          </div>
+          <div class="idea-score-value-row">
+            <div class="idea-score-value" id="idea-score-value">--</div>
+            <span class="idea-score-divider">/100</span>
+          </div>
+          <div class="score-bar-bg">
+            <div class="score-bar-fill" id="idea-score-bar"></div>
+          </div>
+          <div class="idea-score-desc" id="idea-score-desc"></div>
+        </div>
+      </div>
+    </section>
+    <section class="card-grid">
+      <div class="card card-worth">
+        <div class="card-header">
+          <span class="card-icon worth"><i class="fa fa-check"></i></span>
+          <span>Worth Building</span>
+        </div>
+        <div class="card-subtitle">Viability Score</div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="viability-bar"></div>
+          <span class="progress-bar-value" id="viability-value"></span>
+        </div>
+        <div class="card-desc" id="worth-desc"></div>
+      </div>
+      <div class="card card-earning">
+        <div class="card-header">
+          <span class="card-icon earning"><i class="fa fa-dollar"></i></span>
+          <span>Earning Potential</span>
+        </div>
+        <div class="card-earning-title" id="earning-title"></div>
+        <div class="card-earning-desc" id="earning-desc"></div>
+        <div class="earning-details-row">
+          <span><i class="fa fa-percent"></i> Commission</span>
+          <span id="commission-value"></span>
+        </div>
+        <div class="earning-details-row">
+          <span><i class="fa fa-credit-card"></i> Delivery Fee</span>
+          <span id="delivery-fee-value"></span>
+        </div>
+      </div>
+      <div class="card card-problem">
+        <div class="card-header">
+          <span class="card-icon problem"><i class="fa fa-puzzle-piece"></i></span>
+          <span>Problem It Solves</span>
+        </div>
+        <ul class="problem-list" id="problem-list">
+        </ul>
+      </div>
+    </section>
+    <section class="card-grid card-grid-2">
+      <div class="card card-tech">
+        <div class="card-header tech">
+          <span class="card-icon tech"><i class="fa-solid fa-code"></i></span>
+          <span>Tech Stack</span>
+        </div>
+        <div class="tech-tags" id="tech-tags"></div>
+      </div>
+      <div class="card card-mvp">
+        <div class="card-header mvp">
+          <span class="card-icon mvp"><i class="fa-solid fa-star"></i></span>
+          <span>MVP Features</span>
+        </div>
+        <ul class="mvp-list" id="mvp-list"></ul>
+      </div>
+    </section>
+    <section class="usp-section">
+      <div class="usp-card">
+        <div class="usp-quote"><i class="fa-solid fa-quote-left"></i></div>
+        <div class="usp-title">Unique Selling Proposition</div>
+        <div class="usp-text" id="usp-text"></div>
+        <div class="usp-highlights" id="usp-highlights"></div>
+      </div>
+    </section>
+    <section class="card-grid card-grid-3">
+      <div class="card card-monetize">
+        <div class="card-header monetize">
+          <span class="card-icon monetize"><i class="fa-solid fa-coins"></i></span>
+          <span>Monetization Model</span>
+        </div>
+        <div id="monetization-list"></div>
+      </div>
+      <div class="card card-timeline">
+        <div class="card-header timeline">
+          <span class="card-icon timeline"><i class="fa-solid fa-calendar-days"></i></span>
+          <span>Timeline to Revenue</span>
+        </div>
+        <div id="timeline-steps"></div>
+        <div class="timeline-expected">
+          <span class="timeline-expected-label">Expected timeline to first revenue</span>
+          <span class="timeline-expected-value" id="timeline-expected-value"></span>
+        </div>
+      </div>
+    </section>
 
-      <div class="div2">
-        <div class="info">
-          <h3>AI-Powered Food Delivery App</h3>
-          <p>Analysis completed on December 15, 2024</p>
-          <div class="tags">
-            <span class="tag"
-              ><i class="dot fa-solid fa-circle"></i> Worth Building</span
-            >
-            <span class="tag"
-              ><i class="dollar fa-solid fa-dollar-sign"></i>
-            </span>
-          </div>
-        </div>
-        <div class="score">87/100<br /><small>Idea Score</small></div>
-      </div>
-
-      <div class="card-row">
-        <div class="div3">
-          <div class="title">
-            <i class="check fa-solid fa-check"></i> Worth Building
-          </div>
-          <p>
-            <span class="answer">Yes</span><br />
-            <small></small>
-          </p>
-        </div>
-        <div class="div4">
-          <div class="title">
-            <i class="users fa-solid fa-users"></i> Target Audience
-          </div>
-          <ul>
-            <li></li>
-            <li></li>
-            <li></li>
-          </ul>
-        </div>
-        <div class="div5">
-          <div class="title">
-            <i class="rocket fa-solid fa-rocket"></i> MVP Features
-          </div>
-          <ul>
-            <li>AI recommendation engine</li>
-            <li>User preference learning</li>
-            <li><a href="#">Read More</a></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="card-row">
-        <div class="div6">
-          <div class="title">
-            <i class="line fa-solid fa-chart-line"></i> Earning Potential
-          </div>
-          <p><strong>$2.5M+</strong><br /><small>$</small></p>
-        </div>
-        <div class="div7">
-          <div class="title">
-            <i class="puzzle fa-solid fa-puzzle-piece"></i> Problem It Solves
-          </div>
-          <p>
-            <small>
-              Eliminates decision fatigue in food ordering by using AI to
-              suggest personalized meals based on preferences, dietary
-              restrictions, and past orders.</small
-            >
-          </p>
-        </div>
-        <div class="div8">
-          <div class="title">
-            <i class="code fa-solid fa-code"></i> Tech Stack
-          </div>
-          <div class="tech-tags">
-            <div class="tag-group frontend">
-              <strong>Frontend:</strong> <span>React Native</span>
-              <span>TypeScript</span>
-            </div>
-            <div class="tag-group backend">
-              <strong>Backend:</strong> <span>Node.js</span> <span>Python</span>
-            </div>
-            <div class="tag-group ai">
-              <strong>AI/ML:</strong> <span>TensorFlow</span>
-              <span>UX Pilot AI API</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card-row">
-        <div class="div9">
-          <div class="title">
-            <i class="star fa-solid fa-star"></i>Unique Selling Proposition
-          </div>
-          <p>
-            "AI-powered personalization that learns your taste preferences and
-            suggests the perfect meal every time, reducing order time by 70%."
-          </p>
-        </div>
-      </div>
-
-      <div class="card-row">
-        <div class="div10">
-          <div class="title">
-            <i class="coins fa-solid fa-coins"></i> Monetization Model
-          </div>
-          <ul>
-            <li>
-              <strong>15%</strong> <br />
-              Commission per order
-            </li>
-            <li>
-              <strong>$4.99</strong> <br />
-              Premium AI features
-            </li>
-            <li><strong>$299</strong> <br />Restaurant partnerships</li>
-            <li><strong>$2.99</strong> <br />Delivery fee</li>
-          </ul>
-        </div>
-        <div class="div11">
-          <div class="title">
-            <i class="calender fa-solid fa-calendar"></i> Timeline to Revenue
-          </div>
-          <ul>
-            <li>MVP Development: 3-4 months</li>
-            <li>Beta Testing: 1-2 months</li>
-            <li>Market Launch: 1 month</li> 
-            <li>
-              <strong
-                >First Revenue: <span class="time">6 months</span>
-              </strong>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="card-row">
-        <div class="div12">
-          <div class="title">
-            <i class="locate fa-solid fa-map-location-dot"></i> Roadmap – Build
-            From Idea to Launch<br />
-            --For Roadmap Generate Pdf--
-          </div>
-          <div class="pdf-download-section">
-            <button id="generatePDF" class="pdf-btn">
-              <i class="fa-solid fa-file-pdf"></i> Download Roadmap PDF
-            </button>
-          </div>
-          <p></p>
-        </div>
-      </div>
-
-      <div class="div13">
-        <button><i class="fa-solid fa-share"></i> Share Analysis</button>
-        <button><i class="fa-solid fa-bookmark"></i> Save for Later</button>
-      </div>
-    </div>
     <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        function logout() {
-          localStorage.removeItem("token");
-          localStorage.removeItem("user");
-          window.location.href = "/index.html";
-        }
-        const user = JSON.parse(localStorage.getItem("user"));
-        const welcomeElement = document.getElementById("welcomeUser");
-
-        if (user && user.name) {
-          welcomeElement.textContent = `Welcome ${user.name}`;
-          document.getElementById("logout").style.display = "inline";
-          document.getElementById("login-nav").style.display = "none";
-        } else {
-          welcomeElement.textContent = "Welcome Guest";
-          document.getElementById("logout").style.display = "none";
-          document.getElementById("login-nav").style.display = "inline";
-        }
-
-        const result = JSON.parse(localStorage.getItem("aiResult"));
-        if (!result) {
-          window.location.href = "/index.html";
-          return;
-        }
-
-        const today = new Date();
-        const formattedDate = today.toLocaleDateString("en-US", {
-          month: "long",
-          day: "numeric",
-          year: "numeric",
-        });
-
-        // Update header info
-        document.querySelector(".info h3").textContent =
-          result.topic || "No Title";
-        document.querySelector(
-          ".info p"
-        ).textContent = `Analysis completed on ${formattedDate}`;
-        document.querySelector(".score").innerHTML = `${
-          result.Score || "?"
-        }/100<br><small>Idea Score</small>`;
-
-        // Update tags
-        if (result.verdict === "Treasure") {
-          const earning = result.monthlyEarning || "N/A";
-          const earningItems = earning
-            .split(".")
-            .map((item) => item.trim())
-            .filter((item) => item.length > 0);
-
-          document.querySelector(".tags").innerHTML = `
-            <span class="tag"><i class="dot fa-solid fa-circle"></i> ${
-              result.verdict || "N/A"
-            }</span>
-            <span class="tag"><i class="dollar fa-solid fa-dollar-sign"></i> ${
-              earningItems[0] || "N/A"
-            }</span>`;
-        } else {
-          document.querySelector(".tags").innerHTML = `
-            <span class="tag"><i class="dot fa-solid fa-circle" style="color: red;"></i> ${
-              result.verdict || "N/A"
-            }</span>`;
-        }
-        // Worth building section
-        if (result.verdict === "Treasure") {
-          document.querySelector(
-            ".div3 .title"
-          ).innerHTML = `<i class="check fa-solid fa-check"></i> Worth Building`;
-        } else {
-          document.querySelector(
-            ".div3 .title"
-          ).innerHTML = `<i class="cross fa-solid fa-xmark"></i> Not Worth Building`;
-        }
-
-        document.querySelector(".div3 p").innerHTML = `
-          <span class="answer">${
-            result.verdict === "Treasure" ? "Yes" : "No"
-          }</span><br>
-          <small>${result.whyTreasure || "N/A"}</small>`;
-
-        if (result.verdict === "Treasure") {
-          document.querySelector(".div3 p").innerHTML = `
-          <span class="answer">Yes</span><br>
-          <small>${result.whyTreasure || "N/A"}</small>`;
-        } else {
-          document.querySelector(".div3 p").innerHTML = `
-          <span class="answer" style="color: red;">No</span><br>
-          <small>${result.whyTreasure || "N/A"}</small>`;
-        }
-        if (result.verdict === "Treasure") {
-          // Target audience
-          const audienceRaw = result.audience || "";
-          const audienceList = audienceRaw
-            .split(",")
-            .map((item) => `<li>${item.trim()}</li>`)
-            .join("");
-          document.querySelector(".div4 ul").innerHTML = audienceList;
-        } else {
-          document.querySelector(".div4").style.display = "none";
-        }
-        if (result.verdict === "Treasure") {
-          // MVP Features
-          const mvpFeatures = Array.isArray(result.mvpFeatureList)
-            ? result.mvpFeatureList
-            : result.mvpFeatureList?.split(",").map((item) => item.trim());
-
-          document.querySelector(".div5 ul").innerHTML = mvpFeatures
-            ? mvpFeatures.map((feature) => `<li>${feature}</li>`).join("")
-            : "<li>No features specified</li>";
-        } else {
-          document.querySelector(".div5").style.display = "none";
-        }
-        if (result.verdict === "Treasure") {
-          // Earning potential
-          const earning = result.monthlyEarning || "N/A";
-          const earningItems = earning
-            .split(".")
-            .map((item) => item.trim())
-            .filter((item) => item.length > 0);
-            
-          document.querySelector(".div6 p").innerHTML = earningItems
-            .map((item) => `<strong>${item}</strong>`)
-            .join(" ");
-        } else {
-          document.querySelector(".div6").style.display = "none";
-        }
-
-        if (result.verdict === "Treasure") {
-          // Problem it solves
-          const problem = result.realWorldProblem || "Not specified";
-          document.querySelector(".div7 p").innerHTML = `
-      <small>${problem}</small>
-    `;
-        } else {
-          document.querySelector(".div7").style.display = "none";
-        }
-        if (result.verdict === "Treasure") {
-          // Tech Stack
-          const techStr = result.TechStack || "";
-
-          function parseTechStack(techString) {
-            const lines = techString
-              .split("\n")
-              .map((line) => line.trim())
-              .filter((line) => line);
-            const techObj = {};
-
-            lines.forEach((line) => {
-              // line example: "Frontend : React,"
-              // remove trailing commas & split by ":"
-              const cleanLine = line.replace(/,$/, "");
-              const [key, value] = cleanLine.split(":").map((s) => s.trim());
-              if (key && value) {
-                // convert key to lowercase and replace spaces with underscore
-                const formattedKey = key.toLowerCase().replace(/\s+/g, "_");
-                techObj[formattedKey] = value;
-              }
-            });
-
-            return techObj;
-          }
-
-          const stack = parseTechStack(techStr);
-
-          const techHTML = `
-            <div class="tag-group frontend">
-              <strong>Frontend:</strong> <span>${stack.frontend || "N/A"}</span>
-            </div>
-            <div class="tag-group backend">
-              <strong>Backend:</strong> <span>${stack.backend || "N/A"}</span>
-            </div>
-            <div class="tag-group mobile">
-              <strong>Mobile App:</strong> <span>${
-                stack.mobile_app || "N/A"
-              }</span>
-            </div>
-            <div class="tag-group database">
-              <strong>Database:</strong> <span>${stack.database || "N/A"}</span>
-            </div>
-            <div class="tag-group ai">
-              <strong>AI:</strong> <span>${stack.ai || "N/A"}</span>
-            </div>
-            <div class="tag-group auth">
-              <strong>Auth:</strong> <span>${stack.auth || "N/A"}</span>
-            </div>
-          `;
-
-          document.querySelector(".div8 .tech-tags").innerHTML = techHTML;
-        } else {
-          document.querySelector(".div8").style.display = "none";
-        }
-        if (result.verdict === "Treasure") {
-          // USP
-          document.querySelector(".div9 p").textContent = Array.isArray(
-            result.USP
-          )
-            ? result.USP[0]
-            : result.USP || "N/A";
-        } else {
-          document.querySelector(".div9").style.display = "none";
-        }
-        if (result.verdict === "Treasure") {
-          // Monetization model
-          const monetization = result.monetizationStrategy || "N/A";
-          // Split by all periods
-          const monetizationItems = monetization
-            .split(".")
-            .map((item) => item.trim())
-            .filter((item) => item.length > 0);
-
-          document.querySelector(".div10 ul").innerHTML = monetizationItems
-            .map((item) => `<li><strong>${item}</strong></li>`)
-            .join("");
-        } else {
-          document.querySelector(".div10").style.display = "none";
-        }
-        if (result.verdict === "Treasure") {
-          // Timeline to revenue
-          if (result.Timeline_to_first_revenue) {
-            document.querySelector(".div11 ul").innerHTML = `
-  <li>${result.Timeline_to_first_revenue[0]?.phase || "Development"}: ${
-              result.Timeline_to_first_revenue[0]?.duration || "N/A"
-            }</li>
-  <li>${result.Timeline_to_first_revenue[1]?.phase || "Testing"}: ${
-              result.Timeline_to_first_revenue[1]?.duration || "N/A"
-            }</li>
-  <li>${result.Timeline_to_first_revenue[2]?.phase || "Launch"}: ${
-              result.Timeline_to_first_revenue[2]?.duration || "N/A"
-            }</li>
-`;
-          }
-        } else {
-          document.querySelector(".div11").style.display = "none";
-          document.querySelector(".div12").style.display = "none";
-          document.querySelector(".div13").style.display = "none";
-        }
-      });
-
-      // PDF Generation functionality - same as index.html
-        document.getElementById("generatePDF").addEventListener("click", async () => {
-          const aiResult = localStorage.getItem("aiResult");
-          if (!aiResult) {
-            alert("Please generate the business plan first.");
-            return;
-          }
-
-          const user = JSON.parse(localStorage.getItem("user"));
-
-          // Check if user is authenticated
-          if (!user || !user.name) {
-            localStorage.setItem("shouldGeneratePDF", "true");
-            window.location.href = "/login.html";
-            return;
-          }
-
-          let result;
-          try {
-            result = JSON.parse(aiResult);
-          } catch (err) {
-            alert("Invalid AI result format.");
-            return;
-          }
-
-          const { roadmap, topic } = result;
-          if (!Array.isArray(roadmap)) {
-            alert("No roadmap found.");
-            return;
-          }
-
-          try {
-            const response = await fetch("/api/generate-pdf", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ roadmap, topic }),
-            });
-
-            if (!response.ok) {
-              const errorText = await response.text();
-              throw new Error(errorText);
+    // Debug: Log what's in localStorage
+    console.log("localStorage aiResult:", localStorage.getItem("aiResult"));
+    
+    // Test if Font Awesome is working
+    console.log("Testing Font Awesome icons...");
+    
+    // Get data from localStorage (saved when API call is made)
+    const apiResult = JSON.parse(localStorage.getItem("aiResult"));
+    console.log("Parsed API Result:", apiResult);
+    
+    // Helper function to generate colors for lists
+    const colors = ['blue', 'green', 'orange', 'purple', 'pink', 'red'];
+    const getColor = (index) => colors[index % colors.length];
+    
+    // Transform API data to match UI format
+    let result;
+    
+    if (apiResult) {
+      // Check if the idea was marked as "Trash"
+      if (apiResult.verdict === "Trash") {
+        result = {
+          topic: apiResult.topic || "Startup Analysis",
+          subtitle: "Analysis completed - Consider refinement",
+          Score: apiResult.Score || 0,
+          ScoreDesc: apiResult.whyTreasure || "This idea needs improvement",
+          viability: Math.max(0, Math.min(40, apiResult.Score || 0)), // Lower viability for trash ideas
+          viabilityDesc: apiResult.whyTreasure || "Consider refining your idea based on the feedback",
+          earningPotential: "Limited",
+          earningDesc: "Consider revising your approach for better market potential",
+          commission: "N/A",
+          deliveryFee: "N/A",
+          problemList: [{
+            label: apiResult.whyTreasure || "Needs market validation",
+            color: "orange"
+          }],
+          techStack: [],
+          mvpFeatures: [{
+            label: "Refine your business concept",
+            color: "orange"
+          }, {
+            label: "Research market demand",
+            color: "blue"
+          }, {
+            label: "Validate problem-solution fit",
+            color: "purple"
+          }],
+          USP: "Consider developing a stronger value proposition",
+          USPHighlights: [
+            { label: "Research", sub: "Needed" },
+            { label: "Refine", sub: "Concept" },
+            { label: "Validate", sub: "Market" }
+          ],
+          monetization: [{
+            label: "Market research required",
+            highlight: "",
+            color: "orange"
+          }],
+          timeline: [{
+            step: 1,
+            label: "Market Research",
+            duration: "2-3 weeks",
+            color: "blue"
+          }, {
+            step: 2,
+            label: "Concept Refinement",
+            duration: "1-2 weeks",
+            color: "orange"
+          }, {
+            step: 3,
+            label: "Re-validation",
+            duration: "1 week",
+            color: "purple"
+          }],
+          timelineExpected: "4-6 Weeks"
+        };
+      } else {
+        // For "Treasure" ideas, parse the full data
+        
+        // Parse MVP features from comma-separated string
+        const mvpFeaturesArray = [];
+        if (apiResult.mvpFeatureList) {
+          const features = apiResult.mvpFeatureList.split(',');
+          features.forEach((feature, index) => {
+            if (feature.trim()) {
+              mvpFeaturesArray.push({
+                label: feature.trim(),
+                color: getColor(index)
+              });
             }
-
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "roadmap.pdf";
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            window.URL.revokeObjectURL(url);
-          } catch (error) {
-            alert("PDF generation failed.");
-            console.error(error);
+          });
+        }
+        
+        // Parse tech stack from formatted string  
+        const techStackArray = [];
+        if (apiResult.TechStack) {
+          const techLines = apiResult.TechStack.split(',');
+          techLines.forEach((line, index) => {
+            const parts = line.split(':');
+            if (parts.length === 2) {
+              const typeRaw = parts[0].trim();
+              const tech = parts[1].trim();
+              
+              // Map common tech types to proper categories
+              let type = 'other';
+              let sub = typeRaw;
+              
+              if (typeRaw.toLowerCase().includes('frontend') || typeRaw.toLowerCase().includes('react') || typeRaw.toLowerCase().includes('vue')) {
+                type = 'frontend';
+                sub = 'Frontend';
+              } else if (typeRaw.toLowerCase().includes('backend') || typeRaw.toLowerCase().includes('node') || typeRaw.toLowerCase().includes('express')) {
+                type = 'backend';  
+                sub = 'Backend';
+              } else if (typeRaw.toLowerCase().includes('mobile') || typeRaw.toLowerCase().includes('app')) {
+                type = 'mobile';
+                sub = 'Mobile App';
+              } else if (typeRaw.toLowerCase().includes('database') || typeRaw.toLowerCase().includes('db')) {
+                type = 'db';
+                sub = 'Database';
+              } else if (typeRaw.toLowerCase().includes('ai') || typeRaw.toLowerCase().includes('ml')) {
+                type = 'ai';
+                sub = 'AI/ML';
+              }
+              
+              techStackArray.push({
+                label: tech,
+                type: type,
+                sub: sub
+              });
+            }
+          });
+        }
+        
+        // Parse monetization strategy from dot-separated string
+        const monetizationArray = [];
+        if (apiResult.monetizationStrategy) {
+          const strategies = apiResult.monetizationStrategy.split('.');
+          strategies.forEach((strategy, index) => {
+            if (strategy.trim()) {
+              // Extract monetary values if present
+              const strategyText = strategy.trim();
+              let highlight = "";
+              
+              // Look for percentage or monetary values
+              const percentMatch = strategyText.match(/(\d+[-\d]*%)/);
+              const moneyMatch = strategyText.match(/([₹$]\d+[,\d]*)/);
+              
+              if (percentMatch) {
+                highlight = percentMatch[1];
+              } else if (moneyMatch) {
+                highlight = moneyMatch[1];
+              }
+              
+              monetizationArray.push({
+                label: strategyText,
+                highlight: highlight,
+                color: getColor(index)
+              });
+            }
+          });
+        }
+        
+        // Parse timeline data
+        const timelineArray = [];
+        if (apiResult.Timeline_to_first_revenue && Array.isArray(apiResult.Timeline_to_first_revenue)) {
+          apiResult.Timeline_to_first_revenue.forEach((phase, index) => {
+            timelineArray.push({
+              step: index + 1,
+              label: phase.phase,
+              duration: phase.duration,
+              color: getColor(index)
+            });
+          });
+        }
+        
+        // Calculate total timeline
+        let totalMonths = 0;
+        if (apiResult.Timeline_to_first_revenue) {
+          apiResult.Timeline_to_first_revenue.forEach(phase => {
+            const duration = phase.duration.toLowerCase();
+            if (duration.includes('month')) {
+              const match = duration.match(/(\d+)-?(\d+)?/);
+              if (match) {
+                const min = parseInt(match[1]);
+                const max = match[2] ? parseInt(match[2]) : min;
+                totalMonths += Math.ceil((min + max) / 2);
+              }
+            }
+          });
+        }
+        
+        // Parse earning potential to extract amount and details
+        let earningTitle = "High";
+        let earningDesc = "Multiple revenue streams available";
+        let commission = "15-30%";
+        let deliveryFee = "$2-5";
+        
+        if (apiResult.monthlyEarning) {
+          const earning = apiResult.monthlyEarning;
+          console.log("Raw earning data:", earning);
+          
+          // Extract the main amount (before the dot)
+          const parts = earning.split('.');
+          if (parts.length > 0) {
+            earningTitle = parts[0].trim();
+            
+            // Clean up the earning title (remove extra text)
+            if (earningTitle.includes('monthly')) {
+              earningTitle = earningTitle.replace(/monthly/i, '').trim();
+            }
+            
+            if (parts.length > 1) {
+              earningDesc = parts.slice(1).join('.').trim();
+              // Limit description length
+              if (earningDesc.length > 100) {
+                earningDesc = earningDesc.substring(0, 100) + "...";
+              }
+            }
           }
-        });
+          
+          // Extract commission if mentioned
+          const commissionMatch = earning.match(/commission[:\s]*(\d+[-\d]*%)/i);
+          if (commissionMatch) {
+            commission = commissionMatch[1];
+          }
+          
+          // Extract fees if mentioned  
+          const feeMatch = earning.match(/fee[:\s]*([₹$]\d+[-\d]*)/i);
+          if (feeMatch) {
+            deliveryFee = feeMatch[1];
+          }
+        }
+        
+        // Create better USP highlights based on the data
+        let uspHighlights = [];
+        
+        // Try to extract meaningful highlights from various data sources
+        if (apiResult.monthlyEarning) {
+          const earning = apiResult.monthlyEarning.toLowerCase();
+          if (earning.includes('lakh') || earning.includes('crore')) {
+            uspHighlights.push({ label: "High ROI", sub: "Potential" });
+          }
+          if (earning.includes('subscription') || earning.includes('recurring')) {
+            uspHighlights.push({ label: "Recurring", sub: "Revenue" });
+          }
+        }
+        
+        // Check if it's AI/tech related
+        if (apiResult.topic && (apiResult.topic.toLowerCase().includes('ai') || 
+            apiResult.topic.toLowerCase().includes('app') || 
+            apiResult.topic.toLowerCase().includes('tech'))) {
+          uspHighlights.push({ label: "Innovation", sub: "Focus" });
+        }
+        
+        // Check for scalability indicators
+        if (apiResult.TechStack || apiResult.monetizationStrategy) {
+          uspHighlights.push({ label: "Scalable", sub: "Model" });
+        }
+        
+        // Default highlights if we don't have enough
+        if (uspHighlights.length === 0) {
+          uspHighlights = [
+            { label: "Innovation", sub: "Focus" },
+            { label: "Market", sub: "Ready" },
+            { label: "Scalable", sub: "Solution" }
+          ];
+        } else if (uspHighlights.length < 3) {
+          // Add market ready if we have less than 3
+          if (!uspHighlights.some(h => h.label.includes('Market'))) {
+            uspHighlights.push({ label: "Market", sub: "Ready" });
+          }
+        }
+        
+        // Limit to 3 highlights
+        uspHighlights = uspHighlights.slice(0, 3);
+        
+        result = {
+          topic: apiResult.topic || "Startup Analysis",
+          subtitle: "Comprehensive market analysis and viability assessment",
+          Score: apiResult.Score || 0,
+          ScoreDesc: apiResult.whyTreasure || "Analysis completed successfully",
+          viability: Math.min(95, Math.max(60, apiResult.Score || 0)), // Convert score to viability %
+          viabilityDesc: apiResult.whyTreasure || "Strong market potential identified",
+          earningPotential: earningTitle,
+          earningDesc: earningDesc,
+          commission: commission,
+          deliveryFee: deliveryFee,
+          problemList: [{
+            label: apiResult.realWorldProblem || "Solves important market problem",
+            color: "blue"
+          }],
+          techStack: techStackArray,
+          mvpFeatures: mvpFeaturesArray,
+          USP: apiResult.USP || "Unique value proposition identified",
+          USPHighlights: uspHighlights,
+          monetization: monetizationArray,
+          timeline: timelineArray,
+          timelineExpected: totalMonths > 0 ? `${totalMonths} Months` : "6-12 Months"
+        };
+      }
+    } else {
+      // Fallback data if no API result in localStorage
+      result = {
+        topic: "No Analysis Available",
+        subtitle: "Please submit a prompt for analysis",
+        Score: 0,
+        ScoreDesc: "No data available",
+        viability: 0,
+        viabilityDesc: "No analysis performed yet",
+        earningPotential: "Unknown",
+        earningDesc: "Submit a prompt for detailed analysis",
+        commission: "N/A",
+        deliveryFee: "N/A",
+        problemList: [{ label: "No data available", color: "gray" }],
+        techStack: [],
+        mvpFeatures: [],
+        USP: "No analysis available",
+        USPHighlights: [],
+        monetization: [],
+        timeline: [],
+        timelineExpected: "Unknown"
+      };
+    }
+
+    // HERO
+    document.getElementById("idea-title").textContent = result.topic || "";
+    document.getElementById("idea-subtitle").textContent = result.subtitle || "";
+    document.getElementById("idea-score-value").textContent = result.Score ?? "--";
+    document.getElementById("idea-score-bar").style.width = (result.Score || 0) + "%";
+    document.getElementById("idea-score-desc").textContent = result.ScoreDesc || "";
+
+    // Worth Building
+    document.getElementById("viability-bar").style.width = (result.viability || 0) + "%";
+    document.getElementById("viability-value").textContent = (result.viability || 0) + "%";
+    document.getElementById("worth-desc").textContent = result.viabilityDesc || "";
+
+    // Earning Potential
+    document.getElementById("earning-title").textContent = result.earningPotential || "";
+    document.getElementById("earning-desc").textContent = result.earningDesc || "";
+    document.getElementById("commission-value").textContent = result.commission || "";
+    document.getElementById("delivery-fee-value").textContent = result.deliveryFee || "";
+
+    // Problem It Solves
+    document.getElementById("problem-list").innerHTML =
+      (result.problemList || [])
+        .map(
+          (item) =>
+            `<li><span class="dot dot-${item.color}"></span> ${item.label}</li>`
+        )
+        .join("");
+
+    // Tech Stack
+    document.getElementById("tech-tags").innerHTML =
+      (result.techStack || [])
+        .map((t) => {
+          // Add appropriate icons based on tech type
+          let icon = '';
+          if (t.type === 'frontend' || t.label.toLowerCase().includes('react') || t.label.toLowerCase().includes('vue') || t.label.toLowerCase().includes('angular')) {
+            icon = '<i class="fa-brands fa-react"></i> ';
+          } else if (t.type === 'backend' || t.label.toLowerCase().includes('node') || t.label.toLowerCase().includes('express')) {
+            icon = '<i class="fa-brands fa-node-js"></i> ';
+          } else if (t.type === 'mobile' || t.label.toLowerCase().includes('mobile') || t.label.toLowerCase().includes('app')) {
+            icon = '<i class="fa-solid fa-mobile-screen-button"></i> ';
+          } else if (t.type === 'db' || t.label.toLowerCase().includes('mongo') || t.label.toLowerCase().includes('database')) {
+            icon = '<i class="fa-solid fa-database"></i> ';
+          } else if (t.type === 'ai' || t.label.toLowerCase().includes('ai') || t.label.toLowerCase().includes('ml')) {
+            icon = '<i class="fa-solid fa-brain"></i> ';
+          } else {
+            icon = '<i class="fa-solid fa-code"></i> ';
+          }
+          
+          return `<span class="tech-tag ${t.type}">${icon}${t.label}<br/><span class="tech-sub">${t.sub}</span></span>`;
+        })
+        .join("");
+
+    // MVP Features
+    document.getElementById("mvp-list").innerHTML =
+      (result.mvpFeatures || [])
+        .map(
+          (f) =>
+            `<li><span class="mvp-dot dot-${f.color}"></span> ${f.label}</li>`
+        )
+        .join("");
+
+    // USP
+    document.getElementById("usp-text").textContent = result.USP || "";
+    document.getElementById("usp-highlights").innerHTML =
+      (result.USPHighlights || [])
+        .map((h) => {
+          // Add appropriate icons for USP highlights
+          let icon = '';
+          if (h.label.toLowerCase().includes('innovation') || h.label.toLowerCase().includes('focus')) {
+            icon = '<i class="fa-solid fa-lightbulb"></i>';
+          } else if (h.label.toLowerCase().includes('recurring') || h.label.toLowerCase().includes('revenue')) {
+            icon = '<i class="fa-solid fa-repeat"></i>';
+          } else if (h.label.toLowerCase().includes('scalable') || h.label.toLowerCase().includes('model')) {
+            icon = '<i class="fa-solid fa-chart-line"></i>';
+          } else if (h.label.toLowerCase().includes('market') || h.label.toLowerCase().includes('ready')) {
+            icon = '<i class="fa-solid fa-bullseye"></i>';
+          } else if (h.label.toLowerCase().includes('ai') || h.label.toLowerCase().includes('powered')) {
+            icon = '<i class="fa-solid fa-brain"></i>';
+          } else if (h.label.toLowerCase().includes('time') || h.label.toLowerCase().includes('min')) {
+            icon = '<i class="fa-solid fa-clock"></i>';
+          } else if (h.label.toLowerCase().includes('eco') || h.label.toLowerCase().includes('100%')) {
+            icon = '<i class="fa-solid fa-leaf"></i>';
+          } else {
+            icon = '<i class="fa-solid fa-star"></i>';
+          }
+          
+          return `<div class="usp-highlight-item">
+            <div class="usp-badge">
+              ${icon}
+              <span class="usp-badge-text">${h.label}</span>
+            </div>
+            <span class="usp-badge-label">${h.sub}</span>
+          </div>`;
+        })
+        .join("");
+
+    // Monetization
+    document.getElementById("monetization-list").innerHTML =
+      (result.monetization || [])
+        .map((m) => {
+          // Add icons based on monetization type
+          let icon = '';
+          if (m.label.toLowerCase().includes('commission') || m.label.toLowerCase().includes('percentage')) {
+            icon = '<i class="fa-solid fa-percent"></i> ';
+          } else if (m.label.toLowerCase().includes('subscription') || m.label.toLowerCase().includes('recurring')) {
+            icon = '<i class="fa-solid fa-repeat"></i> ';
+          } else if (m.label.toLowerCase().includes('fee') || m.label.toLowerCase().includes('charge')) {
+            icon = '<i class="fa-solid fa-credit-card"></i> ';
+          } else if (m.label.toLowerCase().includes('advertising') || m.label.toLowerCase().includes('ads')) {
+            icon = '<i class="fa-solid fa-bullhorn"></i> ';
+          } else {
+            icon = '<i class="fa-solid fa-coins"></i> ';
+          }
+          
+          return `<div class="monetization-row">${icon}<span>${m.label}</span><span class="mono-highlight ${m.color}">${m.highlight}</span></div>`;
+        })
+        .join("");
+
+    // Timeline
+    document.getElementById("timeline-steps").innerHTML =
+      (result.timeline || [])
+        .map(
+          (t) =>
+            `<div class="timeline-step"><span class="timeline-circle ${t.color}">${t.step}</span><span>${t.label}</span><span class="timeline-duration">${t.duration}</span></div>`
+        )
+        .join("");
+    document.getElementById("timeline-expected-value").textContent =
+      result.timelineExpected || "";
     </script>
   </body>
 </html>

@@ -18,12 +18,22 @@
     <div class="page">
       <div class="navbar">
         <h1>Prompt2Profit</h1>
-        <h3><a href="history.html" style="text-decoration:none;">History</a></h3>
-        <h3><a href="index.html" style="text-decoration:none;">New Prompt</a></h3>
-        <h3 id="login-nav"><a href="login.html" style="text-decoration:none;">login/signup</a></h3>
-        <h3 id="welcomeUser"></h3>
-        <button onclick="logout()" id="logout">Logout</button>
-        <!-- <i class="bell fa-solid fa-bell"></i> -->
+        
+        <!-- Hamburger Menu Button -->
+        <button class="hamburger" id="hamburgerMenu" aria-label="Toggle navigation">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        
+        <!-- Navigation Menu -->
+        <div class="nav-menu" id="navMenu">
+          <h3><a href="history.html" style="text-decoration:none;">History</a></h3>
+          <h3><a href="index.html" style="text-decoration:none;">New Prompt</a></h3>
+          <h3 id="login-nav"><a href="login.html" style="text-decoration:none;">Login/Signup</a></h3>
+          <h3 id="welcomeUser"></h3>
+          <button onclick="logout()" id="logout">Logout</button>
+        </div>
       </div>
 
       <div class="main-container">
@@ -49,16 +59,18 @@
           ></textarea>
 
           <div class="info1">
-            <p>💡 Tip: Be specific and detailed for better AI analysis</p>
+            <p><span class="tip-icon">💡</span> Tip: Be specific and detailed for better AI analysis</p>
             <p><span id="count">0</span>/2000 characters</p>
           </div>
 
           <div class="buttons">
             <button type="submit" id="showResult">
-              <i class="fa-solid fa-wand-magic"></i> Generate Business Plan
+              <i class="fa-solid fa-wand-magic"></i> 
+              <span>Generate Business Plan</span>
             </button>
             <button type="submit" id="generatePDF">
-              <i class="fa-solid fa-route"></i> Get Your Roadmap
+              <i class="fa-solid fa-route"></i> 
+              <span>Get Your Roadmap</span>
             </button>
           </div>
 
@@ -89,6 +101,23 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- Recent Ideas Section -->
+      <div class="recents" id="recentsSection" style="display: none;">
+        <h2 class="section-title">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          Your Recent Ideas
+        </h2>
+        <div class="ideas-grid" id="ideasGrid">
+          <!-- Recent ideas will be populated here -->
+        </div>
+        <div class="view-all-container">
+          <a href="history.html" class="view-all-btn">
+            <i class="fa-solid fa-arrow-right"></i>
+            View All History
+          </a>
         </div>
       </div>
     </div>
@@ -223,6 +252,119 @@
         // Initialize character count
         promptArea.dispatchEvent(new Event('input'));
 
+        //=========================================Load Recent Ideas=======================
+        await loadRecentIdeas();
+
+        async function loadRecentIdeas() {
+          try {
+            const user = JSON.parse(localStorage.getItem("user"));
+            const token = localStorage.getItem("token");
+            
+            if (!user || !user.id) {
+              document.getElementById("recentsSection").style.display = "none";
+              return;
+            }
+
+            const response = await fetch(`/api/history?userId=${user.id}`, {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                ...(token && { Authorization: `Bearer ${token}` }),
+              },
+            });
+
+            if (!response.ok) {
+              console.error("Failed to fetch recent ideas");
+              return;
+            }
+
+            const ideas = await response.json();
+            
+            if (ideas && ideas.length > 0) {
+              document.getElementById("recentsSection").style.display = "block";
+              displayRecentIdeas(ideas.slice(0, 4)); // Show only last 4 ideas
+            } else {
+              document.getElementById("recentsSection").style.display = "none";
+            }
+          } catch (error) {
+            console.error("Error loading recent ideas:", error);
+            document.getElementById("recentsSection").style.display = "none";
+          }
+        }
+
+        function displayRecentIdeas(ideas) {
+          const ideasGrid = document.getElementById("ideasGrid");
+          ideasGrid.innerHTML = "";
+
+          ideas.forEach((idea, index) => {
+            const ideaCard = createIdeaCard(idea, index, ideas.length);
+            ideasGrid.appendChild(ideaCard);
+          });
+        }
+
+        function createIdeaCard(idea, index, totalIdeas) {
+          const card = document.createElement("div");
+          card.className = "idea-card";
+          
+          const timeAgo = getTimeAgo(new Date(idea.createdAt));
+          const truncatedDesc = truncateText(idea.prompt_desc || "Business Idea", 100);
+          
+          card.innerHTML = `
+            <div class="card-header">
+              <h3><i class="fa-solid fa-lightbulb"></i> Idea #${totalIdeas - index}</h3>
+              <span class="time">${timeAgo}</span>
+            </div>
+            <div class="description">${truncatedDesc}</div>
+            <div class="idea-stats">
+              <div class="stat-item">
+                <i class="fa-solid fa-star"></i>
+                <span>Score: ${idea.score || 'N/A'}/10</span>
+              </div>
+              <div class="stat-item">
+                <i class="fa-solid fa-users"></i>
+                <span>${idea.target_audience || 'General'}</span>
+              </div>
+            </div>
+            <div class="card-actions">
+              <button class="action-btn primary" onclick="viewIdeaDetails('${idea._id}')">
+                <i class="fa-solid fa-eye"></i> View Details
+              </button>
+              <button class="action-btn secondary" onclick="regenerateIdea('${encodeURIComponent(idea.prompt_desc || '')}')">
+                <i class="fa-solid fa-refresh"></i> Regenerate
+              </button>
+            </div>
+          `;
+          
+          return card;
+        }
+
+        function truncateText(text, maxLength) {
+          if (text.length <= maxLength) return text;
+          return text.substring(0, maxLength) + "...";
+        }
+
+        function getTimeAgo(date) {
+          const now = new Date();
+          const diffInSeconds = Math.floor((now - date) / 1000);
+          
+          if (diffInSeconds < 60) return "Just now";
+          if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+          if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+          if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)}d ago`;
+          return date.toLocaleDateString();
+        }
+
+        // Global functions for card actions
+        window.viewIdeaDetails = function(ideaId) {
+          window.location.href = `/history.html?id=${ideaId}`;
+        };
+
+        window.regenerateIdea = function(promptDesc) {
+          document.getElementById("promptArea").value = decodeURIComponent(promptDesc);
+          document.getElementById("promptArea").dispatchEvent(new Event('input'));
+          document.getElementById("promptArea").scrollIntoView({ behavior: 'smooth' });
+        };
+
         //=========================================generate pdf function =======================
         document
           .getElementById("generatePDF")
@@ -232,6 +374,9 @@
             if (!raw) return alert("Please generate the business plan first.");
 
             const user = JSON.parse(localStorage.getItem("user"));
+            const button = document.getElementById("generatePDF");
+            const buttonText = button.querySelector("span");
+            const buttonIcon = button.querySelector("i");
 
             // below we check that is user is anonymous or not
             if (!user || !user.name) {
@@ -242,6 +387,7 @@
               window.location.href = "/login.html";
               return;
             }
+            
             let result;
             try {
               result = JSON.parse(raw);
@@ -252,6 +398,11 @@
 
             const { roadmap, topic } = result;
             if (!Array.isArray(roadmap)) return alert("No roadmap found.");
+
+            // Add loading state
+            button.disabled = true;
+            buttonText.textContent = "Creating PDF...";
+            buttonIcon.className = "fa fa-spinner fa-spin";
 
             try {
               const response = await fetch("/api/generate-pdf", {
@@ -277,6 +428,11 @@
             } catch (error) {
               alert("PDF generation failed.");
               console.error(error);
+            } finally {
+              // Reset button state
+              button.disabled = false;
+              buttonText.textContent = "Get Your Roadmap";
+              buttonIcon.className = "fa-solid fa-route";
             }
             // after generating pdf we clear aiResult and topic so that when user clicks on generatepdf then he/she needs to enter prompt first
             localStorage.removeItem("aiResult"); // clear after storing
@@ -289,6 +445,10 @@
           .addEventListener("click", async () => {
             const prompt = document.querySelector(".prompt").value.trim();
             const loader = document.getElementById("fullLoader");
+            const button = document.getElementById("showResult");
+            const buttonText = button.querySelector("span");
+            const buttonIcon = button.querySelector("i");
+            
             loader.style.display = "block";
 
             if (!prompt) {
@@ -296,6 +456,11 @@
               alert("Please enter a business idea first!");
               return;
             }
+
+            // Add loading state
+            button.disabled = true;
+            buttonText.textContent = "Generating...";
+            buttonIcon.className = "fa fa-spinner fa-spin";
 
             try {
               const token = localStorage.getItem("token");
@@ -321,11 +486,46 @@
               console.error(err);
             } finally {
               loader.style.display = "none";
+              // Reset button state
+              button.disabled = false;
+              buttonText.textContent = "Generate Business Plan";
+              buttonIcon.className = "fa-solid fa-wand-magic";
             }
           });
         
       });
     </script>
+    
+    <!-- Hamburger Menu Script -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const hamburger = document.getElementById('hamburgerMenu');
+        const navMenu = document.getElementById('navMenu');
+        
+        hamburger.addEventListener('click', function() {
+          hamburger.classList.toggle('active');
+          navMenu.classList.toggle('active');
+        });
+        
+        // Close menu when clicking on nav links
+        const navLinks = navMenu.querySelectorAll('h3 a, #logout');
+        navLinks.forEach(link => {
+          link.addEventListener('click', function() {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+          });
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+          if (!hamburger.contains(event.target) && !navMenu.contains(event.target)) {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+          }
+        });
+      });
+    </script>
+    
     <!--=========================== loading button ===============================-->
     <div id="fullLoader" style="display: none">
       <div class="loader-backdrop"></div>

@@ -48,51 +48,76 @@
         flex-shrink: 0;
       }
       
-      .nav-links {
+      /* Hamburger Menu */
+      .hamburger {
+        display: none;
+        flex-direction: column;
+        justify-content: space-around;
+        width: 2rem;
+        height: 2rem;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        z-index: 10;
+      }
+
+      .hamburger span {
+        width: 2rem;
+        height: 0.25rem;
+        background: #1E40AF;
+        border-radius: 10px;
+        transition: all 0.3s linear;
+        position: relative;
+        transform-origin: 1px;
+      }
+
+      .hamburger.active span:first-child {
+        transform: rotate(45deg);
+      }
+
+      .hamburger.active span:nth-child(2) {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+
+      .hamburger.active span:nth-child(3) {
+        transform: rotate(-45deg);
+      }
+
+      /* Navigation Menu */
+      .nav-menu {
         display: flex;
         align-items: center;
-        gap: 0.25rem;
-        overflow-x: auto;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
+        gap: 0.5rem;
       }
-      
-      .nav-links::-webkit-scrollbar {
-        display: none;
-      }
-      
-      .nav-links h3 {
+
+      .nav-menu h3 {
         font-family: 'Inter', sans-serif;
-        margin: 0;
+        margin: 0 0.25rem;
         color: #4B5563;
         font-weight: 500;
         cursor: pointer;
         padding: 0.375rem 0.75rem;
         border-radius: 0.5rem;
         transition: all 0.2s ease;
+        text-decoration: none;
         white-space: nowrap;
         flex-shrink: 0;
         font-size: 0.875rem;
       }
-      
-      .nav-links h3:hover {
+
+      .nav-menu h3:hover {
         background: linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%);
         color: white;
         transform: translateY(-1px);
       }
-      
-      .nav-links h3 a {
+
+      .nav-menu h3 a {
         text-decoration: none;
         color: inherit;
       }
-      
-      .user-section {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        flex-shrink: 0;
-      }
-      
+
       #welcomeUser {
         font-family: 'Inter', sans-serif;
         color: #374151;
@@ -104,7 +129,7 @@
         font-size: 0.75rem;
         white-space: nowrap;
       }
-      
+
       #logout {
         border: none;
         padding: 0.375rem 0.75rem;
@@ -117,14 +142,60 @@
         transition: all 0.2s ease;
         white-space: nowrap;
       }
-      
+
       #logout:hover {
         transform: translateY(-1px);
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
       }
       
-      
       @media (max-width: 768px) {
+        .hamburger {
+          display: flex;
+        }
+        
+        .nav-menu {
+          position: fixed;
+          left: -100%;
+          top: 3.5rem;
+          flex-direction: column;
+          background-color: white;
+          width: 100%;
+          text-align: center;
+          transition: 0.3s;
+          box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
+          border-top: 1px solid #E5E7EB;
+          padding: 1rem 0;
+          gap: 0.5rem;
+          z-index: 99;
+        }
+        
+        .nav-menu.active {
+          left: 0;
+        }
+        
+        .nav-menu h3 {
+          width: 90%;
+          margin: 0 auto;
+          padding: 0.75rem;
+          border-radius: 0.5rem;
+          font-size: 0.875rem;
+        }
+        
+        #welcomeUser {
+          width: 90%;
+          margin: 0 auto;
+          text-align: center;
+          padding: 0.75rem;
+          font-size: 0.75rem;
+        }
+        
+        #logout {
+          width: 90%;
+          margin: 0 auto;
+          padding: 0.75rem;
+          font-size: 0.875rem;
+        }
+        
         .navbar {
           height: 3rem;
           padding: 0 0.75rem;
@@ -135,18 +206,50 @@
           font-size: 1rem;
         }
         
-        .nav-links {
-          gap: 0.125rem;
+        .main-content {
+          padding: 0.75rem;
         }
         
-        .nav-links h3 {
+        .filters {
+          flex-direction: column;
+          gap: 0.75rem;
+          padding: 0.75rem;
+        }
+        
+        .filters h2 {
+          font-size: 1rem;
+        }
+        
+        .dropdowns {
+          flex-direction: column;
+          gap: 0.5rem;
+          width: 100%;
+        }
+        
+        .dropdowns select {
+          width: 100%;
           font-size: 0.75rem;
-          padding: 0.25rem 0.5rem;
+          padding: 0.5rem;
         }
         
-        #welcomeUser {
-          font-size: 0.625rem;
-          padding: 0.25rem 0.5rem;
+        .prompt-card {
+          padding: 0.75rem;
+        }
+        
+        .prompt-header {
+          flex-direction: column;
+          gap: 0.5rem;
+          align-items: flex-start;
+        }
+        
+        .prompt-actions {
+          flex-direction: column;
+          gap: 0.75rem;
+        }
+        
+        .action-buttons {
+          flex-direction: column;
+          gap: 0.375rem;
         }
         
         #logout {
@@ -276,18 +379,19 @@
     <header>
       <div class="navbar">
         <h1>Prompt2Profit</h1>
-        <div class="nav-links">
-          <h3>
-            <a href="history.html" style="text-decoration: none">History</a>
-          </h3>
-          <h3>
-            <a href="index.html" style="text-decoration: none">New Prompt</a>
-          </h3>
-          <h3 id="login-nav">
-            <a href="login.html" style="text-decoration: none">login/signup</a>
-          </h3>
-        </div>
-        <div class="user-section">
+        
+        <!-- Hamburger Menu Button -->
+        <button class="hamburger" id="hamburgerMenu" aria-label="Toggle navigation">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        
+        <!-- Navigation Menu -->
+        <div class="nav-menu" id="navMenu">
+          <h3><a href="history.html" style="text-decoration:none;">History</a></h3>
+          <h3><a href="index.html" style="text-decoration:none;">New Prompt</a></h3>
+          <h3 id="login-nav"><a href="login.html" style="text-decoration:none;">Login/Signup</a></h3>
           <h3 id="welcomeUser"></h3>
           <button onclick="logout()" id="logout">Logout</button>
         </div>
@@ -702,6 +806,36 @@
           .getElementById("sortBy")
           .addEventListener("change", applyFiltersAndSort);
       }
+      
+      // Hamburger Menu Script
+      document.addEventListener('DOMContentLoaded', function() {
+        const hamburger = document.getElementById('hamburgerMenu');
+        const navMenu = document.getElementById('navMenu');
+        
+        if (hamburger && navMenu) {
+          hamburger.addEventListener('click', function() {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+          });
+          
+          // Close menu when clicking on nav links
+          const navLinks = navMenu.querySelectorAll('h3 a, #logout');
+          navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+              hamburger.classList.remove('active');
+              navMenu.classList.remove('active');
+            });
+          });
+          
+          // Close menu when clicking outside
+          document.addEventListener('click', function(event) {
+            if (!hamburger.contains(event.target) && !navMenu.contains(event.target)) {
+              hamburger.classList.remove('active');
+              navMenu.classList.remove('active');
+            }
+          });
+        }
+      });
     </script>
   </body>
 </html>
