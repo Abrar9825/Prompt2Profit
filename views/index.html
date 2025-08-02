@@ -15,26 +15,60 @@
     <link rel="stylesheet" href="/css/index.css" />
   </head>
   <body>
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+    
     <div class="page">
-      <div class="navbar">
-        <h1>Prompt2Profit</h1>
+      <!-- Header Navigation -->
+      <header class="header">
+        <div class="logo">
+          <div class="logo-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <span class="logo-text">Prompt2Profit</span>
+        </div>
         
         <!-- Hamburger Menu Button -->
-        <button class="hamburger" id="hamburgerMenu" aria-label="Toggle navigation">
-          <span></span>
-          <span></span>
-          <span></span>
+        <button class="hamburger-menu" id="hamburgerMenu" aria-label="Toggle menu">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
         </button>
-        
-        <!-- Navigation Menu -->
-        <div class="nav-menu" id="navMenu">
-          <h3><a href="history.html" style="text-decoration:none;">History</a></h3>
-          <h3><a href="index.html" style="text-decoration:none;">New Prompt</a></h3>
-          <h3 id="login-nav"><a href="login.html" style="text-decoration:none;">Login/Signup</a></h3>
-          <h3 id="welcomeUser"></h3>
-          <button onclick="logout()" id="logout">Logout</button>
+      </header>
+
+      <!-- Mobile Navigation Menu -->
+      <nav class="mobile-nav-menu" id="mobileNavMenu">
+        <div class="nav-header">
+          <span id="welcomeUser">Welcome Guest</span>
+          <button class="close-menu" id="closeMenu">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
-      </div>
+        <div class="nav-items">
+          <a href="index.html" class="nav-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Dashboard</span>
+          </a>
+          <a href="history.html" class="nav-item">
+            <i class="fas fa-history"></i>
+            <span>History</span>
+          </a>
+          <a href="index.html" class="nav-item">
+            <i class="fas fa-plus-circle"></i>
+            <span>New Analysis</span>
+          </a>
+        </div>
+        <div class="nav-footer">
+          <button onclick="logout()" id="logout" class="auth-btn" style="display:none;">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+          </button>
+          <a href="login.html" id="login-nav" class="auth-btn">
+            <i class="fas fa-sign-in-alt"></i>
+            <span>Login</span>
+          </a>
+        </div>
+      </nav>
 
       <div class="main-container">
         <div class="container-header">
@@ -161,18 +195,7 @@
           url.searchParams.delete("token");
           window.history.replaceState({}, document.title, url.toString());
         }
-        const user = JSON.parse(localStorage.getItem("user"));
-        const welcomeElement = document.getElementById("welcomeUser");
-
-        if (user && user.name) {
-          welcomeElement.textContent = `Welcome ${user.name}`;
-          document.getElementById("logout").style.display = "inline";
-          document.getElementById("login-nav").style.display = "none";
-        } else {
-          welcomeElement.textContent = "Welcome Guest";
-          document.getElementById("logout").style.display = "none";
-          document.getElementById("login-nav").style.display = "inline";
-        }
+        
         // here we are fetching topic from localstorage and providing to promptarea as soon as user logs in
         const storedTopic = localStorage.getItem("topic");
         if (storedTopic) {
@@ -496,34 +519,89 @@
       });
     </script>
     
-    <!-- Hamburger Menu Script -->
+    <!-- Hamburger Menu Script - Same as result page -->
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const hamburger = document.getElementById('hamburgerMenu');
-        const navMenu = document.getElementById('navMenu');
+      // Hamburger Menu Functionality - Same as result page
+      const hamburgerMenu = document.getElementById('hamburgerMenu');
+      const mobileNavMenu = document.getElementById('mobileNavMenu');
+      const closeMenu = document.getElementById('closeMenu');
+      const mobileOverlay = document.getElementById('mobileOverlay');
+      
+      function toggleMenu() {
+        const isActive = mobileNavMenu.classList.contains('active');
         
-        hamburger.addEventListener('click', function() {
-          hamburger.classList.toggle('active');
-          navMenu.classList.toggle('active');
-        });
-        
-        // Close menu when clicking on nav links
-        const navLinks = navMenu.querySelectorAll('h3 a, #logout');
-        navLinks.forEach(link => {
-          link.addEventListener('click', function() {
-            hamburger.classList.remove('active');
-            navMenu.classList.remove('active');
-          });
-        });
-        
-        // Close menu when clicking outside
-        document.addEventListener('click', function(event) {
-          if (!hamburger.contains(event.target) && !navMenu.contains(event.target)) {
-            hamburger.classList.remove('active');
-            navMenu.classList.remove('active');
-          }
+        if (isActive) {
+          // Close menu
+          hamburgerMenu.classList.remove('active');
+          mobileNavMenu.classList.remove('active');
+          mobileOverlay.classList.remove('active');
+          document.body.style.overflow = '';
+        } else {
+          // Open menu
+          hamburgerMenu.classList.add('active');
+          mobileNavMenu.classList.add('active');
+          mobileOverlay.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+      }
+      
+      hamburgerMenu.addEventListener('click', toggleMenu);
+      closeMenu.addEventListener('click', toggleMenu);
+
+      // Close menu when clicking on overlay
+      mobileOverlay.addEventListener('click', toggleMenu);
+
+      // Close menu when clicking on a nav item
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', () => {
+          hamburgerMenu.classList.remove('active');
+          mobileNavMenu.classList.remove('active');
+          mobileOverlay.classList.remove('active');
+          document.body.style.overflow = '';
         });
       });
+
+      // Handle window resize
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+          hamburgerMenu.classList.remove('active');
+          mobileNavMenu.classList.remove('active');
+          mobileOverlay.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      });
+
+      // Authentication functions - Same as result page
+      function checkAuth() {
+        const user = JSON.parse(localStorage.getItem("user"));
+        
+        if (user && user.name) {
+          const welcomeUser = document.getElementById('welcomeUser');
+          const logout = document.getElementById('logout');
+          const loginNav = document.getElementById('login-nav');
+          
+          if (welcomeUser) welcomeUser.textContent = `Welcome ${user.name}`;
+          if (logout) logout.style.display = 'block';
+          if (loginNav) loginNav.style.display = 'none';
+        } else {
+          const welcomeUser = document.getElementById('welcomeUser');
+          const logout = document.getElementById('logout');
+          const loginNav = document.getElementById('login-nav');
+          
+          if (welcomeUser) welcomeUser.textContent = 'Welcome Guest';
+          if (logout) logout.style.display = 'none';
+          if (loginNav) loginNav.style.display = 'block';
+        }
+      }
+
+      function logout() {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        window.location.href = "/index.html";
+      }
+
+      // Initialize auth on page load
+      document.addEventListener('DOMContentLoaded', checkAuth);
     </script>
     
     <!--=========================== loading button ===============================-->

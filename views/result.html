@@ -4,10 +4,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="stylesheet" href="/css/result.css" />
+    <title>Analytics Dashboard - Prompt2Profit</title>
+    <link rel="stylesheet" href="/css/result_new.css" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link
@@ -16,185 +16,356 @@
     />
   </head>
   <body>
-    <div class="parent">
-      <div class="navbar">
-        <h1>Prompt2Profit</h1>
-        <h3>
-          <a href="history.html" style="text-decoration: none">History</a>
-        </h3>
-        <h3>
-          <a href="index.html" style="text-decoration: none">New Prompt</a>
-        </h3>
-        <h3 id="login-nav">
-          <a href="login.html" style="text-decoration: none">login/signup</a>
-        </h3>
-        <h3 id="welcomeUser"></h3>
-        <button onclick="logout()" id="logout">Logout</button>
-        <!-- <i class="bell fa-solid fa-bell"></i> -->
-      </div>
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+    
+    <div class="container">
+      <!-- Header Navigation -->
+      <header class="header">
+        <div class="logo">
+          <div class="logo-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <span class="logo-text">Prompt2Profit</span>
+        </div>
+        
+        <!-- Hamburger Menu Button -->
+        <button class="hamburger-menu" id="hamburgerMenu" aria-label="Toggle menu">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+      </header>
 
-      <div class="div2">
-        <div class="info">
-          <h3>AI-Powered Food Delivery App</h3>
-          <p>Analysis completed on December 15, 2024</p>
-          <div class="tags">
-            <span class="tag"
-              ><i class="dot fa-solid fa-circle"></i> Worth Building</span
-            >
-            <span class="tag"
-              ><i class="dollar fa-solid fa-dollar-sign"></i>
-            </span>
-          </div>
+      <!-- Mobile Navigation Menu -->
+      <nav class="mobile-nav-menu" id="mobileNavMenu">
+        <div class="nav-header">
+          <span id="welcomeUser">Welcome Guest</span>
+          <button class="close-menu" id="closeMenu">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
-        <div class="score">87/100<br /><small>Idea Score</small></div>
-      </div>
+        <div class="nav-items">
+          <a href="index.html" class="nav-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Dashboard</span>
+          </a>
+          <a href="history.html" class="nav-item">
+            <i class="fas fa-history"></i>
+            <span>History</span>
+          </a>
+          <a href="index.html" class="nav-item">
+            <i class="fas fa-plus-circle"></i>
+            <span>New Analysis</span>
+          </a>
+        </div>
+        <div class="nav-footer">
+          <button onclick="logout()" id="logout" class="auth-btn" style="display:none;">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+          </button>
+          <a href="login.html" id="login-nav" class="auth-btn">
+            <i class="fas fa-sign-in-alt"></i>
+            <span>Login</span>
+          </a>
+        </div>
+      </nav>
 
-      <div class="card-row">
-        <div class="div3">
-          <div class="title">
-            <i class="check fa-solid fa-check"></i> Worth Building
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- App Title Section -->
+        <section class="app-title-section">
+          <div class="app-icon">
+            <i class="fas fa-mobile-alt"></i>
           </div>
-          <p>
-            <span class="answer">Yes</span><br />
-            <small></small>
-          </p>
-        </div>
-        <div class="div4">
-          <div class="title">
-            <i class="users fa-solid fa-users"></i> Target Audience
+          <div class="app-info">
+            <h1 class="app-title">Loading...</h1>
+            <p class="app-subtitle">Preparing analysis...</p>
           </div>
-          <ul>
-            <li></li>
-            <li></li>
-            <li></li>
-          </ul>
-        </div>
-        <div class="div5">
-          <div class="title">
-            <i class="rocket fa-solid fa-rocket"></i> MVP Features
-          </div>
-          <ul>
-            <li>AI recommendation engine</li>
-            <li>User preference learning</li>
-            <li><a href="#">Read More</a></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="card-row">
-        <div class="div6">
-          <div class="title">
-            <i class="line fa-solid fa-chart-line"></i> Earning Potential
-          </div>
-          <p><strong>$2.5M+</strong><br /><small>$</small></p>
-        </div>
-        <div class="div7">
-          <div class="title">
-            <i class="puzzle fa-solid fa-puzzle-piece"></i> Problem It Solves
-          </div>
-          <p>
-            <small>
-              Eliminates decision fatigue in food ordering by using AI to
-              suggest personalized meals based on preferences, dietary
-              restrictions, and past orders.</small
-            >
-          </p>
-        </div>
-        <div class="div8">
-          <div class="title">
-            <i class="code fa-solid fa-code"></i> Tech Stack
-          </div>
-          <div class="tech-tags">
-            <div class="tag-group frontend">
-              <strong>Frontend:</strong> <span>React Native</span>
-              <span>TypeScript</span>
-            </div>
-            <div class="tag-group backend">
-              <strong>Backend:</strong> <span>Node.js</span> <span>Python</span>
-            </div>
-            <div class="tag-group ai">
-              <strong>AI/ML:</strong> <span>TensorFlow</span>
-              <span>UX Pilot AI API</span>
+          <div class="idea-score">
+            <div class="score-number">0/100</div>
+            <div class="score-label">Idea Score</div>
+            <div class="score-bar">
+              <div class="score-progress" style="width: 0%"></div>
             </div>
           </div>
-        </div>
-      </div>
+        </section>
 
-      <div class="card-row">
-        <div class="div9">
-          <div class="title">
-            <i class="star fa-solid fa-star"></i>Unique Selling Proposition
+        <!-- Cards Grid -->
+        <div class="cards-grid">
+          <!-- Worth Building Card -->
+          <div class="card worth-building-card">
+            <div class="card-icon green">
+              <i class="fas fa-check"></i>
+            </div>
+            <div class="card-content">
+              <h3>Worth Building</h3>
+              <div class="viability-info">
+                <span class="viability-score">0%</span>
+                <span class="viability-label">Viability Score</span>
+                <p class="viability-description">Analyzing viability...</p>
+              </div>
+            </div>
           </div>
-          <p>
-            "AI-powered personalization that learns your taste preferences and
-            suggests the perfect meal every time, reducing order time by 70%."
-          </p>
-        </div>
-      </div>
 
-      <div class="card-row">
-        <div class="div10">
-          <div class="title">
-            <i class="coins fa-solid fa-coins"></i> Monetization Model
+          <!-- Earning Potential Card -->
+          <div class="card earning-card">
+            <div class="card-icon blue">
+              <i class="fas fa-dollar-sign"></i>
+            </div>
+            <div class="card-content">
+              <h3>Earning Potential</h3>
+              <div class="earning-info">
+                <span class="earning-level">Loading...</span>
+                <p class="earning-description">Calculating potential...</p>
+                <div class="earning-details">
+                  <div class="earning-item">
+                    <span class="percentage">10-15%</span>
+                    <span class="label">Commission</span>
+                  </div>
+                  <div class="earning-item">
+                    <span class="percentage">$2-5</span>
+                    <span class="label">Delivery Fee</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <ul>
-            <li>
-              <strong>15%</strong> <br />
-              Commission per order
-            </li>
-            <li>
-              <strong>$4.99</strong> <br />
-              Premium AI features
-            </li>
-            <li><strong>$299</strong> <br />Restaurant partnerships</li>
-            <li><strong>$2.99</strong> <br />Delivery fee</li>
-          </ul>
-        </div>
-        <div class="div11">
-          <div class="title">
-            <i class="calender fa-solid fa-calendar"></i> Timeline to Revenue
-          </div>
-          <ul>
-            <li>MVP Development: 3-4 months</li>
-            <li>Beta Testing: 1-2 months</li>
-            <li>Market Launch: 1 month</li> 
-            <li>
-              <strong
-                >First Revenue: <span class="time">6 months</span>
-              </strong>
-            </li>
-          </ul>
-        </div>
-      </div>
 
-      <div class="card-row">
-        <div class="div12">
-          <div class="title">
-            <i class="locate fa-solid fa-map-location-dot"></i> Roadmap – Build
-            From Idea to Launch<br />
-            --For Roadmap Generate Pdf--
+          <!-- Problem It Solves Card -->
+          <div class="card problem-card">
+            <div class="card-icon purple">
+              <i class="fas fa-puzzle-piece"></i>
+            </div>
+            <div class="card-content">
+              <h3>Problem It Solves</h3>
+              <ul class="problem-list">
+                <li><span class="bullet"></span>Loading problems...</li>
+              </ul>
+            </div>
           </div>
-          <div class="pdf-download-section">
-            <button id="generatePDF" class="pdf-btn">
-              <i class="fa-solid fa-file-pdf"></i> Download Roadmap PDF
+        </div>
+
+        <!-- Tech Stack & MVP Features Row -->
+        <div class="features-row">
+          <!-- Tech Stack Card -->
+          <div class="card tech-stack-card">
+            <div class="card-header">
+              <div class="card-icon gray">
+                <i class="fas fa-code"></i>
+              </div>
+              <h3>Tech Stack</h3>
+            </div>
+            <div class="tech-grid">
+              <div class="tech-item react">
+                <div class="tech-icon">
+                  <i class="fab fa-react"></i>
+                </div>
+                <span>React Native</span>
+                <span class="tech-type">Mobile App</span>
+              </div>
+              <div class="tech-item node">
+                <div class="tech-icon">
+                  <i class="fab fa-node-js"></i>
+                </div>
+                <span>Node.js</span>
+                <span class="tech-type">Backend</span>
+              </div>
+              <div class="tech-item mongo">
+                <div class="tech-icon">
+                  <i class="fas fa-database"></i>
+                </div>
+                <span>MongoDB</span>
+                <span class="tech-type">Database</span>
+              </div>
+              <div class="tech-item maps">
+                <div class="tech-icon">
+                  <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <span>Maps API</span>
+                <span class="tech-type">Location</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- MVP Features Card -->
+          <div class="card mvp-features-card">
+            <div class="card-header">
+              <div class="card-icon blue">
+                <i class="fas fa-star"></i>
+              </div>
+              <h3>MVP Features</h3>
+            </div>
+            <div class="features-list">
+              <div class="feature-item">
+                <div class="feature-icon">
+                  <i class="fas fa-user-check"></i>
+                </div>
+                <span>User Registration & Authentication</span>
+              </div>
+              <div class="feature-item">
+                <div class="feature-icon">
+                  <i class="fas fa-search"></i>
+                </div>
+                <span>Restaurant Search & Browse</span>
+              </div>
+              <div class="feature-item">
+                <div class="feature-icon">
+                  <i class="fas fa-shopping-cart"></i>
+                </div>
+                <span>Order Placement & Cart</span>
+              </div>
+              <div class="feature-item">
+                <div class="feature-icon">
+                  <i class="fas fa-credit-card"></i>
+                </div>
+                <span>Payment Integration</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Unique Selling Proposition -->
+        <div class="card usp-card">
+          <div class="usp-content">
+            <div class="quote-icon">
+            </div>
+            <div class="usp-text">
+              <i class="fas fa-quote-left" style="font-size: 40px;"></i>
+              <h3 style="font-size: 30px;" >Unique Selling Proposition</h3>
+              <p class="usp-description">"Automated resume generation from GitHub and LinkedIn profiles with AI-powered optimization and professional templates."</p>
+              <div class="usp-highlights">
+                <div class="highlight-item">
+                  <div class="highlight-icon">
+                    <i class="fas fa-clock"></i>
+                  </div>
+                  <span class="highlight-value">15min</span>
+                  <span class="highlight-label">Quick Setup</span>
+                </div>
+                <div class="highlight-item">
+                  <div class="highlight-icon">
+                    <i class="fas fa-robot"></i>
+                  </div>
+                  <span class="highlight-value">AI</span>
+                  <span class="highlight-label">Powered</span>
+                </div>
+                <div class="highlight-item">
+                  <div class="highlight-icon">
+                    <i class="fas fa-leaf"></i>
+                  </div>
+                  <span class="highlight-value">100%</span>
+                  <span class="highlight-label">Automated</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Row: Monetization & Timeline -->
+        <div class="bottom-row">
+          <!-- Monetization Model -->
+          <div class="card monetization-card">
+            <div class="card-header">
+              <div class="card-icon yellow">
+                <i class="fas fa-coins"></i>
+              </div>
+              <h3>Monetization Model</h3>
+            </div>
+            <div class="monetization-list">
+              <div class="monetization-item">
+                <span class="monetization-label">Commission from Restaurants</span>
+                <span class="monetization-value">20-30%</span>
+                <span class="monetization-desc">Per order percentage</span>
+              </div>
+              <div class="monetization-item">
+                <span class="monetization-label">Delivery Fees</span>
+                <span class="monetization-value">$2-5</span>
+                <span class="monetization-desc">Customer charges</span>
+              </div>
+              <div class="monetization-item">
+                <span class="monetization-label">Premium Subscriptions</span>
+                <span class="monetization-value">$9.99</span>
+                <span class="monetization-desc">Monthly plans</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Timeline to Revenue -->
+          <div class="card timeline-card">
+            <div class="card-header">
+              <div class="card-icon blue">
+                <i class="fas fa-calendar-alt"></i>
+              </div>
+              <h3>Timeline to Revenue</h3>
+            </div>
+            <div class="timeline-list">
+              <div class="timeline-item active">
+                <div class="timeline-step">1</div>
+                <div class="timeline-content">
+                  <span class="timeline-phase">MVP Development</span>
+                  <span class="timeline-duration">3-4 months</span>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-step">2</div>
+                <div class="timeline-content">
+                  <span class="timeline-phase">Beta Launch</span>
+                  <span class="timeline-duration">1 month testing</span>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-step">3</div>
+                <div class="timeline-content">
+                  <span class="timeline-phase">First Revenue</span>
+                  <span class="timeline-duration">Month 5-6</span>
+                </div>
+              </div>
+            </div>
+            <div class="timeline-summary">
+              <span class="timeline-total">6 Months</span>
+              <span class="timeline-subtitle">Expected timeline to first revenue</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- PDF Download Section -->
+        <div class="card pdf-card">
+          <div class="pdf-content">
+            <div class="pdf-icon">
+              <i class="fas fa-file-pdf"></i>
+            </div>
+            <div class="pdf-info">
+              <h3>Roadmap – Build From Idea to Launch</h3>
+              <p>Download comprehensive business plan and development roadmap</p>
+            </div>
+            <button id="generatePDF" class="pdf-download-btn">
+              <i class="fas fa-download"></i>
+              Download PDF
             </button>
           </div>
-          <p></p>
         </div>
-      </div>
 
-      <div class="div13">
-        <button><i class="fa-solid fa-share"></i> Share Analysis</button>
-        <button><i class="fa-solid fa-bookmark"></i> Save for Later</button>
-      </div>
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button class="action-btn primary">
+            <i class="fas fa-share"></i>
+            Share Analysis
+          </button>
+          <button class="action-btn secondary">
+            <i class="fas fa-bookmark"></i>
+            Save for Later
+          </button>
+        </div>
+      </main>
     </div>
     <script>
+      function logout() {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        window.location.href = "/index.html";
+      }
+
       document.addEventListener("DOMContentLoaded", () => {
-        function logout() {
-          localStorage.removeItem("token");
-          localStorage.removeItem("user");
-          window.location.href = "/index.html";
-        }
         const user = JSON.parse(localStorage.getItem("user"));
         const welcomeElement = document.getElementById("welcomeUser");
 
@@ -209,7 +380,10 @@
         }
 
         const result = JSON.parse(localStorage.getItem("aiResult"));
+        console.log("Retrieved result from localStorage:", result);
+        
         if (!result) {
+          console.log("No result found in localStorage, redirecting to index");
           window.location.href = "/index.html";
           return;
         }
@@ -221,213 +395,295 @@
           year: "numeric",
         });
 
-        // Update header info
-        document.querySelector(".info h3").textContent =
-          result.topic || "No Title";
-        document.querySelector(
-          ".info p"
-        ).textContent = `Analysis completed on ${formattedDate}`;
-        document.querySelector(".score").innerHTML = `${
-          result.Score || "?"
-        }/100<br><small>Idea Score</small>`;
+        // Update app title and subtitle
+        document.querySelector(".app-title").textContent = result.topic || "AI-Powered Food Delivery App";
+        document.querySelector(".app-subtitle").textContent = `Analysis completed on ${formattedDate}`;
+        
+        // Update idea score
+        const score = result.Score || 87;
+        document.querySelector(".score-number").textContent = `${score}/100`;
+        document.querySelector(".score-progress").style.width = `${score}%`;
 
-        // Update tags
+        // Update Worth Building Card
+        const worthBuildingCard = document.querySelector(".worth-building-card");
+        const viabilityScore = document.querySelector(".viability-score");
+        const viabilityDescription = document.querySelector(".viability-description");
+        const cardIcon = document.querySelector(".worth-building-card .card-icon");
+        
         if (result.verdict === "Treasure") {
-          const earning = result.monthlyEarning || "N/A";
-          const earningItems = earning
-            .split(".")
-            .map((item) => item.trim())
-            .filter((item) => item.length > 0);
-
-          document.querySelector(".tags").innerHTML = `
-            <span class="tag"><i class="dot fa-solid fa-circle"></i> ${
-              result.verdict || "N/A"
-            }</span>
-            <span class="tag"><i class="dollar fa-solid fa-dollar-sign"></i> ${
-              earningItems[0] || "N/A"
-            }</span>`;
+          viabilityScore.textContent = "92%";
+          viabilityScore.style.color = "#22c55e";
+          viabilityDescription.textContent = result.whyTreasure || "Strong market viability";
+          cardIcon.classList.remove("red");
+          cardIcon.classList.add("green");
         } else {
-          document.querySelector(".tags").innerHTML = `
-            <span class="tag"><i class="dot fa-solid fa-circle" style="color: red;"></i> ${
-              result.verdict || "N/A"
-            }</span>`;
-        }
-        // Worth building section
-        if (result.verdict === "Treasure") {
-          document.querySelector(
-            ".div3 .title"
-          ).innerHTML = `<i class="check fa-solid fa-check"></i> Worth Building`;
-        } else {
-          document.querySelector(
-            ".div3 .title"
-          ).innerHTML = `<i class="cross fa-solid fa-xmark"></i> Not Worth Building`;
+          viabilityScore.textContent = "25%";
+          viabilityScore.style.color = "#dc2626";
+          viabilityDescription.textContent = result.whyTreasure || "Low market viability";
+          cardIcon.classList.remove("green");
+          cardIcon.classList.add("red");
+          cardIcon.innerHTML = '<i class="fas fa-times"></i>';
         }
 
-        document.querySelector(".div3 p").innerHTML = `
-          <span class="answer">${
-            result.verdict === "Treasure" ? "Yes" : "No"
-          }</span><br>
-          <small>${result.whyTreasure || "N/A"}</small>`;
-
+        // Update Earning Potential
+        const earningLevel = document.querySelector(".earning-level");
+        const earningDescription = document.querySelector(".earning-description");
+        
         if (result.verdict === "Treasure") {
-          document.querySelector(".div3 p").innerHTML = `
-          <span class="answer">Yes</span><br>
-          <small>${result.whyTreasure || "N/A"}</small>`;
+          earningLevel.textContent = "High";
+          earningDescription.textContent = result.monthlyEarning || "Multiple income streams available";
         } else {
-          document.querySelector(".div3 p").innerHTML = `
-          <span class="answer" style="color: red;">No</span><br>
-          <small>${result.whyTreasure || "N/A"}</small>`;
-        }
-        if (result.verdict === "Treasure") {
-          // Target audience
-          const audienceRaw = result.audience || "";
-          const audienceList = audienceRaw
-            .split(",")
-            .map((item) => `<li>${item.trim()}</li>`)
-            .join("");
-          document.querySelector(".div4 ul").innerHTML = audienceList;
-        } else {
-          document.querySelector(".div4").style.display = "none";
-        }
-        if (result.verdict === "Treasure") {
-          // MVP Features
-          const mvpFeatures = Array.isArray(result.mvpFeatureList)
-            ? result.mvpFeatureList
-            : result.mvpFeatureList?.split(",").map((item) => item.trim());
-
-          document.querySelector(".div5 ul").innerHTML = mvpFeatures
-            ? mvpFeatures.map((feature) => `<li>${feature}</li>`).join("")
-            : "<li>No features specified</li>";
-        } else {
-          document.querySelector(".div5").style.display = "none";
-        }
-        if (result.verdict === "Treasure") {
-          // Earning potential
-          const earning = result.monthlyEarning || "N/A";
-          const earningItems = earning
-            .split(".")
-            .map((item) => item.trim())
-            .filter((item) => item.length > 0);
-            
-          document.querySelector(".div6 p").innerHTML = earningItems
-            .map((item) => `<strong>${item}</strong>`)
-            .join(" ");
-        } else {
-          document.querySelector(".div6").style.display = "none";
+          earningLevel.textContent = "Low";
+          earningDescription.textContent = result.monthlyEarning || "Limited income potential";
         }
 
-        if (result.verdict === "Treasure") {
-          // Problem it solves
-          const problem = result.realWorldProblem || "Not specified";
-          document.querySelector(".div7 p").innerHTML = `
-      <small>${problem}</small>
-    `;
+        // Update Problem It Solves
+        if (result.realWorldProblem) {
+          const problems = result.realWorldProblem.split(',').slice(0, 3);
+          const problemList = document.querySelector(".problem-list");
+          problemList.innerHTML = problems.map(problem => 
+            `<li><span class="bullet"></span>${problem.trim()}</li>`
+          ).join('');
         } else {
-          document.querySelector(".div7").style.display = "none";
+          // Fallback if no problems are provided
+          const problemList = document.querySelector(".problem-list");
+          problemList.innerHTML = `<li><span class="bullet"></span>No specific problems identified</li>`;
         }
-        if (result.verdict === "Treasure") {
-          // Tech Stack
-          const techStr = result.TechStack || "";
 
-          function parseTechStack(techString) {
-            const lines = techString
-              .split("\n")
-              .map((line) => line.trim())
-              .filter((line) => line);
-            const techObj = {};
-
-            lines.forEach((line) => {
-              // line example: "Frontend : React,"
-              // remove trailing commas & split by ":"
-              const cleanLine = line.replace(/,$/, "");
-              const [key, value] = cleanLine.split(":").map((s) => s.trim());
-              if (key && value) {
-                // convert key to lowercase and replace spaces with underscore
-                const formattedKey = key.toLowerCase().replace(/\s+/g, "_");
-                techObj[formattedKey] = value;
-              }
-            });
-
-            return techObj;
+        // Update Tech Stack
+        if (result.TechStack && Array.isArray(result.TechStack)) {
+          const techItems = document.querySelectorAll(".tech-item");
+          
+          // Update each tech item with the data from TechStack array
+          if (result.TechStack[0] && techItems[0]) {
+            techItems[0].querySelector("span").textContent = result.TechStack[0]; // Frontend
           }
+          if (result.TechStack[1] && techItems[1]) {
+            techItems[1].querySelector("span").textContent = result.TechStack[1]; // Backend
+          }
+          if (result.TechStack[3] && techItems[2]) {
+            techItems[2].querySelector("span").textContent = result.TechStack[3]; // Database
+          }
+          if (techItems[3]) {
+            techItems[3].querySelector("span").textContent = result.TechStack[4] || "AI Integration";
+          }
+        }
 
-          const stack = parseTechStack(techStr);
-
-          const techHTML = `
-            <div class="tag-group frontend">
-              <strong>Frontend:</strong> <span>${stack.frontend || "N/A"}</span>
-            </div>
-            <div class="tag-group backend">
-              <strong>Backend:</strong> <span>${stack.backend || "N/A"}</span>
-            </div>
-            <div class="tag-group mobile">
-              <strong>Mobile App:</strong> <span>${
-                stack.mobile_app || "N/A"
-              }</span>
-            </div>
-            <div class="tag-group database">
-              <strong>Database:</strong> <span>${stack.database || "N/A"}</span>
-            </div>
-            <div class="tag-group ai">
-              <strong>AI:</strong> <span>${stack.ai || "N/A"}</span>
-            </div>
-            <div class="tag-group auth">
-              <strong>Auth:</strong> <span>${stack.auth || "N/A"}</span>
+        // Update MVP Features
+        if (result.mvpFeatureList && Array.isArray(result.mvpFeatureList)) {
+          // Define icons for different types of features
+          const featureIcons = [
+            'fas fa-user-check',     // User Registration
+            'fas fa-search',         // Search functionality
+            'fas fa-shopping-cart',  // Cart/Orders
+            'fas fa-credit-card',    // Payment
+            'fas fa-bell',           // Notifications
+            'fas fa-map-marker-alt', // Location
+            'fas fa-star',           // Reviews/Rating
+            'fas fa-mobile-alt'      // Mobile app
+          ];
+          
+          const featuresList = document.querySelector(".features-list");
+          featuresList.innerHTML = result.mvpFeatureList.slice(0, 4).map((feature, index) => 
+            `<div class="feature-item">
+              <div class="feature-icon">
+                <i class="${featureIcons[index] || 'fas fa-check'}"></i>
+              </div>
+              <span>${feature}</span>
+            </div>`
+          ).join('');
+        } else if (typeof result.mvpFeatureList === 'string') {
+          // Handle case where mvpFeatureList is a string
+          const features = result.mvpFeatureList.split(",").map(item => item.trim());
+          const featureIcons = [
+            'fas fa-user-check',
+            'fas fa-search',
+            'fas fa-shopping-cart',
+            'fas fa-credit-card',
+            'fas fa-bell',
+            'fas fa-map-marker-alt',
+            'fas fa-star',
+            'fas fa-mobile-alt'
+          ];
+          
+          const featuresList = document.querySelector(".features-list");
+          featuresList.innerHTML = features.slice(0, 4).map((feature, index) => 
+            `<div class="feature-item">
+              <div class="feature-icon">
+                <i class="${featureIcons[index] || 'fas fa-check'}"></i>
+              </div>
+              <span>${feature}</span>
+            </div>`
+          ).join('');
+        } else {
+          // Default MVP features with icons
+          const featuresList = document.querySelector(".features-list");
+          featuresList.innerHTML = `
+            <div class="feature-item">
+              <div class="feature-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+              </div>
+              <span>No MVP features defined</span>
             </div>
           `;
+        }
 
-          document.querySelector(".div8 .tech-tags").innerHTML = techHTML;
-        } else {
-          document.querySelector(".div8").style.display = "none";
-        }
-        if (result.verdict === "Treasure") {
-          // USP
-          document.querySelector(".div9 p").textContent = Array.isArray(
-            result.USP
-          )
-            ? result.USP[0]
-            : result.USP || "N/A";
-        } else {
-          document.querySelector(".div9").style.display = "none";
-        }
-        if (result.verdict === "Treasure") {
-          // Monetization model
-          const monetization = result.monetizationStrategy || "N/A";
-          // Split by all periods
-          const monetizationItems = monetization
-            .split(".")
-            .map((item) => item.trim())
-            .filter((item) => item.length > 0);
-
-          document.querySelector(".div10 ul").innerHTML = monetizationItems
-            .map((item) => `<li><strong>${item}</strong></li>`)
-            .join("");
-        } else {
-          document.querySelector(".div10").style.display = "none";
-        }
-        if (result.verdict === "Treasure") {
-          // Timeline to revenue
-          if (result.Timeline_to_first_revenue) {
-            document.querySelector(".div11 ul").innerHTML = `
-  <li>${result.Timeline_to_first_revenue[0]?.phase || "Development"}: ${
-              result.Timeline_to_first_revenue[0]?.duration || "N/A"
-            }</li>
-  <li>${result.Timeline_to_first_revenue[1]?.phase || "Testing"}: ${
-              result.Timeline_to_first_revenue[1]?.duration || "N/A"
-            }</li>
-  <li>${result.Timeline_to_first_revenue[2]?.phase || "Launch"}: ${
-              result.Timeline_to_first_revenue[2]?.duration || "N/A"
-            }</li>
-`;
+        // Update USP
+        if (result.USP) {
+          const usp = Array.isArray(result.USP) ? result.USP[0] : result.USP;
+          const uspElement = document.querySelector(".usp-description");
+          if (uspElement) {
+            uspElement.textContent = `"${usp}"`;
+          }
+          
+          // Update highlights based on USP content
+          const uspText = usp.toLowerCase();
+          let highlights = [
+            { icon: 'fas fa-clock', value: '15min', label: 'Quick Setup' },
+            { icon: 'fas fa-robot', value: 'AI', label: 'Powered' },
+            { icon: 'fas fa-leaf', value: '100%', label: 'Automated' }
+          ];
+          
+          // Customize based on content
+          if (uspText.includes('delivery') || uspText.includes('food')) {
+            highlights = [
+              { icon: 'fas fa-shipping-fast', value: '15min', label: 'Delivery' },
+              { icon: 'fas fa-robot', value: 'AI', label: 'Powered' },
+              { icon: 'fas fa-leaf', value: '100%', label: 'Eco-Friendly' }
+            ];
+          } else if (uspText.includes('resume') || uspText.includes('linkedin')) {
+            highlights = [
+              { icon: 'fas fa-clock', value: '15min', label: 'Quick Setup' },
+              { icon: 'fas fa-robot', value: 'AI', label: 'Powered' },
+              { icon: 'fas fa-magic', value: '100%', label: 'Automated' }
+            ];
+          }
+          
+          const highlightsElement = document.querySelector(".usp-highlights");
+          if (highlightsElement) {
+            const highlightsHTML = highlights.map(item => 
+              `<div class="highlight-item">
+                <div class="highlight-icon">
+                  <i class="${item.icon}"></i>
+                </div>
+                <span class="highlight-value">${item.value}</span>
+                <span class="highlight-label">${item.label}</span>
+              </div>`
+            ).join('');
+            
+            highlightsElement.innerHTML = highlightsHTML;
           }
         } else {
-          document.querySelector(".div11").style.display = "none";
-          document.querySelector(".div12").style.display = "none";
-          document.querySelector(".div13").style.display = "none";
+          const uspElement = document.querySelector(".usp-description");
+          if (uspElement) {
+            uspElement.textContent = '"No unique selling proposition defined"';
+          }
         }
-      });
 
-      // PDF Generation functionality - same as index.html
+        // Update Monetization Model
+        if (result.monetizationStrategy) {
+          const monetization = result.monetizationStrategy;
+          
+          // Default monetization items for fallback
+          let monetizationData = [
+            { label: 'Subscription Plans', value: '$9.99', desc: 'Monthly premium features' },
+            { label: 'Transaction Fees', value: '15-20%', desc: 'Commission per transaction' },
+            { label: 'Premium Services', value: '$29.99', desc: 'Professional services' }
+          ];
+          
+          // Try to extract specific monetization info from the strategy text
+          const text = monetization.toLowerCase();
+          
+          // Parse different monetization strategies
+          if (text.includes('freemium')) {
+            monetizationData[0] = { label: 'Freemium Model', value: 'Free/Premium', desc: 'Basic free, advanced paid' };
+          }
+          
+          if (text.includes('commission') && text.includes('%')) {
+            // Extract percentage if mentioned
+            const percentMatch = monetization.match(/(\d+(?:-\d+)?%)/);
+            if (percentMatch) {
+              monetizationData[1] = { label: 'Commission Revenue', value: percentMatch[1], desc: 'Per transaction fee' };
+            }
+          }
+          
+          if (text.includes('subscription')) {
+            const priceMatch = monetization.match(/\$(\d+(?:\.\d+)?)/);
+            if (priceMatch) {
+              monetizationData[0] = { label: 'Subscription Model', value: `$${priceMatch[1]}`, desc: 'Monthly subscription' };
+            }
+          }
+          
+          if (text.includes('review') || text.includes('service')) {
+            monetizationData[2] = { label: 'Professional Services', value: '$25-50', desc: 'Per service fee' };
+          }
+          
+          const monetizationList = document.querySelector(".monetization-list");
+          monetizationList.innerHTML = monetizationData.map(item => 
+            `<div class="monetization-item">
+              <div>
+                <span class="monetization-label">${item.label}</span>
+                <span class="monetization-desc">${item.desc}</span>
+              </div>
+              <span class="monetization-value">${item.value}</span>
+            </div>`
+          ).join('');
+        } else {
+          // Fallback if no monetization strategy is provided
+          const monetizationList = document.querySelector(".monetization-list");
+          monetizationList.innerHTML = `
+            <div class="monetization-item">
+              <div>
+                <span class="monetization-label">Subscription Model</span>
+                <span class="monetization-desc">Monthly premium features</span>
+              </div>
+              <span class="monetization-value">$9.99</span>
+            </div>
+            <div class="monetization-item">
+              <div>
+                <span class="monetization-label">Commission Revenue</span>
+                <span class="monetization-desc">Per transaction fee</span>
+              </div>
+              <span class="monetization-value">15-20%</span>
+            </div>
+            <div class="monetization-item">
+              <div>
+                <span class="monetization-label">Premium Services</span>
+                <span class="monetization-desc">Additional services</span>
+              </div>
+              <span class="monetization-value">$29.99</span>
+            </div>
+          `;
+        }
+
+        // Update Timeline
+        if (result.Timeline_to_first_revenue && Array.isArray(result.Timeline_to_first_revenue)) {
+          const timelineList = document.querySelector(".timeline-list");
+          
+          timelineList.innerHTML = result.Timeline_to_first_revenue.slice(0, 3).map((item, index) => 
+            `<div class="timeline-item ${index === 0 ? 'active' : ''}">
+              <div class="timeline-step">${index + 1}</div>
+              <div class="timeline-content">
+                <span class="timeline-phase">${item.phase || 'Development Phase'}</span>
+                <span class="timeline-duration">${item.duration || 'N/A'}</span>
+              </div>
+            </div>`
+          ).join('');
+          
+          // Update timeline summary
+          const timelineSummary = document.querySelector(".timeline-summary");
+          if (timelineSummary && result.Timeline_to_first_revenue.length > 0) {
+            const totalMonths = result.Timeline_to_first_revenue.reduce((total, phase) => {
+              const duration = phase.duration || '';
+              const months = duration.match(/(\d+)/);
+              return total + (months ? parseInt(months[1]) : 0);
+            }, 0);
+            
+            timelineSummary.querySelector(".timeline-total").textContent = `${totalMonths} Months`;
+          }
+        }
+
+        // PDF Generation functionality
         document.getElementById("generatePDF").addEventListener("click", async () => {
           const aiResult = localStorage.getItem("aiResult");
           if (!aiResult) {
@@ -437,7 +693,6 @@
 
           const user = JSON.parse(localStorage.getItem("user"));
 
-          // Check if user is authenticated
           if (!user || !user.name) {
             localStorage.setItem("shouldGeneratePDF", "true");
             window.location.href = "/login.html";
@@ -484,6 +739,57 @@
             console.error(error);
           }
         });
+      });
+
+      // Hamburger Menu Functionality
+      const hamburgerMenu = document.getElementById('hamburgerMenu');
+      const mobileNavMenu = document.getElementById('mobileNavMenu');
+      const closeMenu = document.getElementById('closeMenu');
+      const mobileOverlay = document.getElementById('mobileOverlay');
+      
+      function toggleMenu() {
+        const isActive = mobileNavMenu.classList.contains('active');
+        
+        if (isActive) {
+          // Close menu
+          hamburgerMenu.classList.remove('active');
+          mobileNavMenu.classList.remove('active');
+          mobileOverlay.classList.remove('active');
+          document.body.style.overflow = '';
+        } else {
+          // Open menu
+          hamburgerMenu.classList.add('active');
+          mobileNavMenu.classList.add('active');
+          mobileOverlay.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+      }
+      
+      hamburgerMenu.addEventListener('click', toggleMenu);
+      closeMenu.addEventListener('click', toggleMenu);
+
+      // Close menu when clicking on overlay
+      mobileOverlay.addEventListener('click', toggleMenu);
+
+      // Close menu when clicking on a nav item
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', () => {
+          hamburgerMenu.classList.remove('active');
+          mobileNavMenu.classList.remove('active');
+          mobileOverlay.classList.remove('active');
+          document.body.style.overflow = '';
+        });
+      });
+
+      // Handle window resize
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+          hamburgerMenu.classList.remove('active');
+          mobileNavMenu.classList.remove('active');
+          mobileOverlay.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      });
     </script>
   </body>
 </html>
